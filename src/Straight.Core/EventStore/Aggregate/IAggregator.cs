@@ -8,7 +8,7 @@ namespace Straight.Core.EventStore.Aggregate
         where TDomainEvent : IDomainEvent
         where TDomainCommand : IDomainCommand
     {
-        void Clear();
+        void Reset();
         void LoadFromHistory(IEnumerable<TDomainEvent> domainEvents);
         IEnumerable<TDomainEvent> GetChanges();
         void UpdateVersion(int version);

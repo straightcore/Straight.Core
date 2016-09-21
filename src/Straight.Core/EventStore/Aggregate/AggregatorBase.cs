@@ -15,17 +15,15 @@ namespace Straight.Core.EventStore.Aggregate
         where TDomainEvent : IDomainEvent
         where TDomainCommand : IDomainCommand
     {
-        private const string APPLY_METHOD_NAME = "Apply";
-        private const string HANDLE_METHOD_NAME = "Handle";
-        private static readonly Type applyEventType = typeof(IApplyEvent<>);
-        private static readonly Type handlerDomainCommandType = typeof(IHandlerDomainCommand<>);
-        private static readonly ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>> registerApplyMethodsByType 
+        private const string ApplyMethodName = "Apply";
+        private const string HandleMethodName = "Handle";
+        private static readonly ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>> RegisterApplyMethodsByType 
             = new ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>>();
-        private static readonly ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>> registerHandleMethodsByType 
+        private static readonly ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>> RegisterHandleMethodsByType 
             = new ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>>();
 
-        private readonly IReadOnlyDictionary<Type, MethodInfo> registerMethods;
-        private readonly List<TDomainEvent> appliedEvents;
+        private readonly IReadOnlyDictionary<Type, MethodInfo> _registerMethods;
+        private readonly List<TDomainEvent> _appliedEvents;
 
         public Guid Id { get; protected set; }
         public int Version { get; protected set; }
@@ -33,33 +31,38 @@ namespace Straight.Core.EventStore.Aggregate
         
         protected AggregatorBase()
         {
-            registerMethods = GetRegisterByType(registerApplyMethodsByType, applyEventType, APPLY_METHOD_NAME)
-                .Union(GetRegisterByType(registerHandleMethodsByType, handlerDomainCommandType, HANDLE_METHOD_NAME))
+            _registerMethods = GetRegisterByType(RegisterApplyMethodsByType, typeof(IApplyEvent<>), ApplyMethodName)
+                .Union(GetRegisterByType(RegisterHandleMethodsByType, typeof(IHandlerDomainCommand<>), HandleMethodName))
                 .ToDictionary(pair => pair.Key, pair => pair.Value);
 
-            appliedEvents = new List<TDomainEvent>();
+            _appliedEvents = new List<TDomainEvent>();
         }
 
         public void LoadFromHistory(IEnumerable<TDomainEvent> domainEvents)
         {
-            if (!domainEvents.Any())
+            Reset();
+            var events = domainEvents as IList<TDomainEvent> ?? domainEvents.ToList();
+            if (!events.Any())
             {
                 return;
             }
-            domainEvents.ForEach(ev => registerMethods.Apply(this, ev));
-            appliedEvents.AddRange(domainEvents);
-            Version = domainEvents.Last().Version;
+            events.ForEach(ev => _registerMethods.Apply(this, ev));
+            _appliedEvents.AddRange(events);
+            Version = events.Last().Version;
+            Id = events.Last().AggregateId;
             EventVersion = Version;
         }
 
         public IEnumerable<TDomainEvent> GetChanges()
         {
-            return appliedEvents.ToList();
+            return _appliedEvents.ToList();
         }
 
-        public void Clear()
+        public void Reset()
         {
-            appliedEvents.Clear();
+            Id = Guid.Empty;
+            Version = 0;
+            _appliedEvents.Clear();
         }
 
         public void UpdateVersion(int version)
@@ -74,19 +77,19 @@ namespace Straight.Core.EventStore.Aggregate
 
         public void Handle(TDomainCommand command)
         {
-            registerMethods.Handle<TDomainEvent>(this, command).ForEach(ev => Apply(ev));
+            _registerMethods.Handle<TDomainEvent>(this, command).ForEach(ev => Apply(ev));
         }
 
-        protected void Apply(TDomainEvent domainEvent)
+        private void Apply(TDomainEvent domainEvent)
         {
             domainEvent.AggregateId = Id;
             domainEvent.Version = GetNewEventVersion();
-            registerMethods.Apply(this, domainEvent);
-            appliedEvents.Add(domainEvent);
+            _registerMethods.Apply(this, domainEvent);
+            _appliedEvents.Add(domainEvent);
         }
         
         private IReadOnlyDictionary<Type, MethodInfo> GetRegisterByType(
-            ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>> register,
+            IDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>> register,
             Type typeOfInterfaceBase, 
             string methodName)
         {

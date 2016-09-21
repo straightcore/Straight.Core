@@ -11,18 +11,17 @@ namespace Straight.Core.Domain
     public abstract class ReadModelBase<TDomainEvent> : IReadModel<TDomainEvent>
         where TDomainEvent : IDomainEvent
     {
-        private const string APPLY_METHOD_NAME = "Apply";
-        private static readonly Type handlerDomainEventType = typeof(IApplyEvent<>);
-        private static readonly ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>> registerApplyMethodsByType 
-            = new ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>>();
-        private List<TDomainEvent> appliedEvents;
-        private readonly IReadOnlyDictionary<Type, MethodInfo> registerMethods;
-        private readonly Type tDomainEventType = typeof(TDomainEvent);
+        private const string ApplyMethodName = "Apply";
 
-        public ReadModelBase()
+        private static readonly ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>> RegisterApplyMethodsByType 
+            = new ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>>();
+        private readonly List<TDomainEvent> _appliedEvents;
+        private readonly IReadOnlyDictionary<Type, MethodInfo> _registerMethods;
+
+        protected ReadModelBase()
         {
-            registerMethods = GetRegisterByType(handlerDomainEventType, APPLY_METHOD_NAME);
-            appliedEvents = new List<TDomainEvent>();
+            _registerMethods = GetRegisterByType(typeof(IApplyEvent<>), ApplyMethodName);
+            _appliedEvents = new List<TDomainEvent>();
         }
 
         public Guid Id
@@ -37,33 +36,30 @@ namespace Straight.Core.Domain
             private set;
         }
 
-        public IEnumerable<TDomainEvent> Events
-        {
-            get
-            {
-                return appliedEvents.AsReadOnly();
-            }
-        }
+        public IEnumerable<TDomainEvent> Events => _appliedEvents.AsReadOnly();
 
         public void LoadFromHistory(IEnumerable<TDomainEvent> domainEvents)
         {
-            domainEvents.ForEach(ev => Apply(ev));
+            _appliedEvents.Clear();
+            Id = Guid.Empty;
+            Version = 0;
+            domainEvents.ForEach(Update);
         }
 
-        protected void Apply(TDomainEvent domainEvent)
+        public void Update(TDomainEvent domainEvent)
         {
-            domainEvent.AggregateId = Id;
+            Id = domainEvent.AggregateId;
             Version = domainEvent.Version;
-            registerMethods.Apply(this, domainEvent);
-            appliedEvents.Add(domainEvent);
+            _registerMethods.Apply(this, domainEvent);
+            _appliedEvents.Add(domainEvent);
         }
-                
+        
         private IReadOnlyDictionary<Type, MethodInfo> GetRegisterByType(Type typeOfInterfaceBase, string methodName)
         {
             IReadOnlyDictionary<Type, MethodInfo> referentiel;
-            if (!registerApplyMethodsByType.TryGetValue(GetType(), out referentiel))
+            if (!RegisterApplyMethodsByType.TryGetValue(GetType(), out referentiel))
             {
-                registerApplyMethodsByType[GetType()] = referentiel = MappingTypeToMethodHelper.ToMappingTypeMethod(
+                RegisterApplyMethodsByType[GetType()] = referentiel = MappingTypeToMethodHelper.ToMappingTypeMethod(
                     GetType(), 
                     typeof(TDomainEvent), 
                     typeOfInterfaceBase, 

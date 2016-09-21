@@ -8,5 +8,7 @@ namespace Straight.Core.Domain
         IEnumerable<TDomainEvent> Events { get; }
 
         void LoadFromHistory(IEnumerable<TDomainEvent> domainEvents);
+
+        void Update(TDomainEvent domainEvent);
     }
 }
