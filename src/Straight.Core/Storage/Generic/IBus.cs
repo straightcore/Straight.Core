@@ -12,7 +12,7 @@
 
 using System.Collections.Generic;
 
-namespace Straight.Core.Transactional.Generic
+namespace Straight.Core.Storage.Generic
 {
     public interface IBus<TMessage>
     {

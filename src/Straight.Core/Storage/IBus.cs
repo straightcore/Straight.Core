@@ -10,11 +10,13 @@
 // See the License for the specific language governing permissions and limitations under the License.
 // ==============================================================================================================
 
-namespace Straight.Core.Transactional
+using System.Collections;
+
+namespace Straight.Core.Storage
 {
-    public interface IUnitOfWork
+    public interface IBus
     {
-        void Commit();
-        void Rollback();
+        void Publish(object message);
+        void Publish(IEnumerable message);
     }
 }

@@ -10,20 +10,11 @@
 // See the License for the specific language governing permissions and limitations under the License.
 // ==============================================================================================================
 
-using System;
-using System.Runtime.Serialization;
-
-namespace Straight.Core.Exceptions
+namespace Straight.Core.Storage
 {
-    [Serializable]
-    public class ConcurrencyException : Exception
+    public interface IUnitOfWork
     {
-        public ConcurrencyException() { }
-
-        public ConcurrencyException(string message) : base(message) { }
-
-        public ConcurrencyException(string message, Exception inner) : base(message, inner) { }
-
-        protected ConcurrencyException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+        void Commit();
+        void Rollback();
     }
 }

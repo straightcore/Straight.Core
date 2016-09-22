@@ -4,14 +4,18 @@ using System.Collections.Generic;
 
 namespace Straight.Core.EventStore.Aggregate
 {
-    public interface IAggregator<TDomainCommand, TDomainEvent> : IVersionable, IIdentifiable
+    public interface IDomainEventChangeable<out TDomainEvent> : IVersionableUpdatable, IIdentifiable
+    {
+        IEnumerable<TDomainEvent> GetChanges();
+        void Clear();
+    }
+
+    public interface IAggregator<in TDomainCommand, TDomainEvent> : IDomainEventChangeable<TDomainEvent>
         where TDomainEvent : IDomainEvent
         where TDomainCommand : IDomainCommand
     {
         void Reset();
         void LoadFromHistory(IEnumerable<TDomainEvent> domainEvents);
-        IEnumerable<TDomainEvent> GetChanges();
-        void UpdateVersion(int version);
         void Handle(TDomainCommand command);
     }
 }

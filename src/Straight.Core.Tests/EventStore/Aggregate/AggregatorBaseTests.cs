@@ -38,7 +38,7 @@ namespace Straight.Core.Tests.EventStore.Aggregate
             var events = new List<IDomainEvent>();
             for (var version = 0; version < 5; version++)
             {
-                events.Add(new DomainEventTest() { Id = Guid.NewGuid(), AggregateId = guid, Version = version });
+                events.Add(new DomainEventTest() {Id = Guid.NewGuid(), AggregateId = guid, Version = version});
             }
             aggregate.LoadFromHistory(events);
             Assert.That(aggregate.Id, Is.EqualTo(guid));
@@ -48,7 +48,7 @@ namespace Straight.Core.Tests.EventStore.Aggregate
         [Test]
         public void Should_have_change_event_when_execute_new_command()
         {
-            var domainCommandTest = new DomainCommandTest() { Id = Guid.NewGuid() };
+            var domainCommandTest = new DomainCommandTest() {Id = Guid.NewGuid()};
             aggregate.Handle(domainCommandTest);
             Assert.That(aggregate.GetChanges(), Is.Not.Null.And.Not.Empty);
             Assert.That(aggregate.GetChanges().Count(ev => ev.Id == domainCommandTest.Id), Is.EqualTo(1));
@@ -65,80 +65,39 @@ namespace Straight.Core.Tests.EventStore.Aggregate
         {
             Assert.Throws<UnregisteredDomainEventException>(() => aggregate.Handle(new DomainCommandTest2()));
         }
-
     }
 
     internal class DomainCommandTest2 : IDomainCommand
     {
-        public Guid Id
-        {
-            get;
-            set;
-        }
+        public Guid Id { get; set; }
     }
 
     internal class DomainCommandUnknow : IDomainCommand
     {
-        public Guid Id
-        {
-            get;
-            set;
-        }
+        public Guid Id { get; set; }
     }
 
     internal class DomainCommandTest : IDomainCommand
     {
-        public Guid Id
-        {
-            get;
-            set;
-        }
+        public Guid Id { get; set; }
     }
 
     internal class DomainEventTest : IDomainEvent
     {
-        public Guid AggregateId
-        {
-            get;
+        public Guid AggregateId { get; set; }
 
-            set;
-        }
+        public Guid Id { get; set; }
 
-        public Guid Id
-        {
-            get;
-
-            set;
-        }
-
-        public int Version
-        {
-            get;
-            set;
-        }
+        public int Version { get; set; }
     }
 
     internal class DomainEventTest2 : IDomainEvent
     {
-        public Guid AggregateId
-        {
-            get;
+        public Guid AggregateId { get; set; }
 
-            set;
-        }
+        public Guid Id { get; set; }
 
-        public Guid Id
-        {
-            get;
-
-            set;
-        }
-
-        public int Version
-        {
-            get;
-            set;
-        }
+        public int Version { get; set; }
     }
 
     internal class AggregatorTest : AggregatorBase<IDomainCommand, IDomainEvent>
@@ -156,14 +115,15 @@ namespace Straight.Core.Tests.EventStore.Aggregate
 
         public void Apply(DomainEventTest @event)
         {
-            Id = @event.Id;            
-            Version = @event.Version;
-
             whenApplied?.Invoke();
         }
 
         public IEnumerable Handle(DomainCommandTest2 command)
         {
+            if (Id == Guid.Empty)
+            {
+                Id = Guid.NewGuid();
+            }
             yield return new DomainEventTest2()
             {
                 Id = Guid.NewGuid(),
@@ -174,10 +134,14 @@ namespace Straight.Core.Tests.EventStore.Aggregate
 
         public IEnumerable Handle(DomainCommandTest command)
         {
+            if (Id == Guid.Empty)
+            {
+                Id = Guid.NewGuid();
+            }
             yield return new DomainEventTest()
             {
                 Id = command.Id,
-                AggregateId = command.Id,
+                AggregateId = Id,
                 Version = 1
             };
         }

@@ -10,13 +10,20 @@
 // See the License for the specific language governing permissions and limitations under the License.
 // ==============================================================================================================
 
-using System.Collections;
+using System;
+using System.Runtime.Serialization;
 
-namespace Straight.Core.Transactional
+namespace Straight.Core.Exceptions
 {
-    public interface IBus
+    [Serializable]
+    public class ConcurrencyViolationException : Exception
     {
-        void Publish(object message);
-        void Publish(IEnumerable message);
+        public ConcurrencyViolationException() { }
+
+        public ConcurrencyViolationException(string message) : base(message) { }
+
+        public ConcurrencyViolationException(string message, Exception inner) : base(message, inner) { }
+
+        protected ConcurrencyViolationException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 }

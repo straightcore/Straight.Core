@@ -24,6 +24,7 @@ namespace Straight.Core.EventStore.Aggregate
 
         private readonly IReadOnlyDictionary<Type, MethodInfo> _registerMethods;
         private readonly List<TDomainEvent> _appliedEvents;
+        private readonly List<TDomainEvent> _changedEvents;
 
         public Guid Id { get; protected set; }
         public int Version { get; protected set; }
@@ -36,6 +37,7 @@ namespace Straight.Core.EventStore.Aggregate
                 .ToDictionary(pair => pair.Key, pair => pair.Value);
 
             _appliedEvents = new List<TDomainEvent>();
+            _changedEvents = new List<TDomainEvent>();
         }
 
         public void LoadFromHistory(IEnumerable<TDomainEvent> domainEvents)
@@ -55,14 +57,21 @@ namespace Straight.Core.EventStore.Aggregate
 
         public IEnumerable<TDomainEvent> GetChanges()
         {
-            return _appliedEvents.ToList();
+            return _changedEvents.ToList();
+        }
+
+        public void Clear()
+        {
+            _changedEvents.Clear();
         }
 
         public void Reset()
         {
             Id = Guid.Empty;
             Version = 0;
+            EventVersion = 0;
             _appliedEvents.Clear();
+            _changedEvents.Clear();
         }
 
         public void UpdateVersion(int version)
@@ -77,15 +86,16 @@ namespace Straight.Core.EventStore.Aggregate
 
         public void Handle(TDomainCommand command)
         {
-            _registerMethods.Handle<TDomainEvent>(this, command).ForEach(ev => Apply(ev));
+            _changedEvents.AddRange(_registerMethods.Handle<TDomainEvent>(this, command).Select(Apply));
         }
 
-        private void Apply(TDomainEvent domainEvent)
+        private TDomainEvent Apply(TDomainEvent domainEvent)
         {
             domainEvent.AggregateId = Id;
             domainEvent.Version = GetNewEventVersion();
             _registerMethods.Apply(this, domainEvent);
             _appliedEvents.Add(domainEvent);
+            return domainEvent;
         }
         
         private IReadOnlyDictionary<Type, MethodInfo> GetRegisterByType(
