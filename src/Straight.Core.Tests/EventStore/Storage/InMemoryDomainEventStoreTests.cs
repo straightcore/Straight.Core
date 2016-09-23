@@ -35,7 +35,7 @@ namespace Straight.Core.Tests.EventStore.Storage
         public void Should_save_new_event_when_storage_is_empty()
         {
             IAggregator<IDomainCommand, IDomainEvent> aggregator = new AggregatorTest(() => { });
-            aggregator.Handle(new DomainCommandTest() {Id = Guid.NewGuid()});
+            aggregator.Update(new DomainCommandTest() {Id = Guid.NewGuid()});
             var expectedVersion = aggregator.GetChanges().Last().Version;
             _storage.BeginTransaction();
             _storage.Save(aggregator);
@@ -46,7 +46,7 @@ namespace Straight.Core.Tests.EventStore.Storage
         public void Should_throw_exception_when_save__without_transaction()
         {
             IAggregator<IDomainCommand, IDomainEvent> aggregator = new AggregatorTest(() => { });
-            aggregator.Handle(new DomainCommandTest() { Id = Guid.NewGuid() });
+            aggregator.Update(new DomainCommandTest() { Id = Guid.NewGuid() });
             Assert.Throws<TransactionException>(() => _storage.Save(aggregator));
         }
 
@@ -57,7 +57,7 @@ namespace Straight.Core.Tests.EventStore.Storage
             IAggregator<IDomainCommand, IDomainEvent> aggregator = new AggregatorTest(() => { });
 
             var domainCommandTest = new DomainCommandTest() { Id = Guid.NewGuid() };
-            aggregator.Handle(domainCommandTest);
+            aggregator.Update(domainCommandTest);
             var expectedChanged = aggregator.GetChanges();
             _storage.BeginTransaction();
             _storage.Save(aggregator);
@@ -72,7 +72,7 @@ namespace Straight.Core.Tests.EventStore.Storage
             IAggregator<IDomainCommand, IDomainEvent> aggregator = new AggregatorTest(() => { });
 
             var domainCommandTest = new DomainCommandTest() { Id = Guid.NewGuid() };
-            aggregator.Handle(domainCommandTest);
+            aggregator.Update(domainCommandTest);
             _storage.BeginTransaction();
             _storage.Save(aggregator);
             _storage.Rollback();
@@ -87,11 +87,11 @@ namespace Straight.Core.Tests.EventStore.Storage
             IAggregator<IDomainCommand, IDomainEvent> aggregatorClone = new AggregatorTest(() => { });
             
             var domainCommandTest = new DomainCommandTest() { Id = Guid.NewGuid() };
-            aggregator.Handle(domainCommandTest);
+            aggregator.Update(domainCommandTest);
             _storage.BeginTransaction();
             _storage.Save(aggregator);
             _storage.Commit();
-            aggregator.Handle(new DomainCommandTest() { Id = Guid.NewGuid() });
+            aggregator.Update(new DomainCommandTest() { Id = Guid.NewGuid() });
             aggregatorClone.LoadFromHistory(_storage.Get(aggregator.Id));
             _storage.BeginTransaction();
             _storage.Save(aggregator);

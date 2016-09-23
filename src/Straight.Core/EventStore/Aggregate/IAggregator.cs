@@ -1,5 +1,4 @@
 ﻿using Straight.Core.Domain;
-using System;
 using System.Collections.Generic;
 
 namespace Straight.Core.EventStore.Aggregate
@@ -7,6 +6,7 @@ namespace Straight.Core.EventStore.Aggregate
     public interface IDomainEventChangeable<out TDomainEvent> : IVersionableUpdatable, IIdentifiable
     {
         IEnumerable<TDomainEvent> GetChanges();
+
         void Clear();
     }
 
@@ -15,7 +15,9 @@ namespace Straight.Core.EventStore.Aggregate
         where TDomainCommand : IDomainCommand
     {
         void Reset();
+
         void LoadFromHistory(IEnumerable<TDomainEvent> domainEvents);
-        void Handle(TDomainCommand command);
+
+        void Update(TDomainCommand command);
     }
 }

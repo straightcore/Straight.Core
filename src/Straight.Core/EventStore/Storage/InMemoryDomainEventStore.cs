@@ -1,11 +1,10 @@
-﻿using System;
+﻿using Straight.Core.Domain;
+using Straight.Core.EventStore.Aggregate;
+using Straight.Core.Exceptions;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using Straight.Core.Domain;
-using Straight.Core.EventStore.Aggregate;
-using Straight.Core.Exceptions;
-using Straight.Core.Extensions.Collections.Generic;
 
 namespace Straight.Core.EventStore.Storage
 {
@@ -92,7 +91,7 @@ namespace Straight.Core.EventStore.Storage
 
         private static int GetVersion(IDomainEventChangeable<TDomainEvent> aggregator)
         {
-            return aggregator.GetChanges().Select(ev => (int?) ev.Version).LastOrDefault() ?? 0;
+            return aggregator.GetChanges().Select(ev => (int?)ev.Version).LastOrDefault() ?? 0;
         }
 
         private List<TDomainEvent> GetListOfEventInChanged(Guid aggregatorId)
@@ -111,7 +110,7 @@ namespace Straight.Core.EventStore.Storage
         {
             List<TDomainEvent> listOfEvent;
             return memory.TryGetValue(aggregator.Id, out listOfEvent)
-                ? listOfEvent.Select(ev => (int?) ev.Version).LastOrDefault() ?? 0
+                ? listOfEvent.Select(ev => (int?)ev.Version).LastOrDefault() ?? 0
                 : 0;
         }
 
@@ -123,7 +122,6 @@ namespace Straight.Core.EventStore.Storage
             }
             throw new ObjectDisposedException("InMemoryDomainEventStore", "it is disposed.");
         }
-
 
         public void Dispose()
         {

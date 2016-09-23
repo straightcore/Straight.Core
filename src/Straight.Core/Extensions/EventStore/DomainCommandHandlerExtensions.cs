@@ -5,8 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Straight.Core.Extensions.EventStore
 {
@@ -22,7 +20,7 @@ namespace Straight.Core.Extensions.EventStore
             if (!registerMethods.TryGetValue(command.GetType(), out handler))
             {
                 throw new UnregisteredDomainEventException(string.Format("The domain command '{0}' is not registered in '{1}'",
-                    command.GetType().FullName, 
+                    command.GetType().FullName,
                     model.GetType().FullName));
             }
             return ((IEnumerable)handler.Invoke(model, new object[] { command }))

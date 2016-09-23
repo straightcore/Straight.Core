@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using Straight.Core.Domain;
+﻿using Straight.Core.Domain;
 using Straight.Core.EventStore.Aggregate;
 using Straight.Core.Storage;
+using System;
+using System.Collections.Generic;
 
 namespace Straight.Core.EventStore.Storage
 {
@@ -11,6 +11,7 @@ namespace Straight.Core.EventStore.Storage
         //ISnapShotStorage<TDomainEvent>,
     {
         IEnumerable<TDomainEvent> Get(Guid aggregateId);
+
         void Save(IDomainEventChangeable<TDomainEvent> aggregator);
     }
 }

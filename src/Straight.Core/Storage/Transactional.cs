@@ -3,7 +3,9 @@
     public interface Transactional
     {
         void BeginTransaction();
+
         void Commit();
+
         void Rollback();
     }
 }

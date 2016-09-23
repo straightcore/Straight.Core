@@ -48,6 +48,7 @@
     <Compile Include="EventStore\Storage\IAggregatorRootMap.cs" />
     <Compile Include="EventStore\Storage\IDomainEventRepository.cs" />
     <Compile Include="EventStore\Storage\IDomainEventStorage.cs" />
+    <Compile Include="EventStore\Storage\InMemoryAggregatorRootMap.cs" />
     <Compile Include="EventStore\Storage\InMemoryDomainEventStore.cs" />
     <Compile Include="Exceptions\TransactionException.cs" />
     <Compile Include="Extensions\Domain\ApplyEventExtensions.cs" />

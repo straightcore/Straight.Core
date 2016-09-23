@@ -1,5 +1,4 @@
-﻿
-namespace Straight.Core.Command
+﻿namespace Straight.Core.Command
 {
     public interface ICommandHandler<in TCommand>
         where TCommand : ICommand

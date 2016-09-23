@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Domain\ReadModelTests.cs" />
     <Compile Include="EventStore\Aggregate\AggregatorBaseTests.cs" />
+    <Compile Include="EventStore\Storage\InMemoryAggregatorRootMapTests.cs" />
     <Compile Include="EventStore\Storage\InMemoryDomainEventStoreTests.cs" />
     <Compile Include="Exceptions\ExceptionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

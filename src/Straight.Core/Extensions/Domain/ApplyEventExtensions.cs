@@ -1,10 +1,7 @@
 ﻿using Straight.Core.Exceptions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Straight.Core.Extensions.Domain
 {
@@ -17,8 +14,8 @@ namespace Straight.Core.Extensions.Domain
             {
                 throw new UnregisteredDomainEventException(
                     string.Format(
-                        "The domain event '{0}' is not registered in '{1}'", 
-                        @event.GetType().FullName, 
+                        "The domain event '{0}' is not registered in '{1}'",
+                        @event.GetType().FullName,
                         model.GetType().FullName));
             }
             handler.Invoke(model, new object[] { @event });

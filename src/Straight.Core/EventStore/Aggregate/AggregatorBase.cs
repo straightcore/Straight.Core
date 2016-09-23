@@ -17,9 +17,11 @@ namespace Straight.Core.EventStore.Aggregate
     {
         private const string ApplyMethodName = "Apply";
         private const string HandleMethodName = "Handle";
-        private static readonly ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>> RegisterApplyMethodsByType 
+
+        private static readonly ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>> RegisterApplyMethodsByType
             = new ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>>();
-        private static readonly ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>> RegisterHandleMethodsByType 
+
+        private static readonly ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>> RegisterHandleMethodsByType
             = new ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>>();
 
         private readonly IReadOnlyDictionary<Type, MethodInfo> _registerMethods;
@@ -29,7 +31,7 @@ namespace Straight.Core.EventStore.Aggregate
         public Guid Id { get; protected set; }
         public int Version { get; protected set; }
         public int EventVersion { get; protected set; }
-        
+
         protected AggregatorBase()
         {
             _registerMethods = GetRegisterByType(RegisterApplyMethodsByType, typeof(IApplyEvent<>), ApplyMethodName)
@@ -78,13 +80,13 @@ namespace Straight.Core.EventStore.Aggregate
         {
             Version = version;
         }
-        
+
         private int GetNewEventVersion()
         {
             return ++EventVersion;
         }
 
-        public void Handle(TDomainCommand command)
+        public void Update(TDomainCommand command)
         {
             _changedEvents.AddRange(_registerMethods.Handle<TDomainEvent>(this, command).Select(Apply));
         }
@@ -97,10 +99,10 @@ namespace Straight.Core.EventStore.Aggregate
             _appliedEvents.Add(domainEvent);
             return domainEvent;
         }
-        
+
         private IReadOnlyDictionary<Type, MethodInfo> GetRegisterByType(
             IDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>> register,
-            Type typeOfInterfaceBase, 
+            Type typeOfInterfaceBase,
             string methodName)
         {
             IReadOnlyDictionary<Type, MethodInfo> referentiel;

@@ -27,7 +27,7 @@ namespace Straight.Core.Tests.EventStore.Aggregate
         {
             bool isCalled = false;
             actionInAggregatorTest = () => isCalled = true;
-            aggregate.Handle(new DomainCommandTest());
+            aggregate.Update(new DomainCommandTest());
             Assert.That(isCalled);
         }
 
@@ -49,7 +49,7 @@ namespace Straight.Core.Tests.EventStore.Aggregate
         public void Should_have_change_event_when_execute_new_command()
         {
             var domainCommandTest = new DomainCommandTest() {Id = Guid.NewGuid()};
-            aggregate.Handle(domainCommandTest);
+            aggregate.Update(domainCommandTest);
             Assert.That(aggregate.GetChanges(), Is.Not.Null.And.Not.Empty);
             Assert.That(aggregate.GetChanges().Count(ev => ev.Id == domainCommandTest.Id), Is.EqualTo(1));
         }
@@ -57,13 +57,13 @@ namespace Straight.Core.Tests.EventStore.Aggregate
         [Test]
         public void Should_does_throw_exception_when_command_is_not_found()
         {
-            Assert.Throws<UnregisteredDomainEventException>(() => aggregate.Handle(new DomainCommandUnknow()));
+            Assert.Throws<UnregisteredDomainEventException>(() => aggregate.Update(new DomainCommandUnknow()));
         }
 
         [Test]
         public void Should_does_throw_exception_when_domainEvent_is_not_found()
         {
-            Assert.Throws<UnregisteredDomainEventException>(() => aggregate.Handle(new DomainCommandTest2()));
+            Assert.Throws<UnregisteredDomainEventException>(() => aggregate.Update(new DomainCommandTest2()));
         }
     }
 
@@ -106,6 +106,12 @@ namespace Straight.Core.Tests.EventStore.Aggregate
         , IHandlerDomainCommand<DomainCommandTest2>
     {
         private Action whenApplied;
+
+        public AggregatorTest()
+            :this(() => { })
+        {
+            
+        }
 
         public AggregatorTest(Action whenApplied)
             : base()

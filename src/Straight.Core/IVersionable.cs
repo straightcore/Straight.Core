@@ -1,5 +1,4 @@
-﻿
-namespace Straight.Core
+﻿namespace Straight.Core
 {
     public interface IVersionable
     {

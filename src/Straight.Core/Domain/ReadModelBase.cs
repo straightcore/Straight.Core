@@ -13,8 +13,9 @@ namespace Straight.Core.Domain
     {
         private const string ApplyMethodName = "Apply";
 
-        private static readonly ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>> RegisterApplyMethodsByType 
+        private static readonly ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>> RegisterApplyMethodsByType
             = new ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>>();
+
         private readonly List<TDomainEvent> _appliedEvents;
         private readonly IReadOnlyDictionary<Type, MethodInfo> _registerMethods;
 
@@ -53,16 +54,16 @@ namespace Straight.Core.Domain
             _registerMethods.Apply(this, domainEvent);
             _appliedEvents.Add(domainEvent);
         }
-        
+
         private IReadOnlyDictionary<Type, MethodInfo> GetRegisterByType(Type typeOfInterfaceBase, string methodName)
         {
             IReadOnlyDictionary<Type, MethodInfo> referentiel;
             if (!RegisterApplyMethodsByType.TryGetValue(GetType(), out referentiel))
             {
                 RegisterApplyMethodsByType[GetType()] = referentiel = MappingTypeToMethodHelper.ToMappingTypeMethod(
-                    GetType(), 
-                    typeof(TDomainEvent), 
-                    typeOfInterfaceBase, 
+                    GetType(),
+                    typeof(TDomainEvent),
+                    typeOfInterfaceBase,
                     methodName);
             }
             return referentiel;
