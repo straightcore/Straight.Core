@@ -29,17 +29,17 @@ namespace Straight.Core.Tests.EventStore.Storage
         public void Should_get_by_id_when_model_is_added()
         {
             var expected = new AggregatorTest();
-            expected.Update(new DomainCommandTest() { Id = Guid.NewGuid() });
+            expected.Update(new DomainCommandTest() {Id = Guid.NewGuid()});
             Assert.DoesNotThrow(() => rootMap.Add(expected));
             var root = rootMap.GetById<AggregatorTest>(expected.Id);
             Assert.That(root, Is.EqualTo(expected));
         }
-        
+
         [Test]
         public void Should_get_null_value_when_is_not_found_and_one_or_more_aggregator_is_saved()
         {
             var expected = new AggregatorTest();
-            expected.Update(new DomainCommandTest() { Id = Guid.NewGuid() });
+            expected.Update(new DomainCommandTest() {Id = Guid.NewGuid()});
             Assert.DoesNotThrow(() => rootMap.Add(expected));
             var root = rootMap.GetById<AggregatorTest>(Guid.NewGuid());
             Assert.That(root, Is.Null);
@@ -49,7 +49,7 @@ namespace Straight.Core.Tests.EventStore.Storage
         public void Should_remove_by_type_when_aggregate_is_in_memory()
         {
             var expected = new AggregatorTest();
-            expected.Update(new DomainCommandTest() { Id = Guid.NewGuid() });
+            expected.Update(new DomainCommandTest() {Id = Guid.NewGuid()});
             rootMap.Add(expected);
             expected = rootMap.GetById<AggregatorTest>(expected.Id);
             rootMap.Remove(expected.GetType(), expected.Id);
@@ -61,7 +61,7 @@ namespace Straight.Core.Tests.EventStore.Storage
         public void Should_remove_when_aggregate_is_in_memory()
         {
             var expected = new AggregatorTest();
-            expected.Update(new DomainCommandTest() { Id = Guid.NewGuid() });
+            expected.Update(new DomainCommandTest() {Id = Guid.NewGuid()});
             rootMap.Add(expected);
             expected = rootMap.GetById<AggregatorTest>(expected.Id);
             rootMap.Remove<AggregatorTest>(expected.Id);
@@ -70,5 +70,16 @@ namespace Straight.Core.Tests.EventStore.Storage
         }
 
 
+        [Test]
+        public void Should_does_throw_exception_when_remove_element_which_does_not_found()
+        {
+            Assert.DoesNotThrow(() => rootMap.Remove<AggregatorTest>(Guid.NewGuid()));
+        }
+
+        [Test]
+        public void Should_does_throw_exception_when_get_element_does_not_exist()
+        {
+            Assert.DoesNotThrow(() => rootMap.GetById<AggregatorTest>(Guid.NewGuid()));
+        }
     }
 }
