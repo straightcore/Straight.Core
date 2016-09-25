@@ -9,7 +9,7 @@ namespace Straight.Core.EventStore.Aggregate
 
         void Clear();
     }
-
+    
     public interface IAggregator<in TDomainCommand, TDomainEvent> : IDomainEventChangeable<TDomainEvent>
         where TDomainEvent : IDomainEvent
         where TDomainCommand : IDomainCommand
@@ -20,4 +20,6 @@ namespace Straight.Core.EventStore.Aggregate
 
         void Update(TDomainCommand command);
     }
+
+
 }

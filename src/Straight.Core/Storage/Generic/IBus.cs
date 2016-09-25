@@ -14,7 +14,7 @@ using System.Collections.Generic;
 
 namespace Straight.Core.Storage.Generic
 {
-    public interface IBus<TMessage>
+    public interface IBus<in TMessage> : IUnitOfWork
     {
         void Publish(TMessage message);
 

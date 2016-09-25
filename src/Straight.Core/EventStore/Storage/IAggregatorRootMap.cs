@@ -4,7 +4,7 @@ using System;
 
 namespace Straight.Core.EventStore.Storage
 {
-    public interface IIdentityMap<out TDomainCommand, TDomainEvent>
+    public interface IAggregatorRootMap<out TDomainCommand, TDomainEvent>
         where TDomainEvent : IDomainEvent
         where TDomainCommand : IDomainCommand
     {
@@ -15,5 +15,7 @@ namespace Straight.Core.EventStore.Storage
         void Remove<TAggregate>(Guid aggregateRootId) where TAggregate : class, IAggregator<TDomainCommand, TDomainEvent>, new();
 
         void Remove(Type aggregateRootType, Guid aggregateRootId);
+
+        void Clear();
     }
 }

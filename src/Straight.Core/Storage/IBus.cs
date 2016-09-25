@@ -14,7 +14,7 @@ using System.Collections;
 
 namespace Straight.Core.Storage
 {
-    public interface IBus
+    public interface IBus : IUnitOfWork
     {
         void Publish(object message);
 

@@ -8,7 +8,6 @@ namespace Straight.Core.EventStore.Storage
 {
     public interface IDomainEventStorage<TDomainEvent> : Transactional
         where TDomainEvent : IDomainEvent
-        //ISnapShotStorage<TDomainEvent>,
     {
         IEnumerable<TDomainEvent> Get(Guid aggregateId);
 
