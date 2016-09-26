@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using Straight.Core.Domain;
-using Straight.Core.EventStore;
 using Straight.Core.EventStore.Storage;
 using Straight.Core.Tests.EventStore.Aggregate;
 
@@ -11,12 +10,12 @@ namespace Straight.Core.Tests.EventStore.Storage
     [TestFixture]
     public class InMemoryAggregatorRootMapTests
     {
-        private InMemoryAggregatorRootMap<IDomainCommand, IDomainEvent> _rootMap;
+        private InMemoryAggregatorRootMap<IDomainEvent> _rootMap;
 
         [SetUp]
         public void SetUp()
         {
-            _rootMap = new InMemoryAggregatorRootMap<IDomainCommand, IDomainEvent>();
+            _rootMap = new InMemoryAggregatorRootMap<IDomainEvent>();
         }
 
         [Test]

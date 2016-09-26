@@ -13,7 +13,7 @@ namespace Straight.Core.Tests.EventStore.Aggregate
     [TestFixture]
     public class AggregatorBaseTests
     {
-        IAggregator<IDomainCommand, IDomainEvent> aggregate;
+        IAggregator<IDomainEvent> aggregate;
         Action actionInAggregatorTest = () => { };
 
         [SetUp]
@@ -100,7 +100,7 @@ namespace Straight.Core.Tests.EventStore.Aggregate
         public int Version { get; set; }
     }
 
-    internal class AggregatorTest : AggregatorBase<IDomainCommand, IDomainEvent>
+    internal class AggregatorTest : AggregatorBase<IDomainEvent>
         , IApplyEvent<DomainEventTest>
         , IHandlerDomainCommand<DomainCommandTest>
         , IHandlerDomainCommand<DomainCommandTest2>

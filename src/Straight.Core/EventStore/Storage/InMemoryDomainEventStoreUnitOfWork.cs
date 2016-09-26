@@ -8,31 +8,30 @@ using Straight.Core.Storage.Generic;
 
 namespace Straight.Core.EventStore.Storage
 {
-    public class InMemoryDomainEventStoreUnitOfWork<TDomainCommand, TDomainEvent> :
-            IDomainEventStoreUnitOfWork<TDomainCommand, TDomainEvent>
+    public class InMemoryDomainEventStoreUnitOfWork<TDomainEvent> :
+            IDomainEventStoreUnitOfWork<TDomainEvent>
         where TDomainEvent : IDomainEvent
-        where TDomainCommand : IDomainCommand
     {
         private readonly IBus<TDomainEvent> _bus;
-        private readonly IAggregatorRootMap<TDomainCommand, TDomainEvent> _identityRootMap;
+        private readonly IAggregatorRootMap<TDomainEvent> _identityRootMap;
         private readonly IDomainEventStorage<TDomainEvent> _repository;
-        private ImmutableDictionary<Guid, IAggregator<TDomainCommand, TDomainEvent>> _aggregatorsPending;
+        private ImmutableDictionary<Guid, IAggregator<TDomainEvent>> _aggregatorsPending;
 
         public InMemoryDomainEventStoreUnitOfWork(
-            IAggregatorRootMap<TDomainCommand, TDomainEvent> identityRootMap,
+            IAggregatorRootMap<TDomainEvent> identityRootMap,
             IDomainEventStorage<TDomainEvent> repository,
             IBus<TDomainEvent> bus)
         {
             _identityRootMap = identityRootMap;
             _repository = repository;
             _bus = bus;
-            _aggregatorsPending = ImmutableDictionary<Guid, IAggregator<TDomainCommand, TDomainEvent>>.Empty;
+            _aggregatorsPending = ImmutableDictionary<Guid, IAggregator<TDomainEvent>>.Empty;
         }
 
         public void Commit()
         {
             var pending = _aggregatorsPending.Values;
-            _aggregatorsPending = ImmutableDictionary<Guid, IAggregator<TDomainCommand, TDomainEvent>>.Empty;
+            _aggregatorsPending = ImmutableDictionary<Guid, IAggregator<TDomainEvent>>.Empty;
             _repository.BeginTransaction();
             foreach (var eventProvider in pending)
             {
@@ -46,12 +45,12 @@ namespace Straight.Core.EventStore.Storage
 
         public void Rollback()
         {
-            _aggregatorsPending = ImmutableDictionary<Guid, IAggregator<TDomainCommand, TDomainEvent>>.Empty;
+            _aggregatorsPending = ImmutableDictionary<Guid, IAggregator<TDomainEvent>>.Empty;
             _identityRootMap.Clear();
         }
 
         public TAggregate GetById<TAggregate>(Guid id)
-            where TAggregate : class, IAggregator<TDomainCommand, TDomainEvent>, new()
+            where TAggregate : class, IAggregator<TDomainEvent>, new()
         {
             var aggregateRoot = _identityRootMap.GetById<TAggregate>(id) ?? LoadHistoryEvents<TAggregate>(id);
             if (aggregateRoot == null)
@@ -63,7 +62,7 @@ namespace Straight.Core.EventStore.Storage
         }
 
         private TAggregate LoadHistoryEvents<TAggregate>(Guid id)
-            where TAggregate : class, IAggregator<TDomainCommand, TDomainEvent>, new()
+            where TAggregate : class, IAggregator<TDomainEvent>, new()
         {
             var aggregate = new TAggregate();
             var domainEvents = _repository.Get(id).ToList();
@@ -76,13 +75,13 @@ namespace Straight.Core.EventStore.Storage
         }
 
         public void Add<TAggregate>(TAggregate aggregateRoot)
-            where TAggregate : class, IAggregator<TDomainCommand, TDomainEvent>, new()
+            where TAggregate : class, IAggregator<TDomainEvent>, new()
         {
             RegisterForTracking(aggregateRoot);
         }
 
         public void RegisterForTracking<TAggregate>(TAggregate aggregateRoot)
-            where TAggregate : class, IAggregator<TDomainCommand, TDomainEvent>, new()
+            where TAggregate : class, IAggregator<TDomainEvent>, new()
         {
             if (_aggregatorsPending.ContainsKey(aggregateRoot.Id))
             {

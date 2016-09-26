@@ -11,9 +11,8 @@ using System.Reflection;
 
 namespace Straight.Core.EventStore.Aggregate
 {
-    public abstract class AggregatorBase<TDomainCommand, TDomainEvent> : IAggregator<TDomainCommand, TDomainEvent>
+    public abstract class AggregatorBase<TDomainEvent> : IAggregator<TDomainEvent>
         where TDomainEvent : IDomainEvent
-        where TDomainCommand : IDomainCommand
     {
         private const string ApplyMethodName = "Apply";
         private const string HandleMethodName = "Handle";
@@ -86,7 +85,7 @@ namespace Straight.Core.EventStore.Aggregate
             return ++EventVersion;
         }
 
-        public void Update(TDomainCommand command)
+        public void Update<TDomainCommand>(TDomainCommand command) where TDomainCommand : class, IDomainCommand
         {
             _changedEvents.AddRange(_registerMethods.Handle<TDomainEvent>(this, command).Select(Apply));
         }

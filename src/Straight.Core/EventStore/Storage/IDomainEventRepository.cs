@@ -4,14 +4,13 @@ using System;
 
 namespace Straight.Core.EventStore.Storage
 {
-    public interface IDomainEventRepository<out TDomainCommand, TDomainEvent>
+    public interface IDomainEventRepository<TDomainEvent>
         where TDomainEvent : IDomainEvent
-        where TDomainCommand : IDomainCommand
     {
-        TAggregate GetById<TAggregate>(Guid id) where TAggregate : class, IAggregator<TDomainCommand, TDomainEvent>, new();
+        TAggregate GetById<TAggregate>(Guid id) where TAggregate : class, IAggregator<TDomainEvent>, new();
 
-        void Add<TAggregate>(TAggregate aggregateRoot) where TAggregate : class, IAggregator<TDomainCommand, TDomainEvent>, new();
+        void Add<TAggregate>(TAggregate aggregateRoot) where TAggregate : class, IAggregator<TDomainEvent>, new();
 
-        void RegisterForTracking<TAggregate>(TAggregate aggregateRoot) where TAggregate : class, IAggregator<TDomainCommand, TDomainEvent>, new();
+        void RegisterForTracking<TAggregate>(TAggregate aggregateRoot) where TAggregate : class, IAggregator<TDomainEvent>, new();
     }
 }

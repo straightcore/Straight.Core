@@ -2,7 +2,7 @@
 
 namespace Straight.Core.EventStore
 {
-    public interface IHandlerDomainCommand<TCommand>
+    public interface IHandlerDomainCommand<in TCommand>
         where TCommand : IDomainCommand
     {
         IEnumerable Handle(TCommand command);

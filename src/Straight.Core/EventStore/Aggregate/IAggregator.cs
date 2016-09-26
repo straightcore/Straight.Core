@@ -10,15 +10,14 @@ namespace Straight.Core.EventStore.Aggregate
         void Clear();
     }
     
-    public interface IAggregator<in TDomainCommand, TDomainEvent> : IDomainEventChangeable<TDomainEvent>
+    public interface IAggregator<TDomainEvent> : IDomainEventChangeable<TDomainEvent>
         where TDomainEvent : IDomainEvent
-        where TDomainCommand : IDomainCommand
     {
         void Reset();
 
         void LoadFromHistory(IEnumerable<TDomainEvent> domainEvents);
 
-        void Update(TDomainCommand command);
+        void Update<TDomainCommand>(TDomainCommand command) where TDomainCommand : class, IDomainCommand;
     }
 
 

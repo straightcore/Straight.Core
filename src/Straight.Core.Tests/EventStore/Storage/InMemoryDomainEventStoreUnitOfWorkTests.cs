@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using NSubstitute;
 using NSubstitute.Core;
 using Straight.Core.Domain;
-using Straight.Core.EventStore;
 using Straight.Core.EventStore.Aggregate;
 using Straight.Core.EventStore.Storage;
 using Straight.Core.Storage;
@@ -19,11 +18,11 @@ namespace Straight.Core.Tests.EventStore.Storage
     [TestFixture]
     public class InMemoryDomainEventStoreUnitOfWorkTests
     {
-        private InMemoryDomainEventStoreUnitOfWork<IDomainCommand, IDomainEvent> _repositoryUnitOfWorkWithSubstitue;
-        private IAggregatorRootMap<IDomainCommand, IDomainEvent> _substituteAggregatorRootMap;
+        private InMemoryDomainEventStoreUnitOfWork<IDomainEvent> _repositoryUnitOfWorkWithSubstitue;
+        private IAggregatorRootMap<IDomainEvent> _substituteAggregatorRootMap;
         private IDomainEventStorage<IDomainEvent> _substituteDomainEventStore;
 
-        private InMemoryDomainEventStoreUnitOfWork<IDomainCommand, IDomainEvent> _repositoryUnitOfWorkWithRealInput;
+        private InMemoryDomainEventStoreUnitOfWork<IDomainEvent> _repositoryUnitOfWorkWithRealInput;
         private InMemoryDomainEventStore<IDomainEvent> _inMemoryDomainEventStore;
         private Straight.Core.Tests.Common.EventStore.Storage.InMemoryAggregatorRootMapMock _inMemoryAggregatorRootMap;
 
@@ -32,14 +31,14 @@ namespace Straight.Core.Tests.EventStore.Storage
         {
             _inMemoryDomainEventStore = new InMemoryDomainEventStore<IDomainEvent>();
             _inMemoryAggregatorRootMap = new Straight.Core.Tests.Common.EventStore.Storage.InMemoryAggregatorRootMapMock();
-            _repositoryUnitOfWorkWithRealInput = new InMemoryDomainEventStoreUnitOfWork<IDomainCommand, IDomainEvent>(
+            _repositoryUnitOfWorkWithRealInput = new InMemoryDomainEventStoreUnitOfWork<IDomainEvent>(
                 _inMemoryAggregatorRootMap,
                 _inMemoryDomainEventStore,
                 Substitute.For<IBus<IDomainEvent>>());
 
-            _substituteAggregatorRootMap = Substitute.For<IAggregatorRootMap<IDomainCommand, IDomainEvent>>();
+            _substituteAggregatorRootMap = Substitute.For<IAggregatorRootMap<IDomainEvent>>();
             _substituteDomainEventStore = Substitute.For<IDomainEventStorage<IDomainEvent>>();
-            _repositoryUnitOfWorkWithSubstitue = new InMemoryDomainEventStoreUnitOfWork<IDomainCommand, IDomainEvent>(
+            _repositoryUnitOfWorkWithSubstitue = new InMemoryDomainEventStoreUnitOfWork<IDomainEvent>(
                 _substituteAggregatorRootMap,
                 _substituteDomainEventStore,
                 Substitute.For<IBus<IDomainEvent>>());
