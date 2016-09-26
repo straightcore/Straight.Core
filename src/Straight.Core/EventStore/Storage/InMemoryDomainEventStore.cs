@@ -73,7 +73,7 @@ namespace Straight.Core.EventStore.Storage
 
             if (version != aggregator.Version)
             {
-                throw new ConcurrencyViolationException();
+                throw new ViolationConcurrencyException();
             }
             var eventList = GetListOfEventInChanged(aggregator.Id);
             eventList.AddRange(aggregator.GetChanges());

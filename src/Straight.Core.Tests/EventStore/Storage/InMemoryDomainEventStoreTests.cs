@@ -97,7 +97,7 @@ namespace Straight.Core.Tests.EventStore.Storage
             _storage.Commit();
 
             _storage.BeginTransaction();
-            Assert.Throws<ConcurrencyViolationException>(() => _storage.Save(aggregatorClone));
+            Assert.Throws<ViolationConcurrencyException>(() => _storage.Save(aggregatorClone));
         }
     }
 }

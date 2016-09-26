@@ -20,7 +20,7 @@ namespace Straight.Core.Tests.Exceptions
             var exceptions = new List<Exception>
             {
                 new TransactionException(exceptionmessage),
-                new ConcurrencyViolationException(exceptionmessage),
+                new ViolationConcurrencyException(exceptionmessage),
                 new UnregisteredDomainEventException(exceptionmessage)
             };
             
@@ -39,7 +39,7 @@ namespace Straight.Core.Tests.Exceptions
             var exceptions = new List<Exception>
             {
                 new TransactionException(exceptionmessage, applicationException),
-                new ConcurrencyViolationException(exceptionmessage, applicationException),
+                new ViolationConcurrencyException(exceptionmessage, applicationException),
                 new UnregisteredDomainEventException(exceptionmessage, applicationException)
             };
 
@@ -56,7 +56,7 @@ namespace Straight.Core.Tests.Exceptions
             var exceptions = new List<Exception>
             {
                 new TransactionException(),
-                new ConcurrencyViolationException(),
+                new ViolationConcurrencyException(),
                 new UnregisteredDomainEventException(),
             };
 

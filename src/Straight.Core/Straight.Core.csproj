@@ -45,6 +45,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bus\Generic\IBus.cs" />
+    <Compile Include="Bus\IBus.cs" />
+    <Compile Include="Bus\IRegisterRouteMessage.cs" />
+    <Compile Include="Bus\IRouterMessage.cs" />
+    <Compile Include="Bus\RouterMessage.cs" />
     <Compile Include="Command\ICommand.cs" />
     <Compile Include="Command\ICommandHandler.cs" />
     <Compile Include="Domain\IReadModel.cs" />
@@ -56,6 +61,7 @@
     <Compile Include="EventStore\Storage\InMemoryAggregatorRootMap.cs" />
     <Compile Include="EventStore\Storage\InMemoryDomainEventStore.cs" />
     <Compile Include="EventStore\Storage\InMemoryDomainEventStoreUnitOfWork.cs" />
+    <Compile Include="Exceptions\NotRegisteredRouteException.cs" />
     <Compile Include="Exceptions\TransactionException.cs" />
     <Compile Include="Extensions\Domain\ApplyEventExtensions.cs" />
     <Compile Include="Extensions\EventStore\DomainCommandHandlerExtensions.cs" />
@@ -67,11 +73,9 @@
     <Compile Include="Domain\IDomainEvent.cs" />
     <Compile Include="Domain\IApplyEvent.cs" />
     <Compile Include="EventStore\IHandlerDomainCommand.cs" />
-    <Compile Include="Exceptions\ConcurrencyViolationException.cs" />
+    <Compile Include="Exceptions\ViolationConcurrencyException.cs" />
     <Compile Include="Exceptions\UnregisteredDomainEventException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Storage\Generic\IBus.cs" />
-    <Compile Include="Storage\IBus.cs" />
     <Compile Include="Storage\Transactional.cs" />
     <Compile Include="Storage\IUnitOfWork.cs" />
   </ItemGroup>

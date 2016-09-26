@@ -1,10 +1,9 @@
-﻿using System;
+﻿using Straight.Core.Domain;
+using Straight.Core.EventStore.Aggregate;
+using Straight.Core.Storage.Generic;
+using System;
 using System.Collections.Immutable;
 using System.Linq;
-using Straight.Core.Domain;
-using Straight.Core.EventStore.Aggregate;
-using Straight.Core.Storage;
-using Straight.Core.Storage.Generic;
 
 namespace Straight.Core.EventStore.Storage
 {

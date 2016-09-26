@@ -2,7 +2,6 @@
 using Straight.Core.EventStore.Aggregate;
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace Straight.Core.EventStore.Storage
 {
