@@ -9,26 +9,14 @@
 // distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and limitations under the License.
 // ==============================================================================================================
-
-using Straight.Core.Domain;
-using System.Collections.Generic;
-
-namespace Straight.Core.EventStore.Aggregate
+namespace Straight.Core.Storage
 {
-    public interface IDomainEventChangeable<out TDomainEvent> : IVersionableUpdatable, IIdentifiable
+    public interface ITransactional
     {
-        IEnumerable<TDomainEvent> GetChanges();
+        void BeginTransaction();
 
-        void Clear();
-    }
+        void Commit();
 
-    public interface IAggregator<TDomainEvent> : IDomainEventChangeable<TDomainEvent>
-        where TDomainEvent : IDomainEvent
-    {
-        void Reset();
-
-        void LoadFromHistory(IEnumerable<TDomainEvent> domainEvents);
-
-        void Update<TDomainCommand>(TDomainCommand command) where TDomainCommand : class, IDomainCommand;
+        void Rollback();
     }
 }

@@ -10,10 +10,13 @@
 // See the License for the specific language governing permissions and limitations under the License.
 // ==============================================================================================================
 
-namespace Straight.Core.Storage
+using System;
+
+namespace Straight.Core.Bus
 {
-    public interface IRouterMessage
+    public interface IActionQueue
     {
-        void Route(object message);
+        void Put(object item);
+        void Pop(Action<object> popAction);
     }
 }

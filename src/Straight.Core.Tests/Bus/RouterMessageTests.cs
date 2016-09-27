@@ -1,13 +1,10 @@
-﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using NUnit.Framework;
 using Straight.Core.Bus;
 using Straight.Core.Exceptions;
+using Straight.Core.Tests.Common.Bus;
 
-namespace Straight.Core.Tests
+namespace Straight.Core.Tests.Bus
 {
     [TestFixture]
     public class RouterMessageTests
@@ -47,9 +44,5 @@ namespace Straight.Core.Tests
         }
     }
 
-    public class MessageTest
-    {
-        public string Message { get; set; }
-        public string Transmitter { get; set; }
-    }
+    
 }

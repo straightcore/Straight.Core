@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Straight.Core.Domain;
 using Straight.Core.Exceptions;
+using Straight.Core.Tests.Common.Domain;
+using Straight.Core.Tests.Common.EventStore;
 
 namespace Straight.Core.Tests.EventStore.Aggregate
 {
@@ -25,7 +27,7 @@ namespace Straight.Core.Tests.EventStore.Aggregate
         [Test]
         public void Should_call_Apply_domain_event_when_event_is_raise_in_aggregate_base()
         {
-            bool isCalled = false;
+            var isCalled = false;
             actionInAggregatorTest = () => isCalled = true;
             aggregate.Update(new DomainCommandTest());
             Assert.That(isCalled);
@@ -67,89 +69,4 @@ namespace Straight.Core.Tests.EventStore.Aggregate
         }
     }
 
-    internal class DomainCommandTest2 : IDomainCommand
-    {
-        public Guid Id { get; set; }
-    }
-
-    internal class DomainCommandUnknow : IDomainCommand
-    {
-        public Guid Id { get; set; }
-    }
-
-    internal class DomainCommandTest : IDomainCommand
-    {
-        public Guid Id { get; set; }
-    }
-
-    internal class DomainEventTest : IDomainEvent
-    {
-        public Guid AggregateId { get; set; }
-
-        public Guid Id { get; set; }
-
-        public int Version { get; set; }
-    }
-
-    internal class DomainEventTest2 : IDomainEvent
-    {
-        public Guid AggregateId { get; set; }
-
-        public Guid Id { get; set; }
-
-        public int Version { get; set; }
-    }
-
-    internal class AggregatorTest : AggregatorBase<IDomainEvent>
-        , IApplyEvent<DomainEventTest>
-        , IHandlerDomainCommand<DomainCommandTest>
-        , IHandlerDomainCommand<DomainCommandTest2>
-    {
-        private Action whenApplied;
-
-        public AggregatorTest()
-            :this(() => { })
-        {
-            
-        }
-
-        public AggregatorTest(Action whenApplied)
-            : base()
-        {
-            this.whenApplied = whenApplied;
-        }
-
-        public void Apply(DomainEventTest @event)
-        {
-            whenApplied?.Invoke();
-        }
-
-        public IEnumerable Handle(DomainCommandTest2 command)
-        {
-            if (Id == Guid.Empty)
-            {
-                Id = Guid.NewGuid();
-            }
-            yield return new DomainEventTest2()
-            {
-                Id = Guid.NewGuid(),
-                AggregateId = command.Id,
-                Version = 1
-            };
-        }
-
-        public IEnumerable Handle(DomainCommandTest command)
-        {
-            if (Id == Guid.Empty)
-            {
-                Id = Guid.NewGuid();
-            }
-            yield return new DomainEventTest()
-            {
-                Id = command.Id,
-                AggregateId = Id,
-                Version = 1
-            };
-        }
-    }
 }

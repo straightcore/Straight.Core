@@ -11,6 +11,8 @@ using Straight.Core.EventStore.Aggregate;
 using Straight.Core.EventStore.Storage;
 using Straight.Core.Storage;
 using Straight.Core.Storage.Generic;
+using Straight.Core.Tests.Common.Domain;
+using Straight.Core.Tests.Common.EventStore;
 using Straight.Core.Tests.EventStore.Aggregate;
 
 namespace Straight.Core.Tests.EventStore.Storage

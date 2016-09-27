@@ -11,32 +11,44 @@
 // ==============================================================================================================
 
 using System;
-using System.Runtime.Serialization;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 
-namespace Straight.Core.Exceptions
+namespace Straight.Core.Bus
 {
-    [Serializable]
-    public class NotRegisteredRouteException : SystemException
+    public class InMemoryActionQueue : IActionQueue
     {
-        private static readonly string FullName = typeof(NotRegisteredRouteException).FullName;
+        private ImmutableQueue<object> _itemQueue;
+        private ImmutableQueue<Action<object>> _listenerQueue;
 
-        public NotRegisteredRouteException() : this($"A system exception ({FullName}) occurred")
+        public InMemoryActionQueue()
         {
+            _itemQueue = ImmutableQueue<object>.Empty;
+            _listenerQueue = ImmutableQueue<Action<object>>.Empty;
         }
 
-
-        public NotRegisteredRouteException(string message) : base (message)
+        public void Put(object item)
         {
-
+            if (_listenerQueue.IsEmpty)
+            {
+                _itemQueue = _itemQueue.Enqueue(item);
+                return;
+            }
+            Action<object> action;
+            _listenerQueue = _listenerQueue.Dequeue(out action);
+            action?.Invoke(item);
         }
 
-        public NotRegisteredRouteException(Type typeOfMessage)
-            : base($"Router does not have route for {typeOfMessage.FullName}")
+        public void Pop(Action<object> popAction)
         {
-        }
-
-        protected NotRegisteredRouteException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
+            if (_itemQueue.IsEmpty)
+            {
+                _listenerQueue = _listenerQueue.Enqueue(popAction);
+                return;
+            }
+            object item;
+            _itemQueue = _itemQueue.Dequeue(out item);
+            popAction(item);
         }
     }
 }

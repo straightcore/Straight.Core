@@ -10,10 +10,21 @@
 // See the License for the specific language governing permissions and limitations under the License.
 // ==============================================================================================================
 
-namespace Straight.Core.Storage
+using System;
+using System.Collections;
+
+namespace Straight.Core.Extensions.Collections
 {
-    public interface IRouterMessage
+    public static class IEnumerableExtensions
     {
-        void Route(object message);
+        public static IEnumerable ForEach(this IEnumerable enumerable, Action<object> action)
+        {
+            foreach (var item in enumerable)
+            {
+                action(item);
+            }
+            return enumerable;
+        }
+        
     }
 }

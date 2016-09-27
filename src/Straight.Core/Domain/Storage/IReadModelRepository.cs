@@ -10,25 +10,16 @@
 // See the License for the specific language governing permissions and limitations under the License.
 // ==============================================================================================================
 
-using Straight.Core.Domain;
-using System.Collections.Generic;
+using System;
 
-namespace Straight.Core.EventStore.Aggregate
+namespace Straight.Core.Domain.Storage
 {
-    public interface IDomainEventChangeable<out TDomainEvent> : IVersionableUpdatable, IIdentifiable
-    {
-        IEnumerable<TDomainEvent> GetChanges();
-
-        void Clear();
-    }
-
-    public interface IAggregator<TDomainEvent> : IDomainEventChangeable<TDomainEvent>
+    public interface IReadModelRepository<TDomainEvent>
         where TDomainEvent : IDomainEvent
     {
-        void Reset();
+        TReadModel GetById<TReadModel>(Guid id) where TReadModel : class, IReadModel<TDomainEvent>, new();
 
-        void LoadFromHistory(IEnumerable<TDomainEvent> domainEvents);
-
-        void Update<TDomainCommand>(TDomainCommand command) where TDomainCommand : class, IDomainCommand;
+        void Add<TReadModel>(TReadModel readModel) where TReadModel : class, IReadModel<TDomainEvent>, new();
+        
     }
 }

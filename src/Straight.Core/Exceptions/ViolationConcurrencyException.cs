@@ -16,9 +16,11 @@ using System.Runtime.Serialization;
 namespace Straight.Core.Exceptions
 {
     [Serializable]
-    public class ViolationConcurrencyException : Exception
+    public class ViolationConcurrencyException : SystemException
     {
-        public ViolationConcurrencyException()
+        private static readonly string FullName = typeof(ViolationConcurrencyException).FullName;
+
+        public ViolationConcurrencyException() : this($"A system exception ({FullName}) occurred")
         {
         }
 

@@ -41,6 +41,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\Generic\IEnumerableExtensions.cs" />
+    <Compile Include="Collections\IEnumerableExtensions.cs" />
+    <Compile Include="Guard\Guard.cs" />
     <Compile Include="Helper\ExtractMethodByInterfaceType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -58,12 +58,14 @@ namespace Straight.Core.Tests.Exceptions
                 new TransactionException(),
                 new ViolationConcurrencyException(),
                 new UnregisteredDomainEventException(),
+                new DomainModelAlreadyExistException(),
+                new NotRegisteredRouteException(),
             };
 
             foreach (var exception in exceptions)
             {
                 Assert.That(exception, Is.Not.Null);
-                Assert.That(exception.Message, Is.EqualTo($"Une exception de type '{exception.GetType().FullName}' a été levée."));
+                Assert.That(exception.Message, Is.EqualTo($"A system exception ({exception.GetType().FullName}) occurred"));
             }
         }
     }
