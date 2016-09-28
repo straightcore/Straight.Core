@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NSubstitute;
 using Straight.Core.Domain;
+using Straight.Core.EventStore;
 using Straight.Core.EventStore.Aggregate;
 using Straight.Core.EventStore.Storage;
 using Straight.Core.Exceptions;

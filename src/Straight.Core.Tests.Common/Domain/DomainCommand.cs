@@ -1,4 +1,5 @@
 ﻿using System;
+using Straight.Core.Domain;
 using Straight.Core.EventStore;
 
 namespace Straight.Core.Tests.Common.Domain

@@ -12,7 +12,7 @@
 
 using System;
 
-namespace Straight.Core.Domain
+namespace Straight.Core.EventStore
 {
     public interface IDomainEvent
     {

@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using Straight.Core.EventStore;
 using Straight.Core.Exceptions;
 using Straight.Core.Extensions.Collections;
 using Straight.Core.Extensions.Guard;

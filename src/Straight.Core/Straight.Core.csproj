@@ -55,10 +55,14 @@
     <Compile Include="Bus\RouterMessage.cs" />
     <Compile Include="Command\ICommand.cs" />
     <Compile Include="Command\ICommandHandler.cs" />
+    <Compile Include="Domain\IDomainCommand.cs" />
+    <Compile Include="Domain\IHandlerDomainCommand.cs" />
     <Compile Include="Domain\IReadModel.cs" />
     <Compile Include="Domain\ReadModelBase.cs" />
     <Compile Include="Domain\Storage\InMemoryReadModelRepository.cs" />
     <Compile Include="Domain\Storage\IReadModelRepository.cs" />
+    <Compile Include="EventStore\IApplyEvent.cs" />
+    <Compile Include="EventStore\IDomainEvent.cs" />
     <Compile Include="EventStore\Storage\IAggregatorRootMap.cs" />
     <Compile Include="EventStore\Storage\IDomainEventStorage.cs" />
     <Compile Include="EventStore\Storage\IDomainEventStoreUnitOfWork.cs" />
@@ -66,6 +70,7 @@
     <Compile Include="EventStore\Storage\InMemoryDomainEventStore.cs" />
     <Compile Include="EventStore\Storage\InMemoryDomainEventStoreUnitOfWork.cs" />
     <Compile Include="Exceptions\DomainModelAlreadyExistException.cs" />
+    <Compile Include="Exceptions\ModelNotFoundException.cs" />
     <Compile Include="Exceptions\NotRegisteredRouteException.cs" />
     <Compile Include="Exceptions\TransactionException.cs" />
     <Compile Include="Extensions\Domain\ApplyEventExtensions.cs" />
@@ -74,10 +79,6 @@
     <Compile Include="IVersionable.cs" />
     <Compile Include="EventStore\Aggregate\AggregatorBase.cs" />
     <Compile Include="EventStore\Aggregate\IAggregator.cs" />
-    <Compile Include="EventStore\IDomainCommand.cs" />
-    <Compile Include="Domain\IDomainEvent.cs" />
-    <Compile Include="Domain\IApplyEvent.cs" />
-    <Compile Include="EventStore\IHandlerDomainCommand.cs" />
     <Compile Include="Exceptions\ViolationConcurrencyException.cs" />
     <Compile Include="Exceptions\UnregisteredDomainEventException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

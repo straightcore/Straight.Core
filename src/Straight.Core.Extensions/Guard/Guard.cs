@@ -11,5 +11,13 @@ namespace Straight.Core.Extensions.Guard
                 throw new ArgumentNullException(name);
             }
         }
+
+        public static void CheckIfArgumentIsNullOrEmpty(this string source, string name)
+        {
+            if (string.IsNullOrEmpty(source))
+            {
+                throw new ArgumentNullException("source");
+            }
+        }
     }
 }

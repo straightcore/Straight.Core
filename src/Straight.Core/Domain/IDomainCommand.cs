@@ -10,13 +10,12 @@
 // See the License for the specific language governing permissions and limitations under the License.
 // ==============================================================================================================
 
-using System.Collections;
+using System;
 
-namespace Straight.Core.EventStore
+namespace Straight.Core.Domain
 {
-    public interface IHandlerDomainCommand<in TCommand>
-        where TCommand : IDomainCommand
+    public interface IDomainCommand
     {
-        IEnumerable Handle(TCommand command);
+        Guid Id { get; }
     }
 }

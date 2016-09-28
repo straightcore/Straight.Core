@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Straight.Core.Domain;
+using Straight.Core.EventStore;
 using Straight.Core.Tests.Common.Domain;
 using Straight.Core.Tests.Common.EventStore;
 using Straight.Core.Tests.EventStore.Aggregate;

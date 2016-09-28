@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using Straight.Core.Domain;
+using Straight.Core.EventStore;
 using Straight.Core.EventStore.Storage;
 using Straight.Core.Tests.Common.Domain;
 using Straight.Core.Tests.Common.EventStore;

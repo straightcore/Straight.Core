@@ -17,12 +17,18 @@ using System;
 
 namespace Straight.Core.EventStore.Storage
 {
-    public interface IDomainEventStoreUnitOfWork<TDomainEvent> : IUnitOfWork
+    public interface IDomainEventStore<TDomainEvent>
         where TDomainEvent : IDomainEvent
     {
         TAggregate GetById<TAggregate>(Guid id) where TAggregate : class, IAggregator<TDomainEvent>, new();
 
         void Add<TAggregate>(TAggregate aggregateRoot) where TAggregate : class, IAggregator<TDomainEvent>, new();
+
+    }
+
+    public interface IDomainEventStoreUnitOfWork<TDomainEvent> : IDomainEventStore<TDomainEvent>, IUnitOfWork
+        where TDomainEvent : IDomainEvent
+    {
 
         void RegisterForTracking<TAggregate>(TAggregate aggregateRoot) where TAggregate : class, IAggregator<TDomainEvent>, new();
     }

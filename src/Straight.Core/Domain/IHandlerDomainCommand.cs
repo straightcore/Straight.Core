@@ -10,11 +10,14 @@
 // See the License for the specific language governing permissions and limitations under the License.
 // ==============================================================================================================
 
+using System.Collections;
+using Straight.Core.EventStore;
+
 namespace Straight.Core.Domain
 {
-    public interface IApplyEvent<in TDomainEvent>
-        where TDomainEvent : IDomainEvent
+    public interface IHandlerDomainCommand<in TCommand>
+        where TCommand : IDomainCommand
     {
-        void Apply(TDomainEvent theEvent);
+        IEnumerable Handle(TCommand command);
     }
 }

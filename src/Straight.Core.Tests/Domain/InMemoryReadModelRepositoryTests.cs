@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Straight.Core.Domain;
 using Straight.Core.Domain.Storage;
+using Straight.Core.EventStore;
 using Straight.Core.Exceptions;
 using Straight.Core.Tests.Common;
 using Straight.Core.Tests.Common.Domain;

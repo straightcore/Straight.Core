@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Straight.Core.EventStore;
 
 namespace Straight.Core.Extensions.EventStore
 {

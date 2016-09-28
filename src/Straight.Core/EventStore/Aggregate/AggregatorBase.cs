@@ -45,6 +45,7 @@ namespace Straight.Core.EventStore.Aggregate
 
         protected AggregatorBase()
         {
+            Id = Guid.NewGuid();
             _registerMethods = GetRegisterByType(RegisterApplyMethodsByType, typeof(IApplyEvent<>), ApplyMethodName)
                 .Union(GetRegisterByType(RegisterHandleMethodsByType, typeof(IHandlerDomainCommand<>), HandleMethodName))
                 .ToDictionary(pair => pair.Key, pair => pair.Value);

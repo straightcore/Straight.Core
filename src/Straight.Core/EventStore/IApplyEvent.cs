@@ -9,12 +9,14 @@
 // distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and limitations under the License.
 // ==============================================================================================================
-using System;
+
+using Straight.Core.Domain;
 
 namespace Straight.Core.EventStore
 {
-    public interface IDomainCommand
+    public interface IApplyEvent<in TDomainEvent>
+        where TDomainEvent : IDomainEvent
     {
-        Guid Id { get; }
+        void Apply(TDomainEvent theEvent);
     }
 }
