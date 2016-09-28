@@ -11,6 +11,7 @@
 // ==============================================================================================================
 
 using System;
+using System.Collections.Generic;
 
 namespace Straight.Core.Domain.Storage
 {
@@ -18,6 +19,8 @@ namespace Straight.Core.Domain.Storage
         where TDomainEvent : IDomainEvent
     {
         TReadModel GetById<TReadModel>(Guid id) where TReadModel : class, IReadModel<TDomainEvent>, new();
+
+        IEnumerable<TReadModel> Get<TReadModel>() where TReadModel : class, IReadModel<TDomainEvent>, new();
 
         void Add<TReadModel>(TReadModel readModel) where TReadModel : class, IReadModel<TDomainEvent>, new();
         

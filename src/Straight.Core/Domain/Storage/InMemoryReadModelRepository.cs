@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using Straight.Core.Exceptions;
 using Straight.Core.Extensions.Collections;
 using Straight.Core.Extensions.Guard;
@@ -34,7 +35,14 @@ namespace Straight.Core.Domain.Storage
             var repo = GetReadModelRepository<TReadModel>(_memory);
             return repo == null ? null : GetReadModel<TReadModel>(id, repo);
         }
-        
+
+        public IEnumerable<TReadModel> Get<TReadModel>() where TReadModel : class, IReadModel<TDomainEvent>, new()
+        {
+            var repo = GetReadModelRepository<TReadModel>(_memory);
+            return repo?.Select(pair => pair.Value as TReadModel).ToList().AsReadOnly() 
+                ?? Enumerable.Empty<TReadModel>();
+        }
+
         public void Add<TReadModel>(TReadModel readModel) 
             where TReadModel : class, IReadModel<TDomainEvent>, new()
         {

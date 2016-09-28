@@ -70,5 +70,22 @@ namespace Straight.Core.Tests.Domain
         {
             Assert.DoesNotThrow(() => _repository.Add(PersonaReadModel.GenerateReadModelTest2()));
         }
+        
+        [Test]
+        public void Should_all_is_not_null_or_empty_when_get_all_by_type()
+        {
+            var actual = _repository.Get<ReadModelTest>();
+            Assert.That(actual, Is.Not.Null.And.Not.Empty);
+        }
+
+        [Test]
+        public void Should_have_all_reamodel_when_get_all_by_type()
+        {
+            var actual = _repository.Get<ReadModelTest>();
+            Assert.That(actual, Is.EquivalentTo(_beginSource));
+        }
+
+
+
     }
 }
