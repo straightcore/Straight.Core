@@ -1,6 +1,8 @@
-﻿namespace Straight.Core.Sample.RealEstateAgency.House.EventStore
+﻿using System;
+
+namespace Straight.Core.RealEstateAgency.Model
 {
-    public class Address
+    public class Address : ICloneable
     {
         public string AdditionalAddress { get; private set; }
         public string Street { get; private set; }
@@ -15,6 +17,11 @@
             PostalCode = postalCode;
             City = city;
             AdditionalAddress = additionalAddress;
+        }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
         }
     }
 }

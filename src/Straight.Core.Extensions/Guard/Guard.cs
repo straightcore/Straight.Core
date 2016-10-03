@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 namespace Straight.Core.Extensions.Guard
 {
@@ -17,6 +18,14 @@ namespace Straight.Core.Extensions.Guard
             if (string.IsNullOrEmpty(source))
             {
                 throw new ArgumentNullException("source");
+            }
+        }
+
+        public static void CheckRegexValidity(this Regex regex, string value, string name)
+        {
+            if (!regex.IsMatch(value))
+            {
+                throw new ArgumentException($"{name} format is not valid");
             }
         }
     }

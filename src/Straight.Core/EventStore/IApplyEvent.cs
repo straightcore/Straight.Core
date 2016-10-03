@@ -17,6 +17,6 @@ namespace Straight.Core.EventStore
     public interface IApplyEvent<in TDomainEvent>
         where TDomainEvent : IDomainEvent
     {
-        void Apply(TDomainEvent theEvent);
+        void Apply(TDomainEvent @event);
     }
 }

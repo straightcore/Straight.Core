@@ -55,6 +55,14 @@
       <Project>{31dc24d4-1227-4d84-9509-85af1575ae54}</Project>
       <Name>Straight.Core.Extensions</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Straight.Core.RealEstateAgency.Model\Straight.Core.RealEstateAgency.Model.csproj">
+      <Project>{55ca532f-d286-4c4e-b1fe-7bf2e13d5447}</Project>
+      <Name>Straight.Core.RealEstateAgency.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Straight.Core.RealEstateAgency.Test.Common\Straight.Core.RealEstateAgency.Test.Common.csproj">
+      <Project>{26778F0D-6945-4914-B655-B1CF801EA1DC}</Project>
+      <Name>Straight.Core.RealEstateAgency.Test.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Straight.Core.Sample.RealEstateAgency.House\Straight.Core.Sample.RealEstateAgency.House.csproj">
       <Project>{9ecb33e1-461b-4032-a5da-ea320d25d831}</Project>
       <Name>Straight.Core.Sample.RealEstateAgency.House</Name>

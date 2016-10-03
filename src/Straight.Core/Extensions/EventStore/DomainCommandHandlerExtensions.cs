@@ -20,13 +20,11 @@ namespace Straight.Core.Extensions.EventStore
             MethodInfo handler;
             if (!registerMethods.TryGetValue(command.GetType(), out handler))
             {
-                throw new UnregisteredDomainEventException(string.Format("The domain command '{0}' is not registered in '{1}'",
-                    command.GetType().FullName,
-                    model.GetType().FullName));
+                throw new UnregisteredDomainEventException(
+                    $"The domain command '{command.GetType().FullName}' is not registered in '{model.GetType().FullName}'");
             }
-            return ((IEnumerable)handler.Invoke(model, new object[] { command }))
-                            .OfType<TDomainEvent>()
-                            .ToList();
+            return ((IEnumerable)handler.Invoke(model, new[] { command }))
+                            .OfType<TDomainEvent>();
         }
     }
 }

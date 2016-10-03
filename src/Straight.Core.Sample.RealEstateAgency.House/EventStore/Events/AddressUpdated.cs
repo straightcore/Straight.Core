@@ -1,26 +1,20 @@
 ﻿using System;
 using Straight.Core.EventStore;
+using Straight.Core.RealEstateAgency.Model;
 
 namespace Straight.Core.Sample.RealEstateAgency.House.EventStore.Events
 {
-    public class AddressUpdated : IDomainEvent
+    public class AddressUpdated : DomainEventBase
     {
         public AddressUpdated(User modifier, Address address)
         {
-            Id = Guid.NewGuid();
-            NewAddress = address;
-            Modifier = modifier;
+            NewAddress = address.Clone() as Address;
+            Modifier = modifier.Clone() as User;
         }
 
-        public User Modifier { get; set; }
+        public User Modifier { get; private set; }
 
         public Address NewAddress { get; private set; }
-
-        public Guid Id { get; }
-        public Guid AggregateId { get; set; }
-        public int Version { get; set; }
-
-
-
+        
     }
 }

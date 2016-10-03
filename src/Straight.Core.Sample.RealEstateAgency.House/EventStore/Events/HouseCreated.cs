@@ -1,25 +1,20 @@
 ﻿using System;
 using Straight.Core.Domain;
 using Straight.Core.EventStore;
+using Straight.Core.RealEstateAgency.Model;
 
 namespace Straight.Core.Sample.RealEstateAgency.House.EventStore.Events
 {
-    public class HouseCreated : IDomainEvent
+    public sealed class HouseCreated : DomainEventBase
     {
-
         public HouseCreated(User creator, Address address)
         {
-            Id = Guid.NewGuid();
-            Address = address;
-            Creator = creator;
+            Address = address.Clone() as Address;
+            Creator = creator.Clone() as User;
         }
 
-        public User Creator { get; set; }
-
-        public Guid Id { get; }
-        public Guid AggregateId { get; set; }
-        public int Version { get; set; }
-
-        public Address Address { get; }
+        public User Creator { get; private set; }
+        
+        public Address Address { get; private set; }
     }
 }

@@ -20,6 +20,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Straight.Core.Extensions.Guard;
 
 namespace Straight.Core.EventStore.Aggregate
 {
@@ -100,16 +101,19 @@ namespace Straight.Core.EventStore.Aggregate
 
         public void Update<TDomainCommand>(TDomainCommand command) where TDomainCommand : class, IDomainCommand
         {
-            _changedEvents.AddRange(_registerMethods.Handle<TDomainEvent>(this, command).Select(Apply));
+            command.CheckIfArgumentIsNull("command");
+            _changedEvents.AddRange(_registerMethods.Handle<TDomainEvent>(this, command)
+                                                    .Select(ExecuteApply));
         }
 
-        private TDomainEvent Apply(TDomainEvent domainEvent)
+        private TDomainEvent ExecuteApply(TDomainEvent @event)
         {
-            domainEvent.AggregateId = Id;
-            domainEvent.Version = GetNewEventVersion();
-            _registerMethods.Apply(this, domainEvent);
-            _appliedEvents.Add(domainEvent);
-            return domainEvent;
+            @event.CheckIfArgumentIsNull("event");
+            @event.AggregateId = Id;
+            @event.Version = GetNewEventVersion();
+            _registerMethods.Apply(this, @event);
+            _appliedEvents.Add(@event);
+            return @event;
         }
 
         private IReadOnlyDictionary<Type, MethodInfo> GetRegisterByType(

@@ -1,11 +1,12 @@
 ﻿using Straight.Core.Domain;
 using Straight.Core.EventStore;
+using Straight.Core.RealEstateAgency.Model;
 using Straight.Core.Sample.RealEstateAgency.House.EventStore;
 using Straight.Core.Sample.RealEstateAgency.House.EventStore.Events;
 
 namespace Straight.Core.Sample.RealEstateAgency.House.Domain
 {
-    public class House : ReadModelBase<IDomainEvent>
+    public class House : ReadModelBase<IDomainEvent>, IHouse
         , IApplyEvent<HouseCreated>
         , IApplyEvent<AddressUpdated>
     {

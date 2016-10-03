@@ -4,13 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9ECB33E1-461B-4032-A5DA-EA320D25D831}</ProjectGuid>
+    <ProjectGuid>{AF9379F7-DC9D-458D-B221-F590B1BE9B01}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Straight.Core.Sample.RealEstateAgency.House</RootNamespace>
-    <AssemblyName>Straight.Core.Sample.RealEstateAgency.House</AssemblyName>
+    <RootNamespace>Straight.Core.RealEstateAgency.Account.Tests</RootNamespace>
+    <AssemblyName>Straight.Core.RealEstateAgency.Account.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,43 +31,41 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="nunit.framework, Version=3.0.5813.39031, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.0.1\lib\net45\nunit.framework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Command\CreateHousesCommand.cs" />
-    <Compile Include="Command\HouseCommandHandler.cs" />
-    <Compile Include="Command\UpdateHouseCommandHandler.cs" />
-    <Compile Include="Domain\Command\UpdateAddressCommand.cs" />
-    <Compile Include="Domain\Command\CreateHouseCommand.cs" />
-    <Compile Include="Domain\House.cs" />
-    <Compile Include="EventStore\AggregatorHouse.cs" />
-    <Compile Include="EventStore\Events\AddressUpdated.cs" />
-    <Compile Include="EventStore\Events\HouseCreated.cs" />
+    <Compile Include="EventStore\AggregatorAccountTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Straight.Core.Extensions\Straight.Core.Extensions.csproj">
       <Project>{31dc24d4-1227-4d84-9509-85af1575ae54}</Project>
       <Name>Straight.Core.Extensions</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Straight.Core.RealEstateAgency.Account\Straight.Core.RealEstateAgency.Account.csproj">
+      <Project>{b56c7f3b-93bc-41e5-b51a-de4a6730303f}</Project>
+      <Name>Straight.Core.RealEstateAgency.Account</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Straight.Core.RealEstateAgency.Model\Straight.Core.RealEstateAgency.Model.csproj">
-      <Project>{55CA532F-D286-4C4E-B1FE-7BF2E13D5447}</Project>
+      <Project>{55ca532f-d286-4c4e-b1fe-7bf2e13d5447}</Project>
       <Name>Straight.Core.RealEstateAgency.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Straight.Core.RealEstateAgency.Test.Common\Straight.Core.RealEstateAgency.Test.Common.csproj">
+      <Project>{26778F0D-6945-4914-B655-B1CF801EA1DC}</Project>
+      <Name>Straight.Core.RealEstateAgency.Test.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Straight.Core\Straight.Core.csproj">
       <Project>{559c30f7-60d8-40a5-8a96-0a4e16aabb37}</Project>
       <Name>Straight.Core</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

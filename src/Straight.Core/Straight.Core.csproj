@@ -55,12 +55,14 @@
     <Compile Include="Bus\RouterMessage.cs" />
     <Compile Include="Command\ICommand.cs" />
     <Compile Include="Command\ICommandHandler.cs" />
+    <Compile Include="Domain\DomainCommandBase.cs" />
     <Compile Include="Domain\IDomainCommand.cs" />
     <Compile Include="Domain\IHandlerDomainCommand.cs" />
     <Compile Include="Domain\IReadModel.cs" />
     <Compile Include="Domain\ReadModelBase.cs" />
     <Compile Include="Domain\Storage\InMemoryReadModelRepository.cs" />
     <Compile Include="Domain\Storage\IReadModelRepository.cs" />
+    <Compile Include="EventStore\DomainEventBase.cs" />
     <Compile Include="EventStore\IApplyEvent.cs" />
     <Compile Include="EventStore\IDomainEvent.cs" />
     <Compile Include="EventStore\Storage\IAggregatorRootMap.cs" />
