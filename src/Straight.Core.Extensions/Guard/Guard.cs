@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Straight.Core.Extensions.Guard
@@ -17,7 +19,17 @@ namespace Straight.Core.Extensions.Guard
         {
             if (string.IsNullOrEmpty(source))
             {
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(name);
+            }
+        }
+
+        public static void CheckIfArgumentIsNullOrEmpty(this IEnumerable<object> source, string name)
+        {
+            var enumerable = (source as object[]) ?? source as IList<object> ?? source.ToList();
+            enumerable.CheckIfArgumentIsNull(name);
+            if (!enumerable.Any())
+            {
+                throw new ArgumentNullException(name);
             }
         }
 

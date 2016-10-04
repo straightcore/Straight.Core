@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Straight.Core.RealEstateAgency.Model;
 
-namespace Straight.Core.RealEstateAgency.Test.Common
+namespace Straight.Core.RealEstateAgency.Test.Common.Server
 {
 
     public static class PersonaCustomer

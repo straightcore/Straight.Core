@@ -55,6 +55,10 @@
       <Project>{31dc24d4-1227-4d84-9509-85af1575ae54}</Project>
       <Name>Straight.Core.Extensions</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Straight.Core.RealEstateAgency.Contracts\Straight.Core.RealEstateAgency.Contracts.csproj">
+      <Project>{620AE724-224B-4F19-81D2-B3A69FAF9B28}</Project>
+      <Name>Straight.Core.RealEstateAgency.Contracts</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Straight.Core.RealEstateAgency.Model\Straight.Core.RealEstateAgency.Model.csproj">
       <Project>{55ca532f-d286-4c4e-b1fe-7bf2e13d5447}</Project>
       <Name>Straight.Core.RealEstateAgency.Model</Name>

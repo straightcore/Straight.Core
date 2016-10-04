@@ -31,6 +31,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable, Version=1.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.1.2.0\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -40,15 +44,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PersonaAddress.cs" />
-    <Compile Include="PersonaCustomer.cs" />
-    <Compile Include="PersonaUser.cs" />
+    <Compile Include="Dto\PersonaAddress.cs" />
+    <Compile Include="Dto\PersonaCustomer.cs" />
+    <Compile Include="Dto\PersonaUser.cs" />
+    <Compile Include="Server\PersonaAddress.cs" />
+    <Compile Include="Server\PersonaCustomer.cs" />
+    <Compile Include="Server\PersonaUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestDomainEventStore.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Straight.Core.RealEstateAgency.Account\Straight.Core.RealEstateAgency.Account.csproj">
       <Project>{b56c7f3b-93bc-41e5-b51a-de4a6730303f}</Project>
       <Name>Straight.Core.RealEstateAgency.Account</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Straight.Core.RealEstateAgency.Contracts\Straight.Core.RealEstateAgency.Contracts.csproj">
+      <Project>{620ae724-224b-4f19-81d2-b3a69faf9b28}</Project>
+      <Name>Straight.Core.RealEstateAgency.Contracts</Name>
     </ProjectReference>
     <ProjectReference Include="..\Straight.Core.RealEstateAgency.Model\Straight.Core.RealEstateAgency.Model.csproj">
       <Project>{55ca532f-d286-4c4e-b1fe-7bf2e13d5447}</Project>
@@ -62,6 +74,9 @@
       <Project>{559c30f7-60d8-40a5-8a96-0a4e16aabb37}</Project>
       <Name>Straight.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

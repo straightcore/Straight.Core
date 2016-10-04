@@ -41,9 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Command\CreateHousesCommand.cs" />
     <Compile Include="Command\HouseCommandHandler.cs" />
-    <Compile Include="Command\UpdateHouseCommandHandler.cs" />
     <Compile Include="Domain\Command\UpdateAddressCommand.cs" />
     <Compile Include="Domain\Command\CreateHouseCommand.cs" />
     <Compile Include="Domain\House.cs" />
@@ -56,6 +54,10 @@
     <ProjectReference Include="..\Straight.Core.Extensions\Straight.Core.Extensions.csproj">
       <Project>{31dc24d4-1227-4d84-9509-85af1575ae54}</Project>
       <Name>Straight.Core.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Straight.Core.RealEstateAgency.Contracts\Straight.Core.RealEstateAgency.Contracts.csproj">
+      <Project>{620ae724-224b-4f19-81d2-b3a69faf9b28}</Project>
+      <Name>Straight.Core.RealEstateAgency.Contracts</Name>
     </ProjectReference>
     <ProjectReference Include="..\Straight.Core.RealEstateAgency.Model\Straight.Core.RealEstateAgency.Model.csproj">
       <Project>{55CA532F-D286-4C4E-B1FE-7BF2E13D5447}</Project>

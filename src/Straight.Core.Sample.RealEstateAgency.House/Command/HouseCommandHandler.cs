@@ -3,6 +3,7 @@ using Straight.Core.Command;
 using Straight.Core.EventStore;
 using Straight.Core.EventStore.Storage;
 using Straight.Core.Exceptions;
+using Straight.Core.RealEstateAgency.Contracts.Messages.House;
 using Straight.Core.Sample.RealEstateAgency.House.Domain.Command;
 using Straight.Core.Sample.RealEstateAgency.House.EventStore;
 

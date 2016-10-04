@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Straight.Core.RealEstateAgency.Model;
 
-namespace Straight.Core.RealEstateAgency.Test.Common
+namespace Straight.Core.RealEstateAgency.Test.Common.Server
 {
 
     public static class PersonaUser

@@ -12,6 +12,7 @@ using Straight.Core.RealEstateAgency.Account.EventStore;
 using Straight.Core.RealEstateAgency.Account.EventStore.Events;
 using Straight.Core.RealEstateAgency.Model;
 using Straight.Core.RealEstateAgency.Test.Common;
+using Straight.Core.RealEstateAgency.Test.Common.Server;
 
 namespace Straight.Core.RealEstateAgency.Account.Tests.EventStore
 {

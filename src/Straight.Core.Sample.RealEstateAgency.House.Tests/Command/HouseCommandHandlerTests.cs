@@ -8,6 +8,9 @@ using NSubstitute;
 using NSubstitute.Core;
 using Straight.Core.EventStore;
 using Straight.Core.EventStore.Storage;
+using Straight.Core.RealEstateAgency.Contracts.Messages.House;
+using Straight.Core.RealEstateAgency.Contracts.Models;
+using Straight.Core.RealEstateAgency.Test.Common.Dto;
 using Straight.Core.Sample.RealEstateAgency.House.Command;
 using Straight.Core.Sample.RealEstateAgency.House.Domain.Command;
 using Straight.Core.Sample.RealEstateAgency.House.EventStore;
@@ -50,20 +53,8 @@ namespace Straight.Core.Sample.RealEstateAgency.House.Tests.Command
         {
             commandHandler.Handle(new CreateHouseCommandHandler()
             {
-                Address = new AddressDto()
-                {
-                    Street = "Central Park West",
-                    StreetNumber = "",
-                    AdditionalAddress = "Cross 79th Street",
-                    PostalCode = "10024",
-                    City = "New York",
-                },
-                Creator = new RequesterDto()
-                {
-                    LastName = "Doe",
-                    FirstName = "John",
-                    Username = "john.doe",
-                }
+                Address = PersonaAddressDto.NationalMuseumNewYork,
+                Creator = PersonaRequesterDto.John
             });
             repository.Received(1).Add(Arg.Any<AggregatorHouse>());
         }
@@ -71,36 +62,26 @@ namespace Straight.Core.Sample.RealEstateAgency.House.Tests.Command
         [Test]
         public void Should_update_address_when_emit_update_house_command()
         {
+            var newYork = PersonaAddressDto.NationalMuseumNewYork;
+            var john = PersonaRequesterDto.John;
             var house = new AggregatorHouse();
             house.Update(new CreateHouseCommand()
             {
-                Street = "Central Park West",
-                StreetNumber = "",
-                AdditionalAddress = "Cross 79th Street",
-                PostalCode = "10024",
-                City = "New York",
-                CreatorLastName = "Doe",
-                CreatorFirstName = "John",
-                CreatorUsername = "john.doe"
+                Street = newYork.Street,
+                StreetNumber = newYork.StreetNumber,
+                AdditionalAddress = newYork.AdditionalAddress,
+                PostalCode = newYork.PostalCode,
+                City = newYork.City,
+                CreatorLastName = john.LastName,
+                CreatorFirstName = john.FirstName,
+                CreatorUsername = john.Username,
             });
             _houses.Add(house.Id, house);
             commandHandler.Handle(new UpdateHouseCommandHandler()
             {
                 HouseId = house.Id,
-                Address = new AddressDto()
-                {
-                    Street = "Central Park West",
-                    StreetNumber = "",
-                    AdditionalAddress = "Cross 79th Street",
-                    PostalCode = "10024",
-                    City = "New York",
-                },
-                Modifier = new RequesterDto()
-                {
-                    LastName = "Doe",
-                    FirstName = "John",
-                    Username = "john.doe",
-                }
+                Address = newYork,
+                Modifier = john
             });
             repository.Received(1).GetById<AggregatorHouse>(Arg.Is(house.Id));
         }
@@ -108,23 +89,14 @@ namespace Straight.Core.Sample.RealEstateAgency.House.Tests.Command
         [Test]
         public void Should_have_created_event_when_emit_create_house_command()
         {
+            var newYork = PersonaAddressDto.NationalMuseumNewYork;
+            var john = PersonaRequesterDto.John;
+
             _houses.Clear();
             commandHandler.Handle(new CreateHouseCommandHandler()
             {
-                Address = new AddressDto()
-                {
-                    Street = "Central Park West",
-                    StreetNumber = "",
-                    AdditionalAddress = "Cross 79th Street",
-                    PostalCode = "10024",
-                    City = "New York",
-                },
-                Creator = new RequesterDto()
-                {
-                    LastName = "Doe",
-                    FirstName = "John",
-                    Username = "john.doe",
-                }
+                Address = newYork,
+                Creator = john
             });
             Assert.That(_houses, Has.Count.EqualTo(1));
         }
@@ -132,18 +104,21 @@ namespace Straight.Core.Sample.RealEstateAgency.House.Tests.Command
         [Test]
         public void Should_have_updated_event_when_emit_update_house_command()
         {
+            var newYork = PersonaAddressDto.NationalMuseumNewYork;
+            var john = PersonaRequesterDto.John;
+
             _houses.Clear();
             var house = new AggregatorHouse();
             house.Update(new CreateHouseCommand()
             {
-                Street = "Central Park West",
-                StreetNumber = "",
-                AdditionalAddress = "Cross 79th Street",
-                PostalCode = "10024",
-                City = "New York",
-                CreatorLastName = "Doe",
-                CreatorFirstName = "John",
-                CreatorUsername = "john.doe"
+                Street = newYork.Street,
+                StreetNumber = newYork.StreetNumber,
+                AdditionalAddress = newYork.AdditionalAddress,
+                PostalCode = newYork.PostalCode,
+                City = newYork.City,
+                CreatorLastName = john.LastName,
+                CreatorFirstName = john.FirstName,
+                CreatorUsername = john.Username,
             });
             house.Clear(); // Clear pending event
             _houses.Add(house.Id, house);
@@ -158,12 +133,7 @@ namespace Straight.Core.Sample.RealEstateAgency.House.Tests.Command
                     PostalCode = "10024",
                     City = "New York",
                 },
-                Modifier = new RequesterDto()
-                {
-                    LastName = "Doe",
-                    FirstName = "jane",
-                    Username = "jane.doe",
-                }
+                Modifier = PersonaRequesterDto.Jane
             };
             commandHandler.Handle(expectedCommand);
             var actual = _houses[house.Id];

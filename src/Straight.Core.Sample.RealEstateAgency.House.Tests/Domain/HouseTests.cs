@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using Straight.Core.EventStore;
 using Straight.Core.RealEstateAgency.Test.Common;
+using Straight.Core.RealEstateAgency.Test.Common.Server;
 using Straight.Core.Sample.RealEstateAgency.House.EventStore.Events;
 
 namespace Straight.Core.Sample.RealEstateAgency.House.Tests.Domain

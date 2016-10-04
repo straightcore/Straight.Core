@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NSubstitute, Version=1.10.0.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca, processorArchitecture=MSIL">
+      <HintPath>..\packages\NSubstitute.1.10.0.0\lib\net45\NSubstitute.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="nunit.framework, Version=3.0.5813.39031, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\packages\NUnit.3.0.1\lib\net45\nunit.framework.dll</HintPath>
       <Private>True</Private>
@@ -38,6 +42,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Command\AccountCommandHandlerTests.cs" />
     <Compile Include="EventStore\AggregatorAccountTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -52,6 +57,10 @@
     <ProjectReference Include="..\Straight.Core.RealEstateAgency.Account\Straight.Core.RealEstateAgency.Account.csproj">
       <Project>{b56c7f3b-93bc-41e5-b51a-de4a6730303f}</Project>
       <Name>Straight.Core.RealEstateAgency.Account</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Straight.Core.RealEstateAgency.Contracts\Straight.Core.RealEstateAgency.Contracts.csproj">
+      <Project>{620ae724-224b-4f19-81d2-b3a69faf9b28}</Project>
+      <Name>Straight.Core.RealEstateAgency.Contracts</Name>
     </ProjectReference>
     <ProjectReference Include="..\Straight.Core.RealEstateAgency.Model\Straight.Core.RealEstateAgency.Model.csproj">
       <Project>{55ca532f-d286-4c4e-b1fe-7bf2e13d5447}</Project>
