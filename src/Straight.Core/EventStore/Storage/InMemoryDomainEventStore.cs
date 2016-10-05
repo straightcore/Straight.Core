@@ -20,34 +20,23 @@ using System.Linq;
 
 namespace Straight.Core.EventStore.Storage
 {
-    public class InMemoryDomainEventStore<TDomainEvent> : IDomainEventStorage<TDomainEvent>, IDisposable
+    public class InMemoryDomainEventStore<TDomainEvent> : DomainEventStoreBase<TDomainEvent>
         where TDomainEvent : IDomainEvent
     {
         private readonly ConcurrentDictionary<Guid, List<TDomainEvent>> memory
             = new ConcurrentDictionary<Guid, List<TDomainEvent>>();
 
-        private bool _disposed = false;
         private ConcurrentDictionary<Guid, List<TDomainEvent>> _changed;
-        private bool _isRunningWithinTransaction = false;
-
-        public void BeginTransaction()
+        
+        protected override void BeginTransactionOverride()
         {
-            CheckDisposed();
-            if (_isRunningWithinTransaction)
-            {
-                throw new TransactionException();
-            }
             _changed = new ConcurrentDictionary<Guid, List<TDomainEvent>>();
-            _isRunningWithinTransaction = true;
         }
-
-        public void Commit()
+        
+        protected override void CommitOverride()
         {
-            CheckDisposed();
-            CheckIsTransactionRunning();
             var localChanged = new Dictionary<Guid, List<TDomainEvent>>(_changed);
             _changed = null;
-            _isRunningWithinTransaction = false;
             foreach (var mappingIdChanged in localChanged)
             {
                 List<TDomainEvent> listEvent;
@@ -60,50 +49,31 @@ namespace Straight.Core.EventStore.Storage
             }
         }
 
-        public IEnumerable<TDomainEvent> Get(Guid aggregateId)
+        protected override void RollbackOverride()
         {
-            CheckDisposed();
+            _changed = null;
+        }
+
+        protected override IEnumerable<TDomainEvent> GetOverride(Guid aggregateId)
+        {
             List<TDomainEvent> listEvents;
             return memory.TryGetValue(aggregateId, out listEvents)
                 ? listEvents.AsReadOnly()
                 : Enumerable.Empty<TDomainEvent>();
         }
-
-        public void Rollback()
+        
+        protected override void SaveOverride(IDomainEventChangeable<TDomainEvent> aggregator)
         {
-            CheckDisposed();
-            _changed = null;
-            _isRunningWithinTransaction = false;
-        }
-
-        public void Save(IDomainEventChangeable<TDomainEvent> aggregator)
-        {
-            CheckDisposed();
-            CheckIsTransactionRunning();
-
-            var version = GetVersionAggregator(aggregator);
-
-            if (version != aggregator.Version)
-            {
-                throw new ViolationConcurrencyException();
-            }
             var eventList = GetListOfEventInChanged(aggregator.Id);
             eventList.AddRange(aggregator.GetChanges());
-            aggregator.UpdateVersion(GetVersion(aggregator));
-            aggregator.Clear();
         }
 
-        private void CheckIsTransactionRunning()
+        protected override int GetVersionAggregator(IDomainEventChangeable<TDomainEvent> aggregator)
         {
-            if (!_isRunningWithinTransaction)
-            {
-                throw new TransactionException("Opperation is not running within a transaction");
-            }
-        }
-
-        private static int GetVersion(IDomainEventChangeable<TDomainEvent> aggregator)
-        {
-            return aggregator.GetChanges().Select(ev => (int?)ev.Version).LastOrDefault() ?? 0;
+            List<TDomainEvent> listOfEvent;
+            return memory.TryGetValue(aggregator.Id, out listOfEvent)
+                ? listOfEvent.Select(ev => (int?)ev.Version).LastOrDefault() ?? 0
+                : 0;
         }
 
         private List<TDomainEvent> GetListOfEventInChanged(Guid aggregatorId)
@@ -117,48 +87,19 @@ namespace Straight.Core.EventStore.Storage
             _changed.TryAdd(aggregatorId, listOfEvent);
             return listOfEvent;
         }
-
-        private int GetVersionAggregator(IDomainEventChangeable<TDomainEvent> aggregator)
-        {
-            List<TDomainEvent> listOfEvent;
-            return memory.TryGetValue(aggregator.Id, out listOfEvent)
-                ? listOfEvent.Select(ev => (int?)ev.Version).LastOrDefault() ?? 0
-                : 0;
-        }
-
-        private void CheckDisposed()
-        {
-            if (!_disposed)
-            {
-                return;
-            }
-            throw new ObjectDisposedException("InMemoryDomainEventStore", "it is disposed.");
-        }
-
-        public void Dispose()
+        
+        protected override void Dispose(bool disposing)
         {
             if (_disposed)
             {
                 return;
             }
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        private void Dispose(bool disposing)
-        {
-            if (_disposed)
-            {
-                return;
-            }
-            _disposed = true;
             if (disposing)
             {
                 memory.Clear();
                 _changed?.Clear();
             }
             _changed = null;
-            _isRunningWithinTransaction = false;
         }
     }
 }
