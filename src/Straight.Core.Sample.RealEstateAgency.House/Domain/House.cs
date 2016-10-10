@@ -1,4 +1,6 @@
-﻿using Straight.Core.Domain;
+﻿using System;
+using System.Collections.Generic;
+using Straight.Core.Domain;
 using Straight.Core.EventStore;
 using Straight.Core.RealEstateAgency.Model;
 using Straight.Core.Sample.RealEstateAgency.House.EventStore;
@@ -9,11 +11,15 @@ namespace Straight.Core.Sample.RealEstateAgency.House.Domain
     public class House : ReadModelBase<IDomainEvent>, IHouse
         , IApplyEvent<HouseCreated>
         , IApplyEvent<AddressUpdated>
+        , IApplyEvent<VisitAdded>
     {
+        private readonly List<Visit> _planningMeet = new List<Visit>();
+
         public User Creator { get; private set; }
         public Address Address { get; private set; }
         public User LastModifier { get; private set; }
-
+        public IEnumerable<Visit> PlanningMeet => _planningMeet.AsReadOnly();
+        
         public void Apply(HouseCreated @event)
         {
             Creator = @event.Creator;
@@ -24,6 +30,12 @@ namespace Straight.Core.Sample.RealEstateAgency.House.Domain
         {
             LastModifier = @event.Modifier;
             Address = @event.NewAddress;
+        }
+
+        public void Apply(VisitAdded @event)
+        {
+            _planningMeet.Add(new Visit(@event.EstateOfficer, @event.Account, @event.MeetDateTime));
+            LastModifier = @event.EstateOfficer;
         }
     }
 }

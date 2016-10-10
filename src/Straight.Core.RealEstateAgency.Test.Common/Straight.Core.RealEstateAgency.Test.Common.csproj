@@ -47,6 +47,7 @@
     <Compile Include="Dto\PersonaAddress.cs" />
     <Compile Include="Dto\PersonaCustomer.cs" />
     <Compile Include="Dto\PersonaUser.cs" />
+    <Compile Include="Server\PersonaAccount.cs" />
     <Compile Include="Server\PersonaAddress.cs" />
     <Compile Include="Server\PersonaCustomer.cs" />
     <Compile Include="Server\PersonaUser.cs" />

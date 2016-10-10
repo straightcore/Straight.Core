@@ -42,12 +42,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Command\HouseCommandHandler.cs" />
+    <Compile Include="Domain\Command\AddVisitHouseCommand.cs" />
     <Compile Include="Domain\Command\UpdateAddressCommand.cs" />
     <Compile Include="Domain\Command\CreateHouseCommand.cs" />
     <Compile Include="Domain\House.cs" />
     <Compile Include="EventStore\AggregatorHouse.cs" />
     <Compile Include="EventStore\Events\AddressUpdated.cs" />
     <Compile Include="EventStore\Events\HouseCreated.cs" />
+    <Compile Include="EventStore\Events\VisitAdded.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

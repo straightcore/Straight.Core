@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Address.cs" />
     <Compile Include="Customer.cs" />
+    <Compile Include="Exceptions\DateAlreadyExistException.cs" />
     <Compile Include="Helper\AddressHelper.cs" />
     <Compile Include="Helper\CustomerHelper.cs" />
     <Compile Include="Helper\PhoneHelper.cs" />
@@ -51,6 +52,7 @@
     <Compile Include="Phone.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="User.cs" />
+    <Compile Include="Visit.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Straight.Core.Extensions\Straight.Core.Extensions.csproj">

@@ -13,6 +13,7 @@ namespace Straight.Core.RealEstateAgency.Account.Domain.Command
         public string CreatorLastName { get; set; }
         public string CreatorUsername { get; set; }
         
+        public string AccountKey { get; set; }
     }
 
     

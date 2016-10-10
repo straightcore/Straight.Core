@@ -34,6 +34,7 @@ namespace Straight.Core.RealEstateAgency.Account.EventStore
                     CustomerHelper.CheckMandatoryCustomer(c.FirstName, c.LastName, c.Birthday, c.Email, c.Phone,
                         c.CellPhone));
             yield return new AccountCreated(
+                command.AccountKey,
                 new User(
                     command.CreatorLastName,
                     command.CreatorFirstName,
