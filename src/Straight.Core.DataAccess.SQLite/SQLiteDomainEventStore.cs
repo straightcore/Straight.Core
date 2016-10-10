@@ -12,6 +12,7 @@ using Straight.Core.Serialization;
 
 namespace Straight.Core.DataAccess.SQLite
 {
+
     public sealed class SqLiteDomainEventStore<TDomainEvent> : DomainEventStoreBase<TDomainEvent>
         where TDomainEvent : IDomainEvent
     {

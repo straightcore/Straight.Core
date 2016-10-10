@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Straight.Core.DataAccess.Serialization;
+using Straight.Core.DataAccess.SQLite;
 using Straight.Core.EventStore;
 using Straight.Core.Tests.Common;
 
@@ -36,14 +37,22 @@ namespace Straight.Core.DataAccess.SQLite.Tests
         {
             driver.Dispose();
         }
-
-
+        
         [Test]
         public void Should_save_new_aggregate_when_commit()
         {
             driver.BeginTransaction();
             driver.Save(PersonaAggregator.CreateNewAggregatorTest(() => { }));
             driver.Commit();
+        }
+
+        [Test]
+        public void Should_not_save_when_rollback_transaction()
+        {
+            driver.BeginTransaction();
+            driver.Save(PersonaAggregator.CreateNewAggregatorTest(() => { }));
+            driver.Rollback();
+
         }
     }
 }
