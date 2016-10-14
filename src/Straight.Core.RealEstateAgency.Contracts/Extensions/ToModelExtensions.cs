@@ -1,15 +1,13 @@
-﻿using System;
-using Straight.Core.RealEstateAgency.Contracts.Models;
+﻿using Straight.Core.RealEstateAgency.Contracts.Models;
 using Straight.Core.RealEstateAgency.Model;
 
 namespace Straight.Core.RealEstateAgency.Contracts.Extensions
 {
     public static class ToModelExtensions
     {
-
         public static Phone ToModel(this PhoneDto phoneDto)
         {
-            return phoneDto == null ? null : new Phone() { CountryCode = phoneDto.CountryCode, Number = phoneDto.Number };
+            return phoneDto == null ? null : new Phone {CountryCode = phoneDto.CountryCode, Number = phoneDto.Number};
         }
 
         public static Customer ToModel(this CustomerDto dto)
@@ -27,9 +25,8 @@ namespace Straight.Core.RealEstateAgency.Contracts.Extensions
                 StreetNumber = dto.Address.StreetNumber,
                 PostalCode = dto.Address.PostalCode,
                 City = dto.Address.City,
-                Street = dto.Address.Street,
+                Street = dto.Address.Street
             };
         }
-
     }
 }

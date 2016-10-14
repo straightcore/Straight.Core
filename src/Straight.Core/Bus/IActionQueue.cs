@@ -17,6 +17,7 @@ namespace Straight.Core.Bus
     public interface IActionQueue
     {
         void Put(object item);
+
         void Pop(Action<object> popAction);
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using Straight.Core.Command;
+﻿using Straight.Core.Command;
 using Straight.Core.EventStore;
 using Straight.Core.EventStore.Storage;
 using Straight.Core.Exceptions;
@@ -22,7 +21,7 @@ namespace Straight.Core.Sample.RealEstateAgency.House.Command
         public void Handle(CreateHouseCommandHandler commandHandler)
         {
             var house = new AggregatorHouse();
-            house.Update(new CreateHouseCommand()
+            house.Update(new CreateHouseCommand
             {
                 CreatorFirstName = commandHandler.Creator.FirstName,
                 CreatorLastName = commandHandler.Creator.LastName,
@@ -31,21 +30,18 @@ namespace Straight.Core.Sample.RealEstateAgency.House.Command
                 AdditionalAddress = commandHandler.Address.AdditionalAddress,
                 City = commandHandler.Address.City,
                 Street = commandHandler.Address.Street,
-                StreetNumber = commandHandler.Address.StreetNumber,
+                StreetNumber = commandHandler.Address.StreetNumber
             });
             _repository.Add(house);
-
         }
 
         public void Handle(UpdateHouseCommandHandler commandHandler)
         {
             var house = _repository.GetById<AggregatorHouse>(commandHandler.HouseId);
             if (house.Id != commandHandler.HouseId)
-            {
                 throw new ModelNotFoundException(
                     $"House not found, please check if this id is correct: {commandHandler.HouseId}");
-            }
-            house.Update(new UpdateAddressCommand()
+            house.Update(new UpdateAddressCommand
             {
                 FirstName = commandHandler.Modifier.FirstName,
                 LastName = commandHandler.Modifier.LastName,
@@ -54,7 +50,7 @@ namespace Straight.Core.Sample.RealEstateAgency.House.Command
                 AdditionalAddress = commandHandler.Address.AdditionalAddress,
                 City = commandHandler.Address.City,
                 Street = commandHandler.Address.Street,
-                StreetNumber = commandHandler.Address.StreetNumber,
+                StreetNumber = commandHandler.Address.StreetNumber
             });
         }
     }

@@ -20,11 +20,8 @@ namespace Straight.Core.Extensions.Collections
         public static IEnumerable ForEach(this IEnumerable enumerable, Action<object> action)
         {
             foreach (var item in enumerable)
-            {
                 action(item);
-            }
             return enumerable;
         }
-        
     }
 }

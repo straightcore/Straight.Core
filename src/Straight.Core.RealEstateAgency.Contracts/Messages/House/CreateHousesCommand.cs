@@ -1,7 +1,7 @@
-﻿using System;
-using System.Runtime.Serialization;
+﻿using Straight.Core.Command;
 using Straight.Core.RealEstateAgency.Contracts.Models;
-using ICommand = Straight.Core.Command.ICommand;
+using System;
+using System.Runtime.Serialization;
 
 namespace Straight.Core.RealEstateAgency.Contracts.Messages.House
 {
@@ -11,6 +11,7 @@ namespace Straight.Core.RealEstateAgency.Contracts.Messages.House
     {
         [DataMember]
         public RequesterDto Creator { get; set; }
+
         [DataMember]
         public AddressDto Address { get; set; }
     }

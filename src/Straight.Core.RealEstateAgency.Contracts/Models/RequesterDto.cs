@@ -9,8 +9,10 @@ namespace Straight.Core.RealEstateAgency.Contracts.Models
     {
         [DataMember]
         public string FirstName { get; set; }
+
         [DataMember]
         public string LastName { get; set; }
+
         [DataMember]
         public string Username { get; set; }
     }

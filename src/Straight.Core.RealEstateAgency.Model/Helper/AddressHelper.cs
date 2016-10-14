@@ -4,7 +4,6 @@ namespace Straight.Core.RealEstateAgency.Model.Helper
 {
     public static class AddressHelper
     {
-
         public static void CheckMandatory(string street, string city, string postalCode)
         {
             street.CheckIfArgumentIsNullOrEmpty("street");

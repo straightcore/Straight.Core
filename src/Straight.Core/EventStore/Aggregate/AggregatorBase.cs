@@ -14,13 +14,13 @@ using Straight.Core.Domain;
 using Straight.Core.Extensions.Collections.Generic;
 using Straight.Core.Extensions.Domain;
 using Straight.Core.Extensions.EventStore;
+using Straight.Core.Extensions.Guard;
 using Straight.Core.Extensions.Helper;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Straight.Core.Extensions.Guard;
 
 namespace Straight.Core.EventStore.Aggregate
 {
@@ -30,19 +30,18 @@ namespace Straight.Core.EventStore.Aggregate
         private const string ApplyMethodName = "Apply";
         private const string HandleMethodName = "Handle";
 
-        private static readonly ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>> RegisterApplyMethodsByType
-            = new ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>>();
+        private static readonly ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>>
+            RegisterApplyMethodsByType
+                = new ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>>();
 
-        private static readonly ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>> RegisterHandleMethodsByType
-            = new ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>>();
+        private static readonly ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>>
+            RegisterHandleMethodsByType
+                = new ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>>();
 
-        private readonly IReadOnlyDictionary<Type, MethodInfo> _registerMethods;
         private readonly List<TDomainEvent> _appliedEvents;
         private readonly List<TDomainEvent> _changedEvents;
 
-        public Guid Id { get; protected set; }
-        public int Version { get; protected set; }
-        public int EventVersion { get; protected set; }
+        private readonly IReadOnlyDictionary<Type, MethodInfo> _registerMethods;
 
         protected AggregatorBase()
         {
@@ -55,14 +54,17 @@ namespace Straight.Core.EventStore.Aggregate
             _changedEvents = new List<TDomainEvent>();
         }
 
+        public int EventVersion { get; protected set; }
+
+        public Guid Id { get; protected set; }
+        public int Version { get; protected set; }
+
         public void LoadFromHistory(IEnumerable<TDomainEvent> domainEvents)
         {
             Reset();
             var events = domainEvents as IList<TDomainEvent> ?? domainEvents.ToList();
             if (!events.Any())
-            {
                 return;
-            }
             events.ForEach(ev => _registerMethods.Apply(this, ev));
             _appliedEvents.AddRange(events);
             Version = events.Last().Version;
@@ -94,16 +96,16 @@ namespace Straight.Core.EventStore.Aggregate
             Version = version;
         }
 
-        private int GetNewEventVersion()
-        {
-            return ++EventVersion;
-        }
-
         public void Update<TDomainCommand>(TDomainCommand command) where TDomainCommand : class, IDomainCommand
         {
             command.CheckIfArgumentIsNull("command");
             _changedEvents.AddRange(_registerMethods.Handle<TDomainEvent>(this, command)
-                                                    .Select(ExecuteApply));
+                .Select(ExecuteApply));
+        }
+
+        private int GetNewEventVersion()
+        {
+            return ++EventVersion;
         }
 
         private TDomainEvent ExecuteApply(TDomainEvent @event)
@@ -123,13 +125,11 @@ namespace Straight.Core.EventStore.Aggregate
         {
             IReadOnlyDictionary<Type, MethodInfo> referentiel;
             if (!register.TryGetValue(GetType(), out referentiel))
-            {
                 register[GetType()] = referentiel = MappingTypeToMethodHelper.ToMappingTypeMethod(
                     GetType(),
                     typeof(TDomainEvent),
                     typeOfInterfaceBase,
                     methodName);
-            }
             return referentiel;
         }
     }

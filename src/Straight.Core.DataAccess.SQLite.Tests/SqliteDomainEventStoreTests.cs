@@ -1,32 +1,23 @@
-﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Data.Sqlite;
+using NUnit.Framework;
 using Straight.Core.DataAccess.Serialization;
-using Straight.Core.DataAccess.SQLite;
 using Straight.Core.EventStore;
 using Straight.Core.Tests.Common;
+using System;
+using System.Linq;
 
 namespace Straight.Core.DataAccess.SQLite.Tests
 {
     [TestFixture]
     public class SqliteDomainEventStoreTests
     {
-        private SqLiteDomainEventStore<IDomainEvent> driver;
-        private string _dbName;
-        
         [SetUp]
         public void Setup()
         {
             if (!AppDomain.CurrentDomain.GetAssemblies().Any(a => a.FullName.Contains("Microsoft.Data.Sqlite")))
             {
                 AppDomain.CurrentDomain.Load("Microsoft.Data.Sqlite");
-                var instance = Microsoft.Data.Sqlite.SqliteFactory.Instance;
+                var instance = SqliteFactory.Instance;
             }
             _dbName = "Data Source=:memory:";
             driver = new SqLiteDomainEventStore<IDomainEvent>(_dbName, new JSonEventSerializer());
@@ -37,14 +28,9 @@ namespace Straight.Core.DataAccess.SQLite.Tests
         {
             driver.Dispose();
         }
-        
-        [Test]
-        public void Should_save_new_aggregate_when_commit()
-        {
-            driver.BeginTransaction();
-            driver.Save(PersonaAggregator.CreateNewAggregatorTest(() => { }));
-            driver.Commit();
-        }
+
+        private SqLiteDomainEventStore<IDomainEvent> driver;
+        private string _dbName;
 
         [Test]
         public void Should_not_save_when_rollback_transaction()
@@ -52,7 +38,14 @@ namespace Straight.Core.DataAccess.SQLite.Tests
             driver.BeginTransaction();
             driver.Save(PersonaAggregator.CreateNewAggregatorTest(() => { }));
             driver.Rollback();
+        }
 
+        [Test]
+        public void Should_save_new_aggregate_when_commit()
+        {
+            driver.BeginTransaction();
+            driver.Save(PersonaAggregator.CreateNewAggregatorTest(() => { }));
+            driver.Commit();
         }
     }
 }

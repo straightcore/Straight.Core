@@ -10,9 +10,9 @@
 // See the License for the specific language governing permissions and limitations under the License.
 // ==============================================================================================================
 
+using Straight.Core.EventStore;
 using System;
 using System.Collections.Generic;
-using Straight.Core.EventStore;
 
 namespace Straight.Core.Domain.Storage
 {
@@ -24,6 +24,5 @@ namespace Straight.Core.Domain.Storage
         IEnumerable<TReadModel> Get<TReadModel>() where TReadModel : class, IReadModel<TDomainEvent>, new();
 
         void Add<TReadModel>(TReadModel readModel) where TReadModel : class, IReadModel<TDomainEvent>, new();
-        
     }
 }

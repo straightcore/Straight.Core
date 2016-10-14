@@ -1,6 +1,5 @@
-﻿using System;
+﻿using Straight.Core.RealEstateAgency.Model;
 using System.Collections.Generic;
-using Straight.Core.RealEstateAgency.Model;
 
 namespace Straight.Core.RealEstateAgency.Test.Common
 {
@@ -13,21 +12,16 @@ namespace Straight.Core.RealEstateAgency.Test.Common
 
         public static Address NationalMuseumNewYorkMistakeInWashington { get; } = new Address("Central Park South", "",
             "Cross 54 Street", "10024", "Washington");
-
     }
 
     internal class AddressComparer : IEqualityComparer<Address>
     {
         public bool Equals(Address x, Address y)
         {
-            if (x == null && y == null)
-            {
+            if ((x == null) && (y == null))
                 return true;
-            }
-            if (x == null || y == null)
-            {
+            if ((x == null) || (y == null))
                 return false;
-            }
             return x.AdditionalAddress.Equals(y.AdditionalAddress)
                    && x.City.Equals(y.City)
                    && x.PostalCode.Equals(y.PostalCode)
@@ -40,5 +34,4 @@ namespace Straight.Core.RealEstateAgency.Test.Common
             return -1;
         }
     }
-
 }

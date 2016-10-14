@@ -10,7 +10,6 @@
 // See the License for the specific language governing permissions and limitations under the License.
 // ==============================================================================================================
 
-using Straight.Core.Domain;
 using Straight.Core.EventStore.Aggregate;
 using System;
 using System.Collections.Generic;
@@ -29,9 +28,7 @@ namespace Straight.Core.EventStore.Storage
         {
             Dictionary<Guid, IAggregator<TDomainEvent>> mappingAggreg;
             if (!_mapping.TryGetValue(typeof(TAggregate), out mappingAggreg))
-            {
                 return null;
-            }
             IAggregator<TDomainEvent> localAggregator;
             return mappingAggreg.TryGetValue(id, out localAggregator) ? localAggregator as TAggregate : null;
         }
@@ -58,9 +55,7 @@ namespace Straight.Core.EventStore.Storage
         {
             Dictionary<Guid, IAggregator<TDomainEvent>> mappingAggreg;
             if (!_mapping.TryGetValue(aggregateRootType, out mappingAggreg))
-            {
                 return;
-            }
             mappingAggreg.Remove(aggregateRootId);
         }
 

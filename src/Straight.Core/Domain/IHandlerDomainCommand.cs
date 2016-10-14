@@ -11,7 +11,6 @@
 // ==============================================================================================================
 
 using System.Collections;
-using Straight.Core.EventStore;
 
 namespace Straight.Core.Domain
 {

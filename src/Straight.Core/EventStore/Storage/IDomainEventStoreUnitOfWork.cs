@@ -10,7 +10,6 @@
 // See the License for the specific language governing permissions and limitations under the License.
 // ==============================================================================================================
 
-using Straight.Core.Domain;
 using Straight.Core.EventStore.Aggregate;
 using Straight.Core.Storage;
 using System;
@@ -23,13 +22,12 @@ namespace Straight.Core.EventStore.Storage
         TAggregate GetById<TAggregate>(Guid id) where TAggregate : class, IAggregator<TDomainEvent>, new();
 
         void Add<TAggregate>(TAggregate aggregateRoot) where TAggregate : class, IAggregator<TDomainEvent>, new();
-
     }
 
     public interface IDomainEventStoreUnitOfWork<TDomainEvent> : IDomainEventStore<TDomainEvent>, IUnitOfWork
         where TDomainEvent : IDomainEvent
     {
-
-        void RegisterForTracking<TAggregate>(TAggregate aggregateRoot) where TAggregate : class, IAggregator<TDomainEvent>, new();
+        void RegisterForTracking<TAggregate>(TAggregate aggregateRoot)
+            where TAggregate : class, IAggregator<TDomainEvent>, new();
     }
 }

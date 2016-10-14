@@ -1,8 +1,8 @@
-﻿using System.IO;
-using System.Runtime.Serialization;
-using Newtonsoft.Json;
-using Straight.Core.EventStore;
+﻿using Newtonsoft.Json;
 using Straight.Core.Serialization;
+using System;
+using System.IO;
+using System.Runtime.Serialization;
 
 namespace Straight.Core.DataAccess.Serialization
 {
@@ -21,7 +21,7 @@ namespace Straight.Core.DataAccess.Serialization
                 var data = reader.ReadLine();
                 return JsonConvert.DeserializeObject<TEvent>(data);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 throw new SerializationException(ex.Message, ex);
             }

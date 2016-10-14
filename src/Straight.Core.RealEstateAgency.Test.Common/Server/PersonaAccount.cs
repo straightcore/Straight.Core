@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using Straight.Core.EventStore;
+﻿using Straight.Core.EventStore;
 using Straight.Core.RealEstateAgency.Account.EventStore.Events;
 using Straight.Core.RealEstateAgency.Model;
+using System.Collections.Generic;
 
 namespace Straight.Core.RealEstateAgency.Test.Common.Server
 {
@@ -12,25 +12,24 @@ namespace Straight.Core.RealEstateAgency.Test.Common.Server
 
         public static IAccount Virginie => _virginie ?? (_virginie = BuildVirginie());
 
+        public static IAccount Pierre => _pierre ?? (_pierre = BuildPierre());
+
         private static IAccount BuildVirginie()
         {
             var virginie = new Account.Domain.Account();
-            virginie.LoadFromHistory(new List<IDomainEvent>()
+            virginie.LoadFromHistory(new List<IDomainEvent>
             {
-                new AccountCreated("chevalier.virginie", PersonaUser.John, new [] {PersonaCustomer.Virginie}),
+                new AccountCreated("chevalier.virginie", PersonaUser.John, new[] {PersonaCustomer.Virginie})
             });
             return virginie;
         }
 
-        public static IAccount Pierre => _pierre ?? (_pierre = BuildPierre());
-
-
         private static IAccount BuildPierre()
         {
             var pierre = new Account.Domain.Account();
-            pierre.LoadFromHistory(new List<IDomainEvent>()
+            pierre.LoadFromHistory(new List<IDomainEvent>
             {
-                new AccountCreated("pierre.durand", PersonaUser.Jane, new [] {PersonaCustomer.Pierre}),
+                new AccountCreated("pierre.durand", PersonaUser.Jane, new[] {PersonaCustomer.Pierre})
             });
             return pierre;
         }

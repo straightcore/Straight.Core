@@ -10,9 +10,7 @@
 // See the License for the specific language governing permissions and limitations under the License.
 // ==============================================================================================================
 
-using Straight.Core.Domain;
 using Straight.Core.EventStore.Aggregate;
-using Straight.Core.Exceptions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -27,12 +25,12 @@ namespace Straight.Core.EventStore.Storage
             = new ConcurrentDictionary<Guid, List<TDomainEvent>>();
 
         private ConcurrentDictionary<Guid, List<TDomainEvent>> _changed;
-        
+
         protected override void BeginTransactionOverride()
         {
             _changed = new ConcurrentDictionary<Guid, List<TDomainEvent>>();
         }
-        
+
         protected override void CommitOverride()
         {
             var localChanged = new Dictionary<Guid, List<TDomainEvent>>(_changed);
@@ -61,7 +59,7 @@ namespace Straight.Core.EventStore.Storage
                 ? listEvents.AsReadOnly()
                 : Enumerable.Empty<TDomainEvent>();
         }
-        
+
         protected override void SaveOverride(IDomainEventChangeable<TDomainEvent> aggregator)
         {
             var eventList = GetListOfEventInChanged(aggregator.Id);
@@ -72,7 +70,7 @@ namespace Straight.Core.EventStore.Storage
         {
             List<TDomainEvent> listOfEvent;
             return memory.TryGetValue(aggregator.Id, out listOfEvent)
-                ? listOfEvent.Select(ev => (int?)ev.Version).LastOrDefault() ?? 0
+                ? listOfEvent.Select(ev => (int?) ev.Version).LastOrDefault() ?? 0
                 : 0;
         }
 
@@ -80,20 +78,16 @@ namespace Straight.Core.EventStore.Storage
         {
             List<TDomainEvent> listOfEvent;
             if (_changed.TryGetValue(aggregatorId, out listOfEvent))
-            {
                 return listOfEvent.ToList();
-            }
             listOfEvent = new List<TDomainEvent>();
             _changed.TryAdd(aggregatorId, listOfEvent);
             return listOfEvent;
         }
-        
+
         protected override void Dispose(bool disposing)
         {
             if (_disposed)
-            {
                 return;
-            }
             if (disposing)
             {
                 memory.Clear();

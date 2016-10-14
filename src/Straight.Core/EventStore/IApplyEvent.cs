@@ -10,8 +10,6 @@
 // See the License for the specific language governing permissions and limitations under the License.
 // ==============================================================================================================
 
-using Straight.Core.Domain;
-
 namespace Straight.Core.EventStore
 {
     public interface IApplyEvent<in TDomainEvent>

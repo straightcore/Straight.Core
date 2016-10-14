@@ -1,17 +1,16 @@
-﻿using System;
+﻿using Straight.Core.RealEstateAgency.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Straight.Core.RealEstateAgency.Model;
 
 namespace Straight.Core.RealEstateAgency.Test.Common.Server
 {
-
     public static class PersonaCustomer
     {
         public static IEqualityComparer<Customer> CustomerValueComparer { get; } = new CustomerEqualityComparer();
 
-        public static Customer Pierre { get; } = new Customer()
+        public static Customer Pierre { get; } = new Customer
         {
             FirstName = "Pierre",
             LastName = "Durand",
@@ -19,13 +18,13 @@ namespace Straight.Core.RealEstateAgency.Test.Common.Server
             Street = "rue des Martyres",
             StreetNumber = "123 bis",
             City = "Paris",
-            CellPhone = new Phone() { Number = "0701020304", CountryCode = "33" },
+            CellPhone = new Phone {Number = "0701020304", CountryCode = "33"},
             Birthday = new DateTime(1979, 08, 12),
             Gender = Gender.Mr,
-            Email = "pierre.durand@fake.com",
+            Email = "pierre.durand@fake.com"
         };
 
-        public static Customer Virginie { get; } = new Customer()
+        public static Customer Virginie { get; } = new Customer
         {
             FirstName = "Virginie",
             LastName = "Eclin",
@@ -33,17 +32,16 @@ namespace Straight.Core.RealEstateAgency.Test.Common.Server
             Street = "rue des Antibes",
             StreetNumber = "23",
             City = "Saint Laurent du Var",
-            CellPhone = new Phone() { Number = "0612345678", CountryCode = "33" },
+            CellPhone = new Phone {Number = "0612345678", CountryCode = "33"},
             Birthday = new DateTime(1983, 03, 07),
             Gender = Gender.Miss,
-            Email = "e.nini@fake.com",
+            Email = "e.nini@fake.com"
         };
     }
 
-
     internal class CustomerEqualityComparer : IEqualityComparer<Customer>
     {
-        private static List<PropertyInfo> properties = new List<PropertyInfo>();
+        private static readonly List<PropertyInfo> properties = new List<PropertyInfo>();
 
         static CustomerEqualityComparer()
         {
@@ -63,5 +61,4 @@ namespace Straight.Core.RealEstateAgency.Test.Common.Server
             return -1;
         }
     }
-
 }

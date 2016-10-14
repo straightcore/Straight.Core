@@ -1,10 +1,8 @@
-﻿using System;
-using Straight.Core.Domain;
-using Straight.Core.EventStore;
+﻿using Straight.Core.Domain;
+using System;
 
 namespace Straight.Core.Tests.Common.Domain
 {
-
     public class DomainCommandTest2 : IDomainCommand
     {
         public Guid Id { get; set; }
@@ -19,5 +17,4 @@ namespace Straight.Core.Tests.Common.Domain
     {
         public Guid Id { get; set; }
     }
-
 }

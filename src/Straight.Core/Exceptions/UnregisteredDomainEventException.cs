@@ -32,7 +32,8 @@ namespace Straight.Core.Exceptions
         {
         }
 
-        protected UnregisteredDomainEventException(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected UnregisteredDomainEventException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
         {
         }
     }

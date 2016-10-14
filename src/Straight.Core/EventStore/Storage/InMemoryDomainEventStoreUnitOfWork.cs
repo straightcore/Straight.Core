@@ -9,7 +9,7 @@
 // distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and limitations under the License.
 // ==============================================================================================================
-using Straight.Core.Domain;
+
 using Straight.Core.EventStore.Aggregate;
 using Straight.Core.Storage.Generic;
 using System;
@@ -64,24 +64,9 @@ namespace Straight.Core.EventStore.Storage
         {
             var aggregateRoot = _identityRootMap.GetById<TAggregate>(id) ?? LoadHistoryEvents<TAggregate>(id);
             if (aggregateRoot == null)
-            {
                 return aggregateRoot;
-            }
             RegisterForTracking(aggregateRoot);
             return aggregateRoot;
-        }
-
-        private TAggregate LoadHistoryEvents<TAggregate>(Guid id)
-            where TAggregate : class, IAggregator<TDomainEvent>, new()
-        {
-            var aggregate = new TAggregate();
-            var domainEvents = _repository.Get(id).ToList();
-            if (!domainEvents.Any())
-            {
-                return null;
-            }
-            aggregate.LoadFromHistory(domainEvents);
-            return aggregate;
         }
 
         public void Add<TAggregate>(TAggregate aggregateRoot)
@@ -94,11 +79,20 @@ namespace Straight.Core.EventStore.Storage
             where TAggregate : class, IAggregator<TDomainEvent>, new()
         {
             if (_aggregatorsPending.ContainsKey(aggregateRoot.Id))
-            {
                 return;
-            }
             _identityRootMap.Add(aggregateRoot);
             _aggregatorsPending = _aggregatorsPending.Add(aggregateRoot.Id, aggregateRoot);
+        }
+
+        private TAggregate LoadHistoryEvents<TAggregate>(Guid id)
+            where TAggregate : class, IAggregator<TDomainEvent>, new()
+        {
+            var aggregate = new TAggregate();
+            var domainEvents = _repository.Get(id).ToList();
+            if (!domainEvents.Any())
+                return null;
+            aggregate.LoadFromHistory(domainEvents);
+            return aggregate;
         }
     }
 }

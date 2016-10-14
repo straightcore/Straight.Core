@@ -10,24 +10,23 @@
 // See the License for the specific language governing permissions and limitations under the License.
 // ==============================================================================================================
 
-using System.Collections;
-using System.Collections.Immutable;
-using System.Linq;
 using Straight.Core.Extensions.Collections;
 using Straight.Core.Storage;
+using System.Collections;
+using System.Collections.Immutable;
 
 namespace Straight.Core.Bus
 {
     public class InMemoryBus : IBus
     {
-        private ImmutableQueue<object> _preCommitItems;
         private readonly IActionQueue _actionQueue;
         private readonly IRouterMessage _router;
+        private ImmutableQueue<object> _preCommitItems;
 
         public InMemoryBus(IRouterMessage router, IActionQueue actionQueue)
         {
-            this._actionQueue = actionQueue;
-            this._router = router;
+            _actionQueue = actionQueue;
+            _router = router;
             actionQueue.Pop(DoPublishItem);
             _preCommitItems = ImmutableQueue<object>.Empty;
         }
@@ -37,9 +36,7 @@ namespace Straight.Core.Bus
             var preCommitItems = _preCommitItems;
             _preCommitItems = ImmutableQueue<object>.Empty;
             if (preCommitItems.IsEmpty)
-            {
                 return;
-            }
             do
             {
                 object item;
@@ -56,9 +53,7 @@ namespace Straight.Core.Bus
         public void Publish(object message)
         {
             if (message == null)
-            {
                 return;
-            }
             _preCommitItems = _preCommitItems.Enqueue(message);
         }
 
@@ -72,6 +67,5 @@ namespace Straight.Core.Bus
             _router.Route(obj);
             _actionQueue.Pop(DoPublishItem);
         }
-
     }
 }

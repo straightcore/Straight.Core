@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections;
-using Straight.Core.Domain;
+﻿using Straight.Core.Domain;
 using Straight.Core.EventStore;
 using Straight.Core.EventStore.Aggregate;
 using Straight.Core.Tests.Common.Domain;
+using System;
+using System.Collections;
 
 namespace Straight.Core.Tests.Common.EventStore
 {
-
     public class AggregatorTest : AggregatorBase<IDomainEvent>
         , IApplyEvent<DomainEventTest>
         , IHandlerDomainCommand<DomainCommandTest>
@@ -18,13 +17,11 @@ namespace Straight.Core.Tests.Common.EventStore
         public AggregatorTest()
             : this(() => { })
         {
-
         }
 
         public AggregatorTest(Action whenApplied)
-            : base()
         {
-            this._whenApplied = whenApplied;
+            _whenApplied = whenApplied;
         }
 
         public void Apply(DomainEventTest @event)
@@ -32,30 +29,26 @@ namespace Straight.Core.Tests.Common.EventStore
             _whenApplied?.Invoke();
         }
 
-        public IEnumerable Handle(DomainCommandTest2 command)
+        public IEnumerable Handle(DomainCommandTest command)
         {
             if (Id == Guid.Empty)
-            {
                 Id = Guid.NewGuid();
-            }
-            yield return new DomainEventTest2()
+            yield return new DomainEventTest
             {
-                Id = Guid.NewGuid(),
-                AggregateId = command.Id,
+                Id = command.Id,
+                AggregateId = Id,
                 Version = 1
             };
         }
 
-        public IEnumerable Handle(DomainCommandTest command)
+        public IEnumerable Handle(DomainCommandTest2 command)
         {
             if (Id == Guid.Empty)
-            {
                 Id = Guid.NewGuid();
-            }
-            yield return new DomainEventTest()
+            yield return new DomainEventTest2
             {
-                Id = command.Id,
-                AggregateId = Id,
+                Id = Guid.NewGuid(),
+                AggregateId = command.Id,
                 Version = 1
             };
         }

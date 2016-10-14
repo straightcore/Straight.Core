@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Straight.Core.RealEstateAgency.Contracts.Models;
+﻿using Straight.Core.RealEstateAgency.Contracts.Models;
+using System.Collections.Generic;
 
 namespace Straight.Core.RealEstateAgency.Test.Common.Dto
 {
@@ -18,28 +18,22 @@ namespace Straight.Core.RealEstateAgency.Test.Common.Dto
 
         public static AddressDto NationalMuseumNewYorkMistakeInWashington { get; } = new AddressDto
         {
-
             Street = "Central Park South",
             AdditionalAddress = "",
             StreetNumber = "Cross 54 Street",
             PostalCode = "10024",
             City = "Washington"
         };
-
     }
 
     internal class AddressDtoComparer : IEqualityComparer<AddressDto>
     {
         public bool Equals(AddressDto x, AddressDto y)
         {
-            if (x == null && y == null)
-            {
+            if ((x == null) && (y == null))
                 return true;
-            }
-            if (x == null || y == null)
-            {
+            if ((x == null) || (y == null))
                 return false;
-            }
             return x.AdditionalAddress.Equals(y.AdditionalAddress)
                    && x.City.Equals(y.City)
                    && x.PostalCode.Equals(y.PostalCode)
@@ -52,5 +46,4 @@ namespace Straight.Core.RealEstateAgency.Test.Common.Dto
             return -1;
         }
     }
-
 }

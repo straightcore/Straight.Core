@@ -10,6 +10,7 @@
 // See the License for the specific language governing permissions and limitations under the License.
 // ==============================================================================================================
 
+using Straight.Core.EventStore;
 using Straight.Core.Extensions.Collections.Generic;
 using Straight.Core.Extensions.Domain;
 using Straight.Core.Extensions.Helper;
@@ -17,7 +18,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
-using Straight.Core.EventStore;
 
 namespace Straight.Core.Domain
 {
@@ -26,8 +26,9 @@ namespace Straight.Core.Domain
     {
         private const string ApplyMethodName = "Apply";
 
-        private static readonly ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>> RegisterApplyMethodsByType
-            = new ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>>();
+        private static readonly ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>>
+            RegisterApplyMethodsByType
+                = new ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>>();
 
         private readonly List<TDomainEvent> _appliedEvents;
         private readonly IReadOnlyDictionary<Type, MethodInfo> _registerMethods;
@@ -38,17 +39,9 @@ namespace Straight.Core.Domain
             _appliedEvents = new List<TDomainEvent>();
         }
 
-        public Guid Id
-        {
-            get;
-            private set;
-        }
+        public Guid Id { get; private set; }
 
-        public int Version
-        {
-            get;
-            private set;
-        }
+        public int Version { get; private set; }
 
         public IEnumerable<TDomainEvent> Events => _appliedEvents.AsReadOnly();
 
@@ -72,13 +65,11 @@ namespace Straight.Core.Domain
         {
             IReadOnlyDictionary<Type, MethodInfo> referentiel;
             if (!RegisterApplyMethodsByType.TryGetValue(GetType(), out referentiel))
-            {
                 RegisterApplyMethodsByType[GetType()] = referentiel = MappingTypeToMethodHelper.ToMappingTypeMethod(
                     GetType(),
                     typeof(TDomainEvent),
                     typeOfInterfaceBase,
                     methodName);
-            }
             return referentiel;
         }
     }

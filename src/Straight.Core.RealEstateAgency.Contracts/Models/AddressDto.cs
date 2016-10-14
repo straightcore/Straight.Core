@@ -9,12 +9,16 @@ namespace Straight.Core.RealEstateAgency.Contracts.Models
     {
         [DataMember]
         public string AdditionalAddress { get; set; }
+
         [DataMember]
         public string Street { get; set; }
+
         [DataMember]
         public string StreetNumber { get; set; }
+
         [DataMember]
         public string PostalCode { get; set; }
+
         [DataMember]
         public string City { get; set; }
 
@@ -23,5 +27,4 @@ namespace Straight.Core.RealEstateAgency.Contracts.Models
             return MemberwiseClone();
         }
     }
-
 }

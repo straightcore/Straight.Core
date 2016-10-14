@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using Straight.Core.EventStore;
+﻿using Straight.Core.EventStore;
 using Straight.Core.RealEstateAgency.Model;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Straight.Core.RealEstateAgency.Account.EventStore.Events
 {
@@ -15,7 +13,7 @@ namespace Straight.Core.RealEstateAgency.Account.EventStore.Events
             Creator = creator.Clone() as User;
             Customers = customers.Select(c => c.Clone() as Customer).ToList().AsReadOnly();
         }
-        
+
         public string AccountKey { get; private set; }
 
         public User Creator { get; private set; }

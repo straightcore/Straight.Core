@@ -1,7 +1,7 @@
-﻿using System;
-using System.Runtime.Serialization;
-using Straight.Core.Command;
+﻿using Straight.Core.Command;
 using Straight.Core.RealEstateAgency.Contracts.Models;
+using System;
+using System.Runtime.Serialization;
 
 namespace Straight.Core.RealEstateAgency.Contracts.Messages.House
 {
@@ -11,10 +11,11 @@ namespace Straight.Core.RealEstateAgency.Contracts.Messages.House
     {
         [DataMember]
         public RequesterDto Modifier { get; set; }
+
         [DataMember]
         public Guid HouseId { get; set; }
+
         [DataMember]
         public AddressDto Address { get; set; }
-
     }
 }

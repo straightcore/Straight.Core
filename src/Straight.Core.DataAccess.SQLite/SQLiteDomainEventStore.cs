@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.IO;
-using System.Runtime.CompilerServices;
-using Microsoft.Data.Sqlite;
+﻿using Microsoft.Data.Sqlite;
 using Straight.Core.EventStore;
 using Straight.Core.EventStore.Aggregate;
 using Straight.Core.EventStore.Storage;
 using Straight.Core.Extensions.Collections.Generic;
 using Straight.Core.Serialization;
+using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.IO;
 
 namespace Straight.Core.DataAccess.SQLite
 {
-
     public sealed class SqLiteDomainEventStore<TDomainEvent> : DomainEventStoreBase<TDomainEvent>
         where TDomainEvent : IDomainEvent
     {
@@ -110,7 +108,7 @@ namespace Straight.Core.DataAccess.SQLite
             using (var stream = new MemoryStream())
             {
                 _serializer.Serialize(new StreamWriter(stream), @event);
-                return (new StreamReader(stream)).ReadToEnd();
+                return new StreamReader(stream).ReadToEnd();
             }
         }
 
@@ -118,9 +116,7 @@ namespace Straight.Core.DataAccess.SQLite
         {
             string insert;
             if (TypeToInsert.TryGetValue(type, out insert))
-            {
                 return insert;
-            }
             var tableName = string.Format(TableName, type.Name);
             insert = string.Format(InsertEventFormat, tableName);
             TypeToInsert = TypeToInsert.Add(type, insert);
@@ -143,11 +139,8 @@ namespace Straight.Core.DataAccess.SQLite
         protected override void Dispose(bool disposing)
         {
             if (disposing)
-            {
                 Rollback();
-            }
         }
-
 
         private struct DBQuery
         {

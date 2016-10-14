@@ -7,7 +7,6 @@ namespace Straight.Core.RealEstateAgency.Model
         public Customer()
             : this(Guid.NewGuid())
         {
-           
         }
 
         public Customer(Guid id)
@@ -29,8 +28,6 @@ namespace Straight.Core.RealEstateAgency.Model
         public string PostalCode { get; set; }
         public string City { get; set; }
 
-        public Guid Id { get; private set; }
-
         public object Clone()
         {
             var clone = MemberwiseClone() as Customer;
@@ -38,6 +35,8 @@ namespace Straight.Core.RealEstateAgency.Model
             clone.CellPhone = CellPhone?.Clone() as Phone;
             return clone;
         }
+
+        public Guid Id { get; }
     }
 
     public enum Gender

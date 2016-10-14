@@ -23,12 +23,9 @@ namespace Straight.Core.Extensions.Domain
         {
             MethodInfo handler;
             if (!registerMethods.TryGetValue(@event.GetType(), out handler))
-            {
                 throw new UnregisteredDomainEventException(
                     $"The domain event '{@event.GetType().FullName}' is not registered in '{model.GetType().FullName}'");
-            }
-            handler.Invoke(model, new object[] {@event});
-            return;
+            handler.Invoke(model, new[] {@event});
         }
     }
 }

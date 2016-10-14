@@ -24,10 +24,8 @@ namespace Straight.Core.Exceptions
         {
         }
 
-
-        public NotRegisteredRouteException(string message) : base (message)
+        public NotRegisteredRouteException(string message) : base(message)
         {
-
         }
 
         public NotRegisteredRouteException(Type typeOfMessage)

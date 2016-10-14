@@ -1,5 +1,4 @@
-﻿using System;
-using Straight.Core.EventStore;
+﻿using Straight.Core.EventStore;
 using Straight.Core.RealEstateAgency.Model;
 
 namespace Straight.Core.Sample.RealEstateAgency.House.EventStore.Events
@@ -15,6 +14,5 @@ namespace Straight.Core.Sample.RealEstateAgency.House.EventStore.Events
         public User Modifier { get; private set; }
 
         public Address NewAddress { get; private set; }
-        
     }
 }

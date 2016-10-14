@@ -48,9 +48,7 @@ namespace Straight.Core.Bus
         {
             ICollection<Action<object>> routes;
             if (!_routes.TryGetValue(message.GetType(), out routes))
-            {
                 throw new NotRegisteredRouteException(message.GetType());
-            }
             routes.ForEach(route => route(message));
         }
     }

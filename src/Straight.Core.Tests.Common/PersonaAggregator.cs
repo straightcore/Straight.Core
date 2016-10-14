@@ -1,6 +1,6 @@
-﻿using System;
-using Straight.Core.Tests.Common.Domain;
+﻿using Straight.Core.Tests.Common.Domain;
 using Straight.Core.Tests.Common.EventStore;
+using System;
 
 namespace Straight.Core.Tests.Common
 {
