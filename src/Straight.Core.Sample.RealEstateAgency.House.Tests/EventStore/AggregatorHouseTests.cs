@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
-using Straight.Core.RealEstateAgency.Model.Exceptions;
-using Straight.Core.RealEstateAgency.Test.Common.Server;
+using Straight.Core.Sample.RealEstateAgency.Model.Exceptions;
+using Straight.Core.Sample.RealEstateAgency.Test.Common.Server;
 using Straight.Core.Sample.RealEstateAgency.House.Domain.Command;
 using Straight.Core.Sample.RealEstateAgency.House.EventStore;
 using Straight.Core.Sample.RealEstateAgency.House.EventStore.Events;
@@ -39,7 +39,7 @@ namespace Straight.Core.Sample.RealEstateAgency.House.Tests.EventStore
             {
                 EstateOfficer = PersonaUser.John,
                 Account = PersonaAccount.Virginie,
-                MeetDateTime = DateTime.UtcNow.Date.AddDays(2).AddHours(12)
+                MeetDate = DateTime.UtcNow.Date.AddDays(2).AddHours(12)
             });
             Assert.That(_house.GetChanges(), Has.Count.EqualTo(1));
             Assert.That(_house.GetChanges().Last().GetType(), Is.EqualTo(typeof(VisitAdded)));
@@ -91,14 +91,14 @@ namespace Straight.Core.Sample.RealEstateAgency.House.Tests.EventStore
             {
                 EstateOfficer = PersonaUser.John,
                 Account = PersonaAccount.Virginie,
-                MeetDateTime = DateTime.UtcNow.Date.AddDays(2).AddHours(12)
+                MeetDate = DateTime.UtcNow.Date.AddDays(2).AddHours(12)
             });
             Assert.Throws<DateAlreadyExistException>(() =>
                 _house.Update(new AddVisitHouseCommand
                 {
                     EstateOfficer = PersonaUser.Jane,
                     Account = PersonaAccount.Pierre,
-                    MeetDateTime = DateTime.UtcNow.Date.AddDays(2).AddHours(12)
+                    MeetDate = DateTime.UtcNow.Date.AddDays(2).AddHours(12)
                 }));
         }
     }

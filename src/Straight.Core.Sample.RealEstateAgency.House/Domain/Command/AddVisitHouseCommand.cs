@@ -1,6 +1,6 @@
 ﻿using Straight.Core.Domain;
-using Straight.Core.RealEstateAgency.Model;
 using System;
+using Straight.Core.Sample.RealEstateAgency.Model;
 
 namespace Straight.Core.Sample.RealEstateAgency.House.Domain.Command
 {
@@ -8,6 +8,6 @@ namespace Straight.Core.Sample.RealEstateAgency.House.Domain.Command
     {
         public User EstateOfficer { get; set; }
         public IAccount Account { get; set; }
-        public DateTime MeetDateTime { get; set; }
+        public DateTime MeetDate { get; set; }
     }
 }

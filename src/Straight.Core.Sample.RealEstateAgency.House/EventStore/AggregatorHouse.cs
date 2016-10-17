@@ -2,9 +2,9 @@
 using Straight.Core.EventStore;
 using Straight.Core.EventStore.Aggregate;
 using Straight.Core.Extensions.Guard;
-using Straight.Core.RealEstateAgency.Model;
-using Straight.Core.RealEstateAgency.Model.Exceptions;
-using Straight.Core.RealEstateAgency.Model.Helper;
+using Straight.Core.Sample.RealEstateAgency.Model;
+using Straight.Core.Sample.RealEstateAgency.Model.Exceptions;
+using Straight.Core.Sample.RealEstateAgency.Model.Helper;
 using Straight.Core.Sample.RealEstateAgency.House.Domain.Command;
 using Straight.Core.Sample.RealEstateAgency.House.EventStore.Events;
 using System;
@@ -50,12 +50,14 @@ namespace Straight.Core.Sample.RealEstateAgency.House.EventStore
             command.CheckIfArgumentIsNull("houseCommand");
             command.Account.CheckIfArgumentIsNull("Account");
             command.EstateOfficer.CheckIfArgumentIsNull("EstateOfficer");
-            if (IsInCurrentMeet(command.MeetDateTime))
-                throw new DateAlreadyExistException(command.MeetDateTime);
+            if (IsInCurrentMeet(command.MeetDate))
+            {
+                throw new DateAlreadyExistException(command.MeetDate);
+            }
             yield return new VisitAdded(
                 command.EstateOfficer.Clone() as User,
                 command.Account,
-                command.MeetDateTime);
+                command.MeetDate);
         }
 
         public IEnumerable Handle(CreateHouseCommand command)

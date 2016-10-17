@@ -19,15 +19,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Straight.Core.Sample.RealEs
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Straight.Core.Sample.RealEstateAgency.House.Tests", "Straight.Core.Sample.RealEstateAgency.House.Tests\Straight.Core.Sample.RealEstateAgency.House.Tests.csproj", "{C619A5AC-BCE9-4F1F-9B29-3BD769E1632E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Straight.Core.RealEstateAgency.Account.Tests", "Straight.Core.RealEstateAgency.Account.Tests\Straight.Core.RealEstateAgency.Account.Tests.csproj", "{AF9379F7-DC9D-458D-B221-F590B1BE9B01}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Straight.Core.Sample.RealEstateAgency.Account.Tests", "Straight.Core.Sample.RealEstateAgency.Account.Tests\Straight.Core.Sample.RealEstateAgency.Account.Tests.csproj", "{AF9379F7-DC9D-458D-B221-F590B1BE9B01}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Straight.Core.RealEstateAgency.Account", "Straight.Core.RealEstateAgency.Account\Straight.Core.RealEstateAgency.Account.csproj", "{B56C7F3B-93BC-41E5-B51A-DE4A6730303F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Straight.Core.Sample.RealEstateAgency.Account", "Straight.Core.Sample.RealEstateAgency.Account\Straight.Core.Sample.RealEstateAgency.Account.csproj", "{B56C7F3B-93BC-41E5-B51A-DE4A6730303F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Straight.Core.RealEstateAgency.Model", "Straight.Core.RealEstateAgency.Model\Straight.Core.RealEstateAgency.Model.csproj", "{55CA532F-D286-4C4E-B1FE-7BF2E13D5447}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Straight.Core.Sample.RealEstateAgency.Model", "Straight.Core.Sample.RealEstateAgency.Model\Straight.Core.Sample.RealEstateAgency.Model.csproj", "{55CA532F-D286-4C4E-B1FE-7BF2E13D5447}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Straight.Core.RealEstateAgency.Test.Common", "Straight.Core.RealEstateAgency.Test.Common\Straight.Core.RealEstateAgency.Test.Common.csproj", "{26778F0D-6945-4914-B655-B1CF801EA1DC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Straight.Core.Sample.RealEstateAgency.Test.Common", "Straight.Core.Sample.RealEstateAgency.Test.Common\Straight.Core.Sample.RealEstateAgency.Test.Common.csproj", "{26778F0D-6945-4914-B655-B1CF801EA1DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Straight.Core.RealEstateAgency.Contracts", "Straight.Core.RealEstateAgency.Contracts\Straight.Core.RealEstateAgency.Contracts.csproj", "{620AE724-224B-4F19-81D2-B3A69FAF9B28}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Straight.Core.Sample.RealEstateAgency.Contracts", "Straight.Core.Sample.RealEstateAgency.Contracts\Straight.Core.Sample.RealEstateAgency.Contracts.csproj", "{620AE724-224B-4F19-81D2-B3A69FAF9B28}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "10.1 - UnitTests", "10.1 - UnitTests", "{9924FFDA-C0EF-4132-895E-27B1BC6F36E8}"
 EndProject
@@ -48,6 +48,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Straight.Core.DataAccess.SQLite.Tests", "Straight.Core.DataAccess.SQLite.Tests\Straight.Core.DataAccess.SQLite.Tests.csproj", "{8ECE2506-914B-4BAD-A229-63C488D553BD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Straight.Core.DataAccess.Tests", "Straight.Core.DataAccess.Tests\Straight.Core.DataAccess.Tests.csproj", "{C0A4A7B1-5581-433B-83D0-F403A890A8FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Straight.Core.Sample.RealEstateAgency.Handler", "Straight.Core.Sample.RealEstateAgency.Handler\Straight.Core.Sample.RealEstateAgency.Handler.csproj", "{E20D7100-9C3A-4E6A-A307-E54F9D9EA02F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Straight.Core.Sample.RealEstateAgency.Handler.Tests", "Straight.Core.Sample.RealEstateAgency.Handler.Tests\Straight.Core.Sample.RealEstateAgency.Handler.Tests.csproj", "{CF9CED63-0FB1-4EF2-B2E8-40FCDFB5C325}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -115,6 +119,14 @@ Global
 		{C0A4A7B1-5581-433B-83D0-F403A890A8FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0A4A7B1-5581-433B-83D0-F403A890A8FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C0A4A7B1-5581-433B-83D0-F403A890A8FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E20D7100-9C3A-4E6A-A307-E54F9D9EA02F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E20D7100-9C3A-4E6A-A307-E54F9D9EA02F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E20D7100-9C3A-4E6A-A307-E54F9D9EA02F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E20D7100-9C3A-4E6A-A307-E54F9D9EA02F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF9CED63-0FB1-4EF2-B2E8-40FCDFB5C325}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF9CED63-0FB1-4EF2-B2E8-40FCDFB5C325}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF9CED63-0FB1-4EF2-B2E8-40FCDFB5C325}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF9CED63-0FB1-4EF2-B2E8-40FCDFB5C325}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -140,5 +152,7 @@ Global
 		{262CAD4F-3F16-498C-A1AB-EF1CCB173C2B} = {4F753D82-86F0-4B6C-802F-E8BC9F7826CF}
 		{8ECE2506-914B-4BAD-A229-63C488D553BD} = {4F753D82-86F0-4B6C-802F-E8BC9F7826CF}
 		{C0A4A7B1-5581-433B-83D0-F403A890A8FD} = {4F753D82-86F0-4B6C-802F-E8BC9F7826CF}
+		{E20D7100-9C3A-4E6A-A307-E54F9D9EA02F} = {8E1E2D1F-8333-4238-A1AF-B54505DC248C}
+		{CF9CED63-0FB1-4EF2-B2E8-40FCDFB5C325} = {8E1E2D1F-8333-4238-A1AF-B54505DC248C}
 	EndGlobalSection
 EndGlobal

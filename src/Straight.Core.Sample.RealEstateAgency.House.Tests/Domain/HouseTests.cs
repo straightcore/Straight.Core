@@ -1,10 +1,9 @@
 ﻿using NUnit.Framework;
 using Straight.Core.EventStore;
-using Straight.Core.RealEstateAgency.Test.Common;
-using Straight.Core.RealEstateAgency.Test.Common.Server;
-using Straight.Core.Sample.RealEstateAgency.House.EventStore.Events;
 using System;
 using System.Collections.Generic;
+using Straight.Core.Sample.RealEstateAgency.House.EventStore.Events;
+using Straight.Core.Sample.RealEstateAgency.Test.Common.Server;
 
 namespace Straight.Core.Sample.RealEstateAgency.House.Tests.Domain
 {

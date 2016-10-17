@@ -1,6 +1,6 @@
 ﻿using Straight.Core.EventStore;
-using Straight.Core.RealEstateAgency.Model;
 using System;
+using Straight.Core.Sample.RealEstateAgency.Model;
 
 namespace Straight.Core.Sample.RealEstateAgency.House.EventStore.Events
 {

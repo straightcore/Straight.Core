@@ -55,21 +55,21 @@
       <Project>{31dc24d4-1227-4d84-9509-85af1575ae54}</Project>
       <Name>Straight.Core.Extensions</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Straight.Core.RealEstateAgency.Contracts\Straight.Core.RealEstateAgency.Contracts.csproj">
+    <ProjectReference Include="..\Straight.Core.Sample.RealEstateAgency.Contracts\Straight.Core.Sample.RealEstateAgency.Contracts.csproj">
       <Project>{620AE724-224B-4F19-81D2-B3A69FAF9B28}</Project>
-      <Name>Straight.Core.RealEstateAgency.Contracts</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Straight.Core.RealEstateAgency.Model\Straight.Core.RealEstateAgency.Model.csproj">
-      <Project>{55ca532f-d286-4c4e-b1fe-7bf2e13d5447}</Project>
-      <Name>Straight.Core.RealEstateAgency.Model</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Straight.Core.RealEstateAgency.Test.Common\Straight.Core.RealEstateAgency.Test.Common.csproj">
-      <Project>{26778F0D-6945-4914-B655-B1CF801EA1DC}</Project>
-      <Name>Straight.Core.RealEstateAgency.Test.Common</Name>
+      <Name>Straight.Core.Sample.RealEstateAgency.Contracts</Name>
     </ProjectReference>
     <ProjectReference Include="..\Straight.Core.Sample.RealEstateAgency.House\Straight.Core.Sample.RealEstateAgency.House.csproj">
-      <Project>{9ecb33e1-461b-4032-a5da-ea320d25d831}</Project>
+      <Project>{9ECB33E1-461B-4032-A5DA-EA320D25D831}</Project>
       <Name>Straight.Core.Sample.RealEstateAgency.House</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Straight.Core.Sample.RealEstateAgency.Model\Straight.Core.Sample.RealEstateAgency.Model.csproj">
+      <Project>{55CA532F-D286-4C4E-B1FE-7BF2E13D5447}</Project>
+      <Name>Straight.Core.Sample.RealEstateAgency.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Straight.Core.Sample.RealEstateAgency.Test.Common\Straight.Core.Sample.RealEstateAgency.Test.Common.csproj">
+      <Project>{26778F0D-6945-4914-B655-B1CF801EA1DC}</Project>
+      <Name>Straight.Core.Sample.RealEstateAgency.Test.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Straight.Core\Straight.Core.csproj">
       <Project>{559c30f7-60d8-40a5-8a96-0a4e16aabb37}</Project>

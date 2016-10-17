@@ -64,10 +64,6 @@
       <Project>{262CAD4F-3F16-498C-A1AB-EF1CCB173C2B}</Project>
       <Name>Straight.Core.DataAccess</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Straight.Core.RealEstateAgency.Test.Common\Straight.Core.RealEstateAgency.Test.Common.csproj">
-      <Project>{26778f0d-6945-4914-b655-b1cf801ea1dc}</Project>
-      <Name>Straight.Core.RealEstateAgency.Test.Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Straight.Core.Tests.Common\Straight.Core.Tests.Common.csproj">
       <Project>{32FFBD0B-EE57-4048-B47A-3CFF01523308}</Project>
       <Name>Straight.Core.Tests.Common</Name>
