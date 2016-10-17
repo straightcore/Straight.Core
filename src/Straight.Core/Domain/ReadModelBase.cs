@@ -65,11 +65,13 @@ namespace Straight.Core.Domain
         {
             IReadOnlyDictionary<Type, MethodInfo> referentiel;
             if (!RegisterApplyMethodsByType.TryGetValue(GetType(), out referentiel))
+            {
                 RegisterApplyMethodsByType[GetType()] = referentiel = MappingTypeToMethodHelper.ToMappingTypeMethod(
                     GetType(),
                     typeof(TDomainEvent),
                     typeOfInterfaceBase,
                     methodName);
+            }
             return referentiel;
         }
     }

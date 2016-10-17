@@ -39,10 +39,10 @@ namespace Straight.Core.Extensions.Helper
             Type genericParameterType,
             Type typeOfInterfaceBase)
         {
-            var alreadyFound = false;
             return interfaceType.IsGenericType
                    && (interfaceType.GetGenericTypeDefinition() == typeOfInterfaceBase)
-                   && (alreadyFound |= interfaceType.GetGenericArguments().FirstOrDefault() != genericParameterType);
+                   //&& (interfaceType.GetGenericArguments().FirstOrDefault() != genericParameterType)
+                   ;
         }
     }
 }

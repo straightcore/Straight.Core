@@ -42,7 +42,7 @@ namespace Straight.Core.Sample.RealEstateAgency.House.Tests.EventStore
                 MeetDateTime = DateTime.UtcNow.Date.AddDays(2).AddHours(12)
             });
             Assert.That(_house.GetChanges(), Has.Count.EqualTo(1));
-            Assert.That(_house.GetChanges().Last().GetType(), Is.EqualTo(typeof(AddressUpdated)));
+            Assert.That(_house.GetChanges().Last().GetType(), Is.EqualTo(typeof(VisitAdded)));
         }
 
         [Test]

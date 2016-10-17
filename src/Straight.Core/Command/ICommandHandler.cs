@@ -12,7 +12,12 @@
 
 namespace Straight.Core.Command
 {
-    public interface ICommandHandler<in TCommand>
+    public interface ICommandHandler
+    {
+
+    }
+
+    public interface ICommandHandler<in TCommand> : ICommandHandler
         where TCommand : ICommand
     {
         void Handle(TCommand command);

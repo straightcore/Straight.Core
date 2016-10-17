@@ -39,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bus\MessageTest.cs" />
+    <Compile Include="Command\CommandHandlerTest.cs" />
     <Compile Include="Domain\DomainCommand.cs" />
     <Compile Include="Domain\ReadModelTest.cs" />
     <Compile Include="EventStore\AggregatorTest.cs" />

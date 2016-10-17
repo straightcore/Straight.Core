@@ -84,6 +84,8 @@
     <Compile Include="EventStore\Aggregate\IAggregator.cs" />
     <Compile Include="Exceptions\ViolationConcurrencyException.cs" />
     <Compile Include="Exceptions\UnregisteredDomainEventException.cs" />
+    <Compile Include="Messaging\CommandHandlerDispatcher.cs" />
+    <Compile Include="Messaging\ICommandHandlerDispatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\IEventSerializer.cs" />
     <Compile Include="Storage\ITransactional.cs" />
