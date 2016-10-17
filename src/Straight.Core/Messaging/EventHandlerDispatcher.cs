@@ -10,14 +10,18 @@
 // See the License for the specific language governing permissions and limitations under the License.
 // ==============================================================================================================
 
-using Straight.Core.Command;
+using System;
+using Straight.Core.EventStore;
 
 namespace Straight.Core.Messaging
 {
-    public interface ICommandHandlerDispatcher
+    public class EventHandlerDispatcher : HandlerDispatcher<IEventHandler, IDomainEvent>, IEventHandlerDispatcher
     {
-        void Register(ICommandHandler handler);
+        private static readonly Type GenericEventHandlerType = typeof(IEventHandler<>);
 
-        void Process(ICommand command);
+
+        public EventHandlerDispatcher() : base(GenericEventHandlerType)
+        {
+        }
     }
 }

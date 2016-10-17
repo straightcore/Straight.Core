@@ -85,7 +85,12 @@
     <Compile Include="Exceptions\ViolationConcurrencyException.cs" />
     <Compile Include="Exceptions\UnregisteredDomainEventException.cs" />
     <Compile Include="Messaging\CommandHandlerDispatcher.cs" />
+    <Compile Include="Messaging\EventHandlerDispatcher.cs" />
+    <Compile Include="Messaging\HandlerDispatcher.cs" />
     <Compile Include="Messaging\ICommandHandlerDispatcher.cs" />
+    <Compile Include="Messaging\IEventHandler.cs" />
+    <Compile Include="Messaging\IEventHandlerDispatcher.cs" />
+    <Compile Include="Messaging\IHandlerDispatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\IEventSerializer.cs" />
     <Compile Include="Storage\ITransactional.cs" />

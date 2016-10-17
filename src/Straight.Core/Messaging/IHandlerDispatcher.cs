@@ -10,14 +10,11 @@
 // See the License for the specific language governing permissions and limitations under the License.
 // ==============================================================================================================
 
-using Straight.Core.Command;
-
 namespace Straight.Core.Messaging
 {
-    public interface ICommandHandlerDispatcher
+    public interface IHandlerDispatcher<THandled, TProcessed> where THandled : class where TProcessed : class
     {
-        void Register(ICommandHandler handler);
-
-        void Process(ICommand command);
+        void Register(THandled handler);
+        void Process(TProcessed @event);
     }
 }

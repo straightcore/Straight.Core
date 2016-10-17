@@ -54,6 +54,7 @@
     <Compile Include="EventStore\Storage\InMemoryDomainEventStoreUnitOfWorkTests.cs" />
     <Compile Include="Exceptions\ExceptionTests.cs" />
     <Compile Include="Messaging\CommandHandlerDispatcherTests.cs" />
+    <Compile Include="Messaging\EventHandlerDispatcherTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Bus\RouterMessageTests.cs" />
   </ItemGroup>

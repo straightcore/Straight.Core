@@ -1,81 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Reflection;
+﻿// ==============================================================================================================
+// Straight Compagny
+// Straight Core
+// ==============================================================================================================
+// ©2016 Straight Compagny. All rights reserved.
+// Licensed under the MIT License (MIT); you may not use this file except in compliance
+// with the License. You may obtain have a last condition or last licence at https://github.com/straightcore/Straight.Core/blob/master
+// Unless required by applicable law or agreed to in writing, software distributed under the License is
+// distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and limitations under the License.
+// ==============================================================================================================using System;
+
+using System;
 using Straight.Core.Command;
-using Straight.Core.Extensions.Collections.Generic;
-using Straight.Core.Extensions.Helper;
 
 namespace Straight.Core.Messaging
 {
-    public class CommandHandlerDispatcher : ICommandHandlerDispatcher
+    public class CommandHandlerDispatcher : HandlerDispatcher<ICommandHandler, ICommand>, ICommandHandlerDispatcher
     {
         private static readonly Type GenericCommandHandlerType = typeof(ICommandHandler<>);
 
-
-        private ImmutableDictionary<Type, ImmutableList<ICommandHandler>> _handlerRegistred =
-            ImmutableDictionary<Type, ImmutableList<ICommandHandler>>.Empty;
-        private ImmutableDictionary<Type, MethodInfo> _methods = ImmutableDictionary<Type, MethodInfo>.Empty;
-
-        public void Register(ICommandHandler handler)
+        public CommandHandlerDispatcher() : base(GenericCommandHandlerType)
         {
-            foreach (var commandType in handler.GetType()
-                .GetInterfaces()
-                .Where(iface => iface.IsGenericType
-                                && iface.GetGenericTypeDefinition() == GenericCommandHandlerType)
-                .Select(iface => iface.GetGenericArguments()[0]))
-            {
-                SetHandlerRegister(handler, commandType);
-                SetMethodInfo(handler, commandType);
-            }
-        }
-
-        private void SetMethodInfo(ICommandHandler handler, Type commandType)
-        {
-            var methods = GetRegisterByType(handler.GetType(), typeof(ICommandHandler<>), commandType);
-            _methods = _methods.AddRange(methods.Where(k => !_methods.ContainsKey(k.Key)));
-        }
-
-        private void SetHandlerRegister(ICommandHandler handler, Type commandType)
-        {
-            ImmutableList<ICommandHandler> repoHandler;
-            if (!_handlerRegistred.TryGetValue(commandType, out repoHandler))
-            {
-                repoHandler = ImmutableList<ICommandHandler>.Empty;
-                _handlerRegistred = _handlerRegistred.Add(commandType, repoHandler.Add(handler));
-            }
-            else
-            {
-                _handlerRegistred = _handlerRegistred.SetItem(commandType, repoHandler.Add(handler));
-            }
-        }
-
-        public void Process(ICommand command)
-        {
-            ImmutableList<ICommandHandler> repoHandler;
-            MethodInfo handleMethod;
-            if (!_handlerRegistred.TryGetValue(command.GetType(), out repoHandler)
-                || !_methods.TryGetValue(command.GetType(), out handleMethod))
-            {
-                throw new ArgumentOutOfRangeException($"{command.GetType().FullName} is not recognized");
-            }
-            repoHandler.ForEach(h => handleMethod.Invoke(h, new[] {command}));
-        }
-
-        private static Dictionary<Type, MethodInfo> GetRegisterByType(Type commandHandler, Type typeOfInterfaceBase, Type genericArguments)
-        {
-            return typeOfInterfaceBase.GetMethods()
-                               .Select(m => m.Name)
-                               .Select(m => MappingTypeToMethodHelper.ToMappingTypeMethod(
-                                                    commandHandler
-                                                    , genericArguments
-                                                    , typeOfInterfaceBase
-                                                    , m))
-                                .SelectMany(k => k)
-                                .GroupBy(k => k.Key)
-                                .ToDictionary(k => k.Key, k => k.First().Value);
-
         }
     }
 }
