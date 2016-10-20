@@ -100,11 +100,13 @@ namespace Straight.Core.Sample.RealEstateAgency.Account.EventStore
         public IEnumerable Handle(AddVisitCommand command)
         {
             command.CheckIfArgumentIsNull("command");
+            command.House.CheckIfArgumentIsNull("Address");
             AddressHelper.CheckMandatory(
                 command.House.Address.Street,
                 command.House.Address.City,
                 command.House.Address.PostalCode);
-            var estateOfficier = new User(command.EstateOfficierLastName, command.EstateOfficierFirstName,
+            var estateOfficier = new User(command.EstateOfficierLastName, 
+                command.EstateOfficierFirstName,
                 command.EstateOfficierUsername);
             if (IsInCurrentMeet(command.MeetDate))
             {

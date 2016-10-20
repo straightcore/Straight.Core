@@ -19,7 +19,7 @@ namespace Straight.Core.Domain.Storage
     public interface IReadModelRepository<TDomainEvent>
         where TDomainEvent : IDomainEvent
     {
-        TReadModel GetById<TReadModel>(Guid id) where TReadModel : class, IReadModel<TDomainEvent>, new();
+        TReadModel Get<TReadModel>(Guid id) where TReadModel : class, IReadModel<TDomainEvent>, new();
 
         IEnumerable<TReadModel> Get<TReadModel>() where TReadModel : class, IReadModel<TDomainEvent>, new();
 

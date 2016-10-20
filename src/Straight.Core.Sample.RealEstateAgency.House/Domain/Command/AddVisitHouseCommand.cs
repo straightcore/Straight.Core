@@ -9,5 +9,6 @@ namespace Straight.Core.Sample.RealEstateAgency.House.Domain.Command
         public User EstateOfficer { get; set; }
         public IAccount Account { get; set; }
         public DateTime MeetDate { get; set; }
+        public IHouse House { get; set; }
     }
 }

@@ -6,7 +6,6 @@ using Straight.Core.Extensions.Guard;
 using Straight.Core.Messaging;
 using Straight.Core.Sample.RealEstateAgency.Account.Domain.Command;
 using Straight.Core.Sample.RealEstateAgency.Account.EventStore;
-using Straight.Core.Sample.RealEstateAgency.House.EventStore.Events;
 using Straight.Core.Sample.RealEstateAgency.Model;
 using HouseVisitAdded = Straight.Core.Sample.RealEstateAgency.House.EventStore.Events.VisitAdded;
 
@@ -30,9 +29,13 @@ namespace Straight.Core.Sample.RealEstateAgency.Handler
             var aggregate = _aggregatorRepository.GetById<AggregatorAccount>(@event.Account.Id);
             if (aggregate == null)
             {
-                throw new ArgumentException($"Cannot find account ('{aggregate.Id}')");
+                throw new ArgumentException($"Cannot find account ('{@event.Account.Id}')");
             }
-            IHouse house = _readRepository.GetById<House.Domain.House>(@event.AggregateId);
+            IHouse house = _readRepository.Get<House.Domain.House>(@event.AggregateId);
+            if (house == null)
+            {
+                throw new ArgumentException($"Cannot find house ('{@event.AggregateId}')");
+            }
             aggregate.Update(new AddVisitCommand()
             {
                 EstateOfficierFirstName = @event.EstateOfficer.FirstName,

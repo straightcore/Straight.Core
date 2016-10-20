@@ -55,7 +55,7 @@ namespace Straight.Core.Tests.Domain
         [Test]
         public void Should_get_read_model_when_get_by_id()
         {
-            var actual = _repository.GetById<ReadModelTest>(_beginSource.First().Id);
+            var actual = _repository.Get<ReadModelTest>(_beginSource.First().Id);
             Assert.That(actual, Is.Not.Null);
         }
 
@@ -69,7 +69,7 @@ namespace Straight.Core.Tests.Domain
         [Test]
         public void Should_return_null_when_id_is_not_found()
         {
-            var actual = _repository.GetById<ReadModelTest>(Guid.NewGuid());
+            var actual = _repository.Get<ReadModelTest>(Guid.NewGuid());
             Assert.That(actual, Is.Null);
         }
 

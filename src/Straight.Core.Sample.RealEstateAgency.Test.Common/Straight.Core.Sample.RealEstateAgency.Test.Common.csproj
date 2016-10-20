@@ -50,9 +50,11 @@
     <Compile Include="Server\PersonaAccount.cs" />
     <Compile Include="Server\PersonaAddress.cs" />
     <Compile Include="Server\PersonaCustomer.cs" />
+    <Compile Include="Server\PersonaHouse.cs" />
     <Compile Include="Server\PersonaUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestDomainEventStore.cs" />
+    <Compile Include="TestReadModelRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Straight.Core.Sample.RealEstateAgency.Account\Straight.Core.Sample.RealEstateAgency.Account.csproj">

@@ -40,7 +40,7 @@ namespace Straight.Core.Domain.Storage
                     new ConcurrentDictionary<Guid, IReadModel<TDomainEvent>>(typeToData.Value));
         }
 
-        public TReadModel GetById<TReadModel>(Guid id) where TReadModel : class, IReadModel<TDomainEvent>, new()
+        public TReadModel Get<TReadModel>(Guid id) where TReadModel : class, IReadModel<TDomainEvent>, new()
         {
             var repo = GetReadModelRepository<TReadModel>(_memory);
             return repo == null ? null : GetReadModel<TReadModel>(id, repo);
