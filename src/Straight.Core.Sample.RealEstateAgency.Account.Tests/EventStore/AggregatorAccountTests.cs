@@ -1,10 +1,10 @@
 ﻿using NUnit.Framework;
-using System.Linq;
 using Straight.Core.Sample.RealEstateAgency.Account.Domain.Command;
 using Straight.Core.Sample.RealEstateAgency.Account.EventStore;
 using Straight.Core.Sample.RealEstateAgency.Account.EventStore.Events;
 using Straight.Core.Sample.RealEstateAgency.Model;
 using Straight.Core.Sample.RealEstateAgency.Test.Common.Server;
+using System.Linq;
 
 namespace Straight.Core.RealEstateAgency.Account.Tests.EventStore
 {

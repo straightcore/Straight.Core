@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using Straight.Core.Domain;
+﻿using Straight.Core.Domain;
 using Straight.Core.EventStore;
 using Straight.Core.Sample.RealEstateAgency.Account.EventStore.Events;
 using Straight.Core.Sample.RealEstateAgency.Model;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 
 namespace Straight.Core.Sample.RealEstateAgency.Account.Domain
 {

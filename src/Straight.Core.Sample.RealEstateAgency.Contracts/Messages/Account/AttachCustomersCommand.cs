@@ -1,7 +1,7 @@
-﻿using System;
-using System.Runtime.Serialization;
-using Straight.Core.Command;
+﻿using Straight.Core.Command;
 using Straight.Core.Sample.RealEstateAgency.Contracts.Models;
+using System;
+using System.Runtime.Serialization;
 
 namespace Straight.Core.Sample.RealEstateAgency.Contracts.Messages.Account
 {

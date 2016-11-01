@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Bus\InMemoryActionQueueTests.cs" />
     <Compile Include="Bus\InMemoryBusTests.cs" />
+    <Compile Include="Command\UnitOfWorkTransactionHandlerTests.cs" />
     <Compile Include="Domain\InMemoryReadModelRepositoryTests.cs" />
     <Compile Include="Domain\ReadModelTests.cs" />
     <Compile Include="EventStore\Aggregate\AggregatorBaseTests.cs" />

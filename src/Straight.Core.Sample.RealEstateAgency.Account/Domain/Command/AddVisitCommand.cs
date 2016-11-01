@@ -1,7 +1,7 @@
-﻿using System;
-using Straight.Core.Command;
+﻿using Straight.Core.Command;
 using Straight.Core.Domain;
 using Straight.Core.Sample.RealEstateAgency.Model;
+using System;
 
 namespace Straight.Core.Sample.RealEstateAgency.Account.Domain.Command
 {

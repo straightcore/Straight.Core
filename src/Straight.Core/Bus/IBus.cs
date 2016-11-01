@@ -11,8 +11,9 @@
 // ==============================================================================================================
 
 using System.Collections;
+using Straight.Core.Storage;
 
-namespace Straight.Core.Storage
+namespace Straight.Core.Bus
 {
     public interface IBus : IUnitOfWork
     {

@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Straight.Core.Sample.RealEstateAgency.Contracts.Models;
+﻿using Straight.Core.Sample.RealEstateAgency.Contracts.Models;
+using System.Collections.Generic;
 
 namespace Straight.Core.Sample.RealEstateAgency.Test.Common.Dto
 {

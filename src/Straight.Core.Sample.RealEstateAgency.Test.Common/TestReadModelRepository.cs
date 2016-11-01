@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Straight.Core.Domain;
+﻿using Straight.Core.Domain;
 using Straight.Core.Domain.Storage;
 using Straight.Core.EventStore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Straight.Core.Sample.RealEstateAgency.Test.Common
 {
@@ -15,9 +15,7 @@ namespace Straight.Core.Sample.RealEstateAgency.Test.Common
         {
             object obj;
             if (cache.TryGetValue(id, out obj))
-            {
                 return obj as TReadModel;
-            }
             return null;
         }
 

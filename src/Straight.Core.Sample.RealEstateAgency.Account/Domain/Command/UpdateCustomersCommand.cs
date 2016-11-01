@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using Straight.Core.Domain;
+﻿using Straight.Core.Domain;
 using Straight.Core.Sample.RealEstateAgency.Model;
+using System.Collections.Generic;
 
 namespace Straight.Core.Sample.RealEstateAgency.Account.Domain.Command
 {

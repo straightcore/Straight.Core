@@ -2,6 +2,7 @@
 
 namespace Straight.Core.Tests.Common.Command
 {
-
-    public class CommandTest : ICommand { }
+    public class CommandTest : ICommand
+    {
+    }
 }

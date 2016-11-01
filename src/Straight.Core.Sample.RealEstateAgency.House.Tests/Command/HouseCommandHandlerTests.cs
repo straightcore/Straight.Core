@@ -3,16 +3,16 @@ using NSubstitute.Core;
 using NUnit.Framework;
 using Straight.Core.EventStore;
 using Straight.Core.EventStore.Storage;
+using Straight.Core.Sample.RealEstateAgency.Contracts.Messages.House;
+using Straight.Core.Sample.RealEstateAgency.Contracts.Models;
 using Straight.Core.Sample.RealEstateAgency.House.Command;
 using Straight.Core.Sample.RealEstateAgency.House.Domain.Command;
 using Straight.Core.Sample.RealEstateAgency.House.EventStore;
 using Straight.Core.Sample.RealEstateAgency.House.EventStore.Events;
+using Straight.Core.Sample.RealEstateAgency.Test.Common.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Straight.Core.Sample.RealEstateAgency.Contracts.Messages.House;
-using Straight.Core.Sample.RealEstateAgency.Contracts.Models;
-using Straight.Core.Sample.RealEstateAgency.Test.Common.Dto;
 
 namespace Straight.Core.Sample.RealEstateAgency.House.Tests.Command
 {

@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Straight.Core.Extensions.Guard;
+using System;
 using System.Text.RegularExpressions;
-using Straight.Core.Extensions.Guard;
 
 namespace Straight.Core.Sample.RealEstateAgency.Model.Helper
 {

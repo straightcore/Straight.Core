@@ -1,34 +1,20 @@
 ﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Straight.Core.Messaging;
 using Straight.Core.Tests.Common.EventStore;
+using System;
 
 namespace Straight.Core.Tests.Messaging
 {
     [TestFixture]
     public class EventHandlerDispatcherTests
     {
-        private EventHandlerDispatcher _dispatcher;
-
         [SetUp]
         public void Setup()
         {
             _dispatcher = new EventHandlerDispatcher();
         }
 
-
-        [Test]
-        public void Should_call_method_when_register_and_process_event()
-        {
-            var isCalledEvent1 = false;
-            _dispatcher.Register(new EventHandlerTest(() => isCalledEvent1 = true));
-            _dispatcher.Process(new DomainEventTest());
-            Assert.That(isCalledEvent1);
-        }
+        private EventHandlerDispatcher _dispatcher;
 
         [Test]
         public void Should_call_all_methods_when_register_and_process_events()
@@ -43,6 +29,14 @@ namespace Straight.Core.Tests.Messaging
             Assert.That(isCalledEvent2);
         }
 
+        [Test]
+        public void Should_call_method_when_register_and_process_event()
+        {
+            var isCalledEvent1 = false;
+            _dispatcher.Register(new EventHandlerTest(() => isCalledEvent1 = true));
+            _dispatcher.Process(new DomainEventTest());
+            Assert.That(isCalledEvent1);
+        }
 
         [Test]
         public void Should_handle_event_when_multiple_type_handler_for_an_event()
@@ -50,12 +44,11 @@ namespace Straight.Core.Tests.Messaging
             var isCalledEvent1 = false;
             _dispatcher.Register(new EventHandlerTest(() => isCalledEvent1 = true));
             var isCalledHandler2 = false;
-            _dispatcher.Register(new EventHandlerTest2() { ActionDomainEventTest = () => isCalledHandler2 = true});
+            _dispatcher.Register(new EventHandlerTest2 {ActionDomainEventTest = () => isCalledHandler2 = true});
             _dispatcher.Process(new DomainEventTest());
             Assert.That(isCalledEvent1);
             Assert.That(isCalledHandler2);
         }
-
 
         [Test]
         public void Should_throw_argument_exception_when_process_event_unknow()
@@ -68,12 +61,12 @@ namespace Straight.Core.Tests.Messaging
         IEventHandler<DomainEventTest>
     {
         public Action ActionDomainEventTest { get; set; } = () => { };
+
         public void Handle(DomainEventTest @event)
         {
             ActionDomainEventTest();
         }
     }
-
 
     public class EventHandlerTest :
         IEventHandler<DomainEventTest>

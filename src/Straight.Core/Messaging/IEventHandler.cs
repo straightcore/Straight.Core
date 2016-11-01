@@ -14,7 +14,9 @@ using Straight.Core.EventStore;
 
 namespace Straight.Core.Messaging
 {
-    public interface IEventHandler { }
+    public interface IEventHandler
+    {
+    }
 
     public interface IEventHandler<in TEvent> : IEventHandler
         where TEvent : IDomainEvent

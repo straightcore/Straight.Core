@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using Straight.Core.EventStore;
+﻿using Straight.Core.EventStore;
 using Straight.Core.EventStore.Aggregate;
 using Straight.Core.EventStore.Storage;
+using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace Straight.Core.Sample.RealEstateAgency.Test.Common
 {

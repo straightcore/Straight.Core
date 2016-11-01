@@ -1,28 +1,51 @@
 ﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NSubstitute;
 using Straight.Core.Command;
 using Straight.Core.Messaging;
 using Straight.Core.Tests.Common.Command;
-using Straight.Core.Tests.Common.Domain;
+using System;
 
 namespace Straight.Core.Tests.Messaging
 {
     [TestFixture]
     public class CommandHandlerDispatcherTests
     {
-        private CommandHandlerDispatcher _dispatcher;
-
         [SetUp]
         public void Setup()
         {
             _dispatcher = new CommandHandlerDispatcher();
         }
 
+        private CommandHandlerDispatcher _dispatcher;
+
+        private class CommandHandlerTest : ICommandHandler<CommandTest>
+        {
+            private readonly Action<CommandTest> _action = cmd => { };
+
+            public CommandHandlerTest(Action<CommandTest> action)
+            {
+                _action = action;
+            }
+
+            public void Handle(CommandTest command)
+            {
+                _action(command);
+            }
+        }
+
+        private class CommandHandlerTestV2 : ICommandHandler<CommandTest>
+        {
+            private readonly Action<CommandTest> _action = cmd => { };
+
+            public CommandHandlerTestV2(Action<CommandTest> action)
+            {
+                _action = action;
+            }
+
+            public void Handle(CommandTest command)
+            {
+                _action(command);
+            }
+        }
 
         [Test]
         public void Should_process_when_commandhandler_has_been_register()
@@ -43,7 +66,7 @@ namespace Straight.Core.Tests.Messaging
             var isCalledSecondInstance = false;
             handler = new CommandHandlerTest(test => isCalledSecondInstance = true);
             _dispatcher.Register(handler);
-            
+
             _dispatcher.Process(new CommandTest());
             Assert.That(isCalledFirstInstance);
             Assert.That(isCalledSecondInstance);
@@ -63,41 +86,11 @@ namespace Straight.Core.Tests.Messaging
             Assert.That(isCalledFirstInstance);
             Assert.That(isCalledSecondInstance);
         }
-        
+
         [Test]
         public void Should_throw_argument_exception_when_process_commandtest_not_register()
         {
             Assert.Throws<ArgumentOutOfRangeException>(() => _dispatcher.Process(new CommandTest()));
-        }
-
-        private class CommandHandlerTest : ICommandHandler<CommandTest>
-        {
-            private readonly Action<CommandTest> _action = (cmd) => { };
-
-            public CommandHandlerTest(Action<CommandTest> action)
-            {
-                _action = action;
-            }
-
-            public void Handle(CommandTest command)
-            {
-                _action(command);
-            }
-        }
-
-        private class CommandHandlerTestV2 : ICommandHandler<CommandTest>
-        {
-            private readonly Action<CommandTest> _action = (cmd) => { };
-
-            public CommandHandlerTestV2(Action<CommandTest> action)
-            {
-                _action = action;
-            }
-
-            public void Handle(CommandTest command)
-            {
-                _action(command);
-            }
         }
     }
 }

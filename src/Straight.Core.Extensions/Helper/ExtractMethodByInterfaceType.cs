@@ -41,8 +41,8 @@ namespace Straight.Core.Extensions.Helper
         {
             return interfaceType.IsGenericType
                    && (interfaceType.GetGenericTypeDefinition() == typeOfInterfaceBase)
-                   //&& (interfaceType.GetGenericArguments().FirstOrDefault() != genericParameterType)
-                   ;
+                //&& (interfaceType.GetGenericArguments().FirstOrDefault() != genericParameterType)
+                ;
         }
     }
 }

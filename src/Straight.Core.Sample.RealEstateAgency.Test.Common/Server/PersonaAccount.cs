@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using Straight.Core.EventStore;
+﻿using Straight.Core.EventStore;
 using Straight.Core.Sample.RealEstateAgency.Account.EventStore.Events;
 using Straight.Core.Sample.RealEstateAgency.Model;
+using System;
+using System.Collections.Generic;
 
 namespace Straight.Core.Sample.RealEstateAgency.Test.Common.Server
 {
@@ -22,7 +22,7 @@ namespace Straight.Core.Sample.RealEstateAgency.Test.Common.Server
             {
                 new AccountCreated("chevalier.virginie", PersonaUser.John, new[] {PersonaCustomer.Virginie})
                 {
-                    AggregateId = Guid.NewGuid(),
+                    AggregateId = Guid.NewGuid()
                 }
             });
             return virginie;
@@ -35,7 +35,7 @@ namespace Straight.Core.Sample.RealEstateAgency.Test.Common.Server
             {
                 new AccountCreated("pierre.durand", PersonaUser.Jane, new[] {PersonaCustomer.Pierre})
                 {
-                    AggregateId = Guid.NewGuid(),
+                    AggregateId = Guid.NewGuid()
                 }
             });
             return pierre;

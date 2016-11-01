@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Straight.Core.Command;
+﻿using Straight.Core.Command;
 using Straight.Core.EventStore;
 using Straight.Core.EventStore.Storage;
 using Straight.Core.Extensions.Collections.Generic;
@@ -8,9 +6,13 @@ using Straight.Core.Extensions.Guard;
 using Straight.Core.Sample.RealEstateAgency.Account.Domain.Command;
 using Straight.Core.Sample.RealEstateAgency.Account.EventStore;
 using Straight.Core.Sample.RealEstateAgency.Contracts.Extensions;
-using AttachCustomersCommandDto = Straight.Core.Sample.RealEstateAgency.Contracts.Messages.Account.AttachCustomersCommand;
+using System;
+using System.Linq;
+using AttachCustomersCommandDto =
+    Straight.Core.Sample.RealEstateAgency.Contracts.Messages.Account.AttachCustomersCommand;
 using CreateAccountCommandDto = Straight.Core.Sample.RealEstateAgency.Contracts.Messages.Account.CreateAccountCommand;
-using UpdateCustomersCommandDto = Straight.Core.Sample.RealEstateAgency.Contracts.Messages.Account.UpdateCustomersCommand;
+using UpdateCustomersCommandDto =
+    Straight.Core.Sample.RealEstateAgency.Contracts.Messages.Account.UpdateCustomersCommand;
 
 namespace Straight.Core.Sample.RealEstateAgency.Account.Command
 {
@@ -32,9 +34,7 @@ namespace Straight.Core.Sample.RealEstateAgency.Account.Command
             command.Modifier.CheckIfArgumentIsNull(nameof(command.Modifier));
             var account = _repository.GetById<AggregatorAccount>(command.Id);
             if (account == null)
-            {
                 throw new ArgumentException($"Cannot find account ('{command.Id}')");
-            }
             command.Customers.ForEach(c => c.Id = Guid.Empty);
             account.Update(new AttachCustomersCommand
             {

@@ -15,6 +15,7 @@ namespace Straight.Core.Messaging
     public interface IHandlerDispatcher<THandled, TProcessed> where THandled : class where TProcessed : class
     {
         void Register(THandled handler);
+
         void Process(TProcessed @event);
     }
 }

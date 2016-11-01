@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using NSubstitute;
+﻿using NSubstitute;
 using NUnit.Framework;
 using Straight.Core.EventStore;
 using Straight.Core.EventStore.Storage;
@@ -12,6 +10,8 @@ using Straight.Core.Sample.RealEstateAgency.Contracts.Models;
 using Straight.Core.Sample.RealEstateAgency.Test.Common;
 using Straight.Core.Sample.RealEstateAgency.Test.Common.Dto;
 using Straight.Core.Sample.RealEstateAgency.Test.Common.Server;
+using System;
+using System.Linq;
 using AttachCustomersCommand = Straight.Core.Sample.RealEstateAgency.Contracts.Messages.Account.AttachCustomersCommand;
 using UpdateCustomersCommand = Straight.Core.Sample.RealEstateAgency.Contracts.Messages.Account.UpdateCustomersCommand;
 

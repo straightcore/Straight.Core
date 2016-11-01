@@ -55,6 +55,8 @@
     <Compile Include="Bus\RouterMessage.cs" />
     <Compile Include="Command\ICommand.cs" />
     <Compile Include="Command\ICommandHandler.cs" />
+    <Compile Include="Command\ITransactionHandler.cs" />
+    <Compile Include="Command\UnitOfWorkTransactionHandler.cs" />
     <Compile Include="Domain\DomainCommandBase.cs" />
     <Compile Include="Domain\IDomainCommand.cs" />
     <Compile Include="Domain\IHandlerDomainCommand.cs" />

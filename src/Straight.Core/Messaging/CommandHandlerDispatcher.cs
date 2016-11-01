@@ -10,8 +10,8 @@
 // See the License for the specific language governing permissions and limitations under the License.
 // ==============================================================================================================using System;
 
-using System;
 using Straight.Core.Command;
+using System;
 
 namespace Straight.Core.Messaging
 {

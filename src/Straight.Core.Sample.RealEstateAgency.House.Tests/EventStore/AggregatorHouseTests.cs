@@ -1,9 +1,9 @@
 ﻿using NUnit.Framework;
-using Straight.Core.Sample.RealEstateAgency.Model.Exceptions;
-using Straight.Core.Sample.RealEstateAgency.Test.Common.Server;
 using Straight.Core.Sample.RealEstateAgency.House.Domain.Command;
 using Straight.Core.Sample.RealEstateAgency.House.EventStore;
 using Straight.Core.Sample.RealEstateAgency.House.EventStore.Events;
+using Straight.Core.Sample.RealEstateAgency.Model.Exceptions;
+using Straight.Core.Sample.RealEstateAgency.Test.Common.Server;
 using System;
 using System.Linq;
 

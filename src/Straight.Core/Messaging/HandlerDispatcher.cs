@@ -10,18 +10,17 @@
 // See the License for the specific language governing permissions and limitations under the License.
 // ==============================================================================================================
 
+using Straight.Core.Extensions.Guard;
+using Straight.Core.Extensions.Helper;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
-using Straight.Core.EventStore;
-using Straight.Core.Extensions.Guard;
-using Straight.Core.Extensions.Helper;
 
 namespace Straight.Core.Messaging
 {
-    public class HandlerDispatcher<THandled, TProcessed> : IHandlerDispatcher<THandled, TProcessed> 
+    public class HandlerDispatcher<THandled, TProcessed> : IHandlerDispatcher<THandled, TProcessed>
         where THandled : class
         where TProcessed : class
     {
@@ -29,6 +28,7 @@ namespace Straight.Core.Messaging
 
         private ImmutableDictionary<Type, ImmutableList<THandled>> _handlerRegistred =
             ImmutableDictionary<Type, ImmutableList<THandled>>.Empty;
+
         private ImmutableDictionary<Type, MethodInfo> _methods = ImmutableDictionary<Type, MethodInfo>.Empty;
 
         public HandlerDispatcher(Type genericHandlerType)
@@ -42,12 +42,22 @@ namespace Straight.Core.Messaging
             foreach (var commandType in handler.GetType()
                 .GetInterfaces()
                 .Where(iface => iface.IsGenericType
-                                && iface.GetGenericTypeDefinition() == _genericHandlerType)
+                                && (iface.GetGenericTypeDefinition() == _genericHandlerType))
                 .Select(iface => iface.GetGenericArguments()[0]))
             {
                 SetHandlerRegister(handler, commandType);
                 SetMethodInfo(handler, commandType);
             }
+        }
+
+        public void Process(TProcessed @event)
+        {
+            ImmutableList<THandled> repoHandler;
+            MethodInfo handleMethod;
+            if (!_handlerRegistred.TryGetValue(@event.GetType(), out repoHandler)
+                || !_methods.TryGetValue(@event.GetType(), out handleMethod))
+                throw new ArgumentOutOfRangeException($"{@event.GetType().FullName} is not recognized");
+            repoHandler.ForEach(h => handleMethod.Invoke(h, new object[] {@event}));
         }
 
         private void SetMethodInfo(THandled handler, Type commandType)
@@ -70,31 +80,19 @@ namespace Straight.Core.Messaging
             }
         }
 
-        public void Process(TProcessed @event)
-        {
-            ImmutableList<THandled> repoHandler;
-            MethodInfo handleMethod;
-            if (!_handlerRegistred.TryGetValue(@event.GetType(), out repoHandler)
-                || !_methods.TryGetValue(@event.GetType(), out handleMethod))
-            {
-                throw new ArgumentOutOfRangeException($"{@event.GetType().FullName} is not recognized");
-            }
-            repoHandler.ForEach(h => handleMethod.Invoke(h, new object[] { @event }));
-        }
-
-        private static Dictionary<Type, MethodInfo> GetRegisterByType(Type commandHandler, Type typeOfInterfaceBase, Type genericArguments)
+        private static Dictionary<Type, MethodInfo> GetRegisterByType(Type commandHandler, Type typeOfInterfaceBase,
+            Type genericArguments)
         {
             return typeOfInterfaceBase.GetMethods()
-                               .Select(m => m.Name)
-                               .Select(m => MappingTypeToMethodHelper.ToMappingTypeMethod(
-                                                    commandHandler
-                                                    , genericArguments
-                                                    , typeOfInterfaceBase
-                                                    , m))
-                                .SelectMany(k => k)
-                                .GroupBy(k => k.Key)
-                                .ToDictionary(k => k.Key, k => k.First().Value);
-
+                .Select(m => m.Name)
+                .Select(m => MappingTypeToMethodHelper.ToMappingTypeMethod(
+                    commandHandler
+                    , genericArguments
+                    , typeOfInterfaceBase
+                    , m))
+                .SelectMany(k => k)
+                .GroupBy(k => k.Key)
+                .ToDictionary(k => k.Key, k => k.First().Value);
         }
     }
 }

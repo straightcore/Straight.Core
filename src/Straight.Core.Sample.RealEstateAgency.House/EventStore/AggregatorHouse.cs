@@ -2,11 +2,11 @@
 using Straight.Core.EventStore;
 using Straight.Core.EventStore.Aggregate;
 using Straight.Core.Extensions.Guard;
+using Straight.Core.Sample.RealEstateAgency.House.Domain.Command;
+using Straight.Core.Sample.RealEstateAgency.House.EventStore.Events;
 using Straight.Core.Sample.RealEstateAgency.Model;
 using Straight.Core.Sample.RealEstateAgency.Model.Exceptions;
 using Straight.Core.Sample.RealEstateAgency.Model.Helper;
-using Straight.Core.Sample.RealEstateAgency.House.Domain.Command;
-using Straight.Core.Sample.RealEstateAgency.House.EventStore.Events;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -51,9 +51,7 @@ namespace Straight.Core.Sample.RealEstateAgency.House.EventStore
             command.Account.CheckIfArgumentIsNull("Account");
             command.EstateOfficer.CheckIfArgumentIsNull("EstateOfficer");
             if (IsInCurrentMeet(command.MeetDate))
-            {
                 throw new DateAlreadyExistException(command.MeetDate);
-            }
             yield return new VisitAdded(
                 command.EstateOfficer.Clone() as User,
                 command.Account,

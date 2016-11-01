@@ -1,5 +1,5 @@
-﻿using System.Text.RegularExpressions;
-using Straight.Core.Extensions.Guard;
+﻿using Straight.Core.Extensions.Guard;
+using System.Text.RegularExpressions;
 
 namespace Straight.Core.Sample.RealEstateAgency.Model.Helper
 {

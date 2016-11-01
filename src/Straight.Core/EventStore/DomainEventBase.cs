@@ -27,9 +27,7 @@ namespace Straight.Core.EventStore
             set
             {
                 if (_aggregateId != Guid.Empty)
-                {
                     throw new ReadOnlyException("AggregateId is already set.");
-                }
                 _aggregateId = value;
             }
         }

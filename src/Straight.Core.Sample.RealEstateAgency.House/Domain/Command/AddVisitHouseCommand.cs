@@ -1,6 +1,6 @@
 ﻿using Straight.Core.Domain;
-using System;
 using Straight.Core.Sample.RealEstateAgency.Model;
+using System;
 
 namespace Straight.Core.Sample.RealEstateAgency.House.Domain.Command
 {

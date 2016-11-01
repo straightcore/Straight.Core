@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Straight.Core.EventStore;
+﻿using Straight.Core.EventStore;
 using Straight.Core.Sample.RealEstateAgency.Model;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Straight.Core.Sample.RealEstateAgency.Account.EventStore.Events
 {

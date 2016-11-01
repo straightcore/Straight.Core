@@ -1,5 +1,4 @@
-﻿
-namespace Straight.Core.Sample.RealEstateAgency.Model
+﻿namespace Straight.Core.Sample.RealEstateAgency.Model
 {
     public interface IHouse : IIdentifiable
     {

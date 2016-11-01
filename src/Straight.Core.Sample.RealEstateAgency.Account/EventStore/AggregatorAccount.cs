@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using Straight.Core.Domain;
+﻿using Straight.Core.Domain;
 using Straight.Core.EventStore;
 using Straight.Core.EventStore.Aggregate;
 using Straight.Core.Extensions.Collections.Generic;
@@ -13,6 +8,11 @@ using Straight.Core.Sample.RealEstateAgency.Account.EventStore.Events;
 using Straight.Core.Sample.RealEstateAgency.Model;
 using Straight.Core.Sample.RealEstateAgency.Model.Exceptions;
 using Straight.Core.Sample.RealEstateAgency.Model.Helper;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 
 namespace Straight.Core.Sample.RealEstateAgency.Account.EventStore
 {
@@ -26,10 +26,10 @@ namespace Straight.Core.Sample.RealEstateAgency.Account.EventStore
         , IHandlerDomainCommand<AddVisitCommand>
         , IApplyEvent<VisitAdded>
     {
+        private readonly SortedSet<DateTime> _allMeetDates = new SortedSet<DateTime>();
         private User _creator;
         private ImmutableDictionary<Guid, Customer> _customers = ImmutableDictionary<Guid, Customer>.Empty;
         private User _lastModifier;
-        private readonly SortedSet<DateTime> _allMeetDates = new SortedSet<DateTime>();
 
         public void Apply(AccountCreated @event)
         {
@@ -47,6 +47,28 @@ namespace Straight.Core.Sample.RealEstateAgency.Account.EventStore
         {
             _lastModifier = @event.Modifier;
             _customers = _customers.SetItem(@event.Customer.Id, @event.Customer.Clone() as Customer);
+        }
+
+        public void Apply(VisitAdded @event)
+        {
+            _lastModifier = @event.EstateOfficier;
+            _allMeetDates.Add(@event.MeetDate);
+        }
+
+        public IEnumerable Handle(AddVisitCommand command)
+        {
+            command.CheckIfArgumentIsNull("command");
+            command.House.CheckIfArgumentIsNull("Address");
+            AddressHelper.CheckMandatory(
+                command.House.Address.Street,
+                command.House.Address.City,
+                command.House.Address.PostalCode);
+            var estateOfficier = new User(command.EstateOfficierLastName,
+                command.EstateOfficierFirstName,
+                command.EstateOfficierUsername);
+            if (IsInCurrentMeet(command.MeetDate))
+                throw new DateAlreadyExistException(command.MeetDate);
+            yield return new VisitAdded(command.House, estateOfficier, command.MeetDate);
         }
 
         public IEnumerable Handle(AttachCustomersCommand command)
@@ -82,9 +104,7 @@ namespace Straight.Core.Sample.RealEstateAgency.Account.EventStore
         public IEnumerable Handle(UpdateCustomersCommand command)
         {
             if (!command.Customers.All(c => _customers.ContainsKey(c.Id)))
-            {
                 throw new ArgumentException("One or more customers are not found.");
-            }
             command.Customers.ForEach(c => AddressHelper.CheckMandatory(c.Street, c.City, c.PostalCode));
             command.Customers.ForEach(c => CustomerHelper.CheckMandatoryCustomer(
                 c.FirstName,
@@ -97,52 +117,20 @@ namespace Straight.Core.Sample.RealEstateAgency.Account.EventStore
             return command.Customers.Select(c => new CustomerUpdated(c, modifier));
         }
 
-        public IEnumerable Handle(AddVisitCommand command)
-        {
-            command.CheckIfArgumentIsNull("command");
-            command.House.CheckIfArgumentIsNull("Address");
-            AddressHelper.CheckMandatory(
-                command.House.Address.Street,
-                command.House.Address.City,
-                command.House.Address.PostalCode);
-            var estateOfficier = new User(command.EstateOfficierLastName, 
-                command.EstateOfficierFirstName,
-                command.EstateOfficierUsername);
-            if (IsInCurrentMeet(command.MeetDate))
-            {
-                throw new DateAlreadyExistException(command.MeetDate);
-            }
-            yield return new VisitAdded(command.House, estateOfficier, command.MeetDate);
-        }
-
-        public void Apply(VisitAdded @event)
-        {
-            this._lastModifier = @event.EstateOfficier;
-            _allMeetDates.Add(@event.MeetDate);
-        }
-
         private bool IsInCurrentMeet(DateTime meetDt)
         {
             if (!_allMeetDates.Any())
-            {
                 return false;
-            }
             if (_allMeetDates.Contains(meetDt))
-            {
                 return true;
-            }
             if ((_allMeetDates.Count == 1)
                 && IsInTimSpan(meetDt, _allMeetDates.First(), TimeSpan.FromMinutes(30)))
-            {
                 return true;
-            }
             var before = _allMeetDates.LastOrDefault(dt => dt < meetDt);
             var after = _allMeetDates.FirstOrDefault(dt => dt > meetDt);
             if ((before == default(DateTime))
                 && IsInTimSpan(meetDt, before, TimeSpan.FromMinutes(30)))
-            {
                 return true;
-            }
             return (after == default(DateTime))
                    && IsInTimSpan(meetDt, after, TimeSpan.FromMinutes(30));
         }

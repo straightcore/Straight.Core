@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Straight.Core.Sample.RealEstateAgency.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Straight.Core.Sample.RealEstateAgency.Model;
 
 namespace Straight.Core.Sample.RealEstateAgency.Test.Common.Server
 {

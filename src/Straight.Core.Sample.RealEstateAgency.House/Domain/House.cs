@@ -1,8 +1,8 @@
 ﻿using Straight.Core.Domain;
 using Straight.Core.EventStore;
 using Straight.Core.Sample.RealEstateAgency.House.EventStore.Events;
-using System.Collections.Generic;
 using Straight.Core.Sample.RealEstateAgency.Model;
+using System.Collections.Generic;
 
 namespace Straight.Core.Sample.RealEstateAgency.House.Domain
 {
