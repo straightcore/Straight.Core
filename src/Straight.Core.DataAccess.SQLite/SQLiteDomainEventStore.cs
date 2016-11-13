@@ -7,7 +7,9 @@ using Straight.Core.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Data;
 using System.IO;
+using System.Linq;
 
 namespace Straight.Core.DataAccess.SQLite
 {
@@ -20,25 +22,42 @@ namespace Straight.Core.DataAccess.SQLite
             @"INSERT INTO {0} VALUES(@EventId, @AggregatorId, @Event, @Version)";
 
         private const string SelectLastVersionEventFormat =
-            @"SELECT Max(Version) From {0} Where AggregatorId=@AggregatorId";
+            @"SELECT ifnull(Max(Version), 0) From {0} Where AggregatorId=@AggregatorId";
 
-        private static ImmutableDictionary<Type, string> TypeToInsert = ImmutableDictionary<Type, string>.Empty;
+        private const string SelectEventsFormat =
+            @"SELECT EventId, AggregatorId, Event, Version From {0} Where AggregatorId=@AggregatorId";
+
+        private static ImmutableDictionary<string, string> _typeToSelect = ImmutableDictionary<string, string>.Empty;
+        private static ImmutableDictionary<string, string> _typeToInsert = ImmutableDictionary<string, string>.Empty;
+        private static ImmutableDictionary<string, string> _typeToLastVersion = ImmutableDictionary<string, string>.Empty;
         private readonly string _connectionString;
         private readonly IEventSerializer _serializer;
         private SqliteConnection _sqliteConnection;
         private SqliteTransaction _sqLiteTransaction;
+        private readonly string selectSql;
+        private readonly string lastVersionSql;
+        private readonly string insertSql;
 
-        public SqLiteDomainEventStore(string connectionString, IEventSerializer serializer)
+        public SqLiteDomainEventStore(string connectionString, string tableName, IEventSerializer serializer)
         {
             _connectionString = connectionString;
             _serializer = serializer;
+            selectSql = GetSelectCommandText(tableName);
+            lastVersionSql = GetLastVersionCommandText(tableName);
+            insertSql = GetInsertCommandText(tableName);
         }
 
         protected override void BeginTransactionOverride()
         {
-            _sqliteConnection = new SqliteConnection(_connectionString);
-            _sqliteConnection.Open();
+            _sqliteConnection = GetConnection();
             _sqLiteTransaction = _sqliteConnection.BeginTransaction();
+        }
+
+        private SqliteConnection GetConnection()
+        {
+            var sqliteConnection = new SqliteConnection(_connectionString);
+            sqliteConnection.Open();
+            return sqliteConnection;
         }
 
         protected override void CommitOverride()
@@ -64,12 +83,44 @@ namespace Straight.Core.DataAccess.SQLite
 
         protected override IEnumerable<TDomainEvent> GetOverride(Guid aggregateId)
         {
-            throw new NotImplementedException();
+            using (var ms = SelectEvents(aggregateId))
+            {
+                var streamReader = new StreamReader(ms);
+                while (!streamReader.EndOfStream)
+                {
+                    yield return _serializer.Deserialize<TDomainEvent>(streamReader);
+                }
+            }
+        }
+
+        private Stream SelectEvents(Guid aggregateId)
+        {
+
+            using (var connection = GetConnection())
+            using (var cmd = connection.CreateCommand())
+            {
+                cmd.CommandText = selectSql;
+                cmd.Parameters.Add(new SqliteParameter("@AggregatorId", aggregateId));
+                return WriteEvents(cmd.ExecuteReader());
+            }
+        }
+
+        private static Stream WriteEvents(IDataReader reader)
+        {
+            var ms = new MemoryStream();
+            var writer = new StreamWriter(ms);
+            while (reader.Read())
+            {
+                writer.WriteLine(reader["Event"]);
+            }
+            writer.Flush();
+            ms.Seek(0, SeekOrigin.Begin);
+            return ms;
         }
 
         protected override void SaveOverride(IDomainEventChangeable<TDomainEvent> aggregator)
         {
-            var commandText = GetCommandText(aggregator.GetType());
+            var commandText = insertSql;
             aggregator.GetChanges().ForEach(ev => SaveEvent(ev, commandText, _sqLiteTransaction));
         }
 
@@ -88,20 +139,15 @@ namespace Straight.Core.DataAccess.SQLite
 
         protected override int GetVersionAggregator(IDomainEventChangeable<TDomainEvent> aggregator)
         {
-            const string commandText = @"
-                INSERT OR IGNORE INTO EventProviders VALUES (@eventProviderId, @type, 0);
-                SELECT Version FROM EventProviders WHERE EventProviderId = @eventProviderId";
-            using (var sqLiteCommand = new SqliteCommand(commandText, _sqLiteTransaction.Connection, _sqLiteTransaction)
-            )
+            using (var sqLiteCommand = new SqliteCommand(lastVersionSql, _sqLiteTransaction.Connection, _sqLiteTransaction))
             {
                 sqLiteCommand.Parameters.Add(new SqliteParameter("@AggregatorId", aggregator.Id));
-                sqLiteCommand.Parameters.Add(new SqliteParameter("@type", aggregator.GetType().FullName));
-                sqLiteCommand.Parameters.Add(new SqliteParameter("@version", aggregator.Version));
-
                 var executeScalar = sqLiteCommand.ExecuteScalar();
                 return executeScalar == null ? 0 : Convert.ToInt32(executeScalar);
             }
         }
+
+
 
         private string Serialize(TDomainEvent @event)
         {
@@ -112,15 +158,45 @@ namespace Straight.Core.DataAccess.SQLite
             }
         }
 
-        private string GetCommandText(Type type)
+        private string GetSelectCommandText(string table)
+        {
+            string select;
+            if (_typeToSelect.TryGetValue(table, out select))
+            {
+                return select;
+            }
+            var tableName = string.Format(TableName, table);
+            select = string.Format(SelectEventsFormat, tableName);
+            _typeToSelect = _typeToSelect.Add(table, select);
+            CheckIfTableExist(tableName);
+            return select;
+        }
+
+        private string GetLastVersionCommandText(string table)
+        {
+            string select;
+            if (_typeToLastVersion.TryGetValue(table, out select))
+            {
+                return select;
+            }
+            var tableName = string.Format(TableName, table);
+            select = string.Format(SelectLastVersionEventFormat, tableName);
+            _typeToLastVersion = _typeToLastVersion.Add(table, select);
+            CheckIfTableExist(tableName);
+            return select;
+        }
+
+        private string GetInsertCommandText(string table)
         {
             string insert;
-            if (TypeToInsert.TryGetValue(type, out insert))
+            if (_typeToInsert.TryGetValue(table, out insert))
+            {
                 return insert;
-            var tableName = string.Format(TableName, type.Name);
+            }
+            var tableName = string.Format(TableName, table);
             insert = string.Format(InsertEventFormat, tableName);
-            TypeToInsert = TypeToInsert.Add(type, insert);
-            CheckIfTableExist(tableName);
+            _typeToInsert = _typeToInsert.Add(table, insert);
+            CheckIfTableExist(table);
             return insert;
         }
 
@@ -128,9 +204,8 @@ namespace Straight.Core.DataAccess.SQLite
         {
             string createTableIfNotExist =
                 $"create table if not exists {tableName} (AggregatorId TEXT, EventId Text, Event TEXT, Version INTEGER)";
-            using (
-                var sqLiteCommand = new SqliteCommand(createTableIfNotExist, _sqLiteTransaction.Connection,
-                    _sqLiteTransaction))
+            using (var sqLiteCommand = new SqliteCommand(createTableIfNotExist, _sqLiteTransaction.Connection,
+                _sqLiteTransaction))
             {
                 sqLiteCommand.ExecuteScalar();
             }
@@ -139,13 +214,9 @@ namespace Straight.Core.DataAccess.SQLite
         protected override void Dispose(bool disposing)
         {
             if (disposing)
+            {
                 Rollback();
-        }
-
-        private struct DBQuery
-        {
-            public string Select;
-            public string LastVersion;
+            }
         }
     }
 }
