@@ -69,7 +69,9 @@ namespace Straight.Core.EventStore.Storage
             CheckIsTransactionRunning();
             var version = GetVersionAggregator(aggregator);
             if (version != aggregator.Version)
+            {
                 throw new ViolationConcurrencyException();
+            }
             SaveOverride(aggregator);
             aggregator.UpdateVersion(GetVersion(aggregator));
             aggregator.Clear();

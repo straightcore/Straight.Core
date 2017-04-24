@@ -69,6 +69,7 @@
     <Compile Include="EventStore\IDomainEvent.cs" />
     <Compile Include="EventStore\Storage\DomainEventStoreBase.cs" />
     <Compile Include="EventStore\Storage\IAggregatorRootMap.cs" />
+    <Compile Include="EventStore\Storage\IConcurrencyConflictsResolver.cs" />
     <Compile Include="EventStore\Storage\IDomainEventStorage.cs" />
     <Compile Include="EventStore\Storage\IDomainEventStoreUnitOfWork.cs" />
     <Compile Include="EventStore\Storage\InMemoryAggregatorRootMap.cs" />

@@ -56,8 +56,10 @@ namespace Straight.Core.Messaging
             MethodInfo handleMethod;
             if (!_handlerRegistred.TryGetValue(@event.GetType(), out repoHandler)
                 || !_methods.TryGetValue(@event.GetType(), out handleMethod))
+            {
                 throw new ArgumentOutOfRangeException($"{@event.GetType().FullName} is not recognized");
-            repoHandler.ForEach(h => handleMethod.Invoke(h, new object[] {@event}));
+            }
+            repoHandler.ForEach(h => handleMethod.Invoke(h, new object[] { @event }));
         }
 
         private void SetMethodInfo(THandled handler, Type commandType)
