@@ -40,6 +40,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\GeneralAssemblyInfo.cs">
+      <Link>Properties\GeneralAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Collections\Generic\IEnumerableExtensions.cs" />
     <Compile Include="Collections\IEnumerableExtensions.cs" />
     <Compile Include="Guard\Guard.cs" />

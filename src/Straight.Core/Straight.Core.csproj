@@ -45,6 +45,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\GeneralAssemblyInfo.cs">
+      <Link>Properties\GeneralAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Bus\Generic\IBus.cs" />
     <Compile Include="Bus\IActionQueue.cs" />
     <Compile Include="Bus\IBus.cs" />

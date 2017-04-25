@@ -41,6 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\GeneralAssemblyInfo.cs">
+      <Link>Properties\GeneralAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Command\HouseCommandHandler.cs" />
     <Compile Include="Domain\Command\AddVisitHouseCommand.cs" />
     <Compile Include="Domain\Command\UpdateAddressCommand.cs" />

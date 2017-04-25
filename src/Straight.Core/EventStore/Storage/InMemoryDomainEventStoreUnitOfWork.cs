@@ -18,8 +18,7 @@ using System.Linq;
 
 namespace Straight.Core.EventStore.Storage
 {
-    public class InMemoryDomainEventStoreUnitOfWork<TDomainEvent> :
-            IDomainEventStoreUnitOfWork<TDomainEvent>
+    public class InMemoryDomainEventStoreUnitOfWork<TDomainEvent> : IDomainEventStoreUnitOfWork<TDomainEvent>
         where TDomainEvent : IDomainEvent
     {
         private readonly IBus<TDomainEvent> _bus;

@@ -44,6 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\GeneralAssemblyInfo.cs">
+      <Link>Properties\GeneralAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Command\AccountCommandHandler.cs" />
     <Compile Include="Domain\Account.cs" />
     <Compile Include="Domain\Command\AddVisitCommand.cs" />

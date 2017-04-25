@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Straight.Core", "Straight.Core\Straight.Core.csproj", "{559C30F7-60D8-40A5-8A96-0A4E16AABB37}"
 EndProject
@@ -52,6 +52,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Straight.Core.Sample.RealEstateAgency.Handler", "Straight.Core.Sample.RealEstateAgency.Handler\Straight.Core.Sample.RealEstateAgency.Handler.csproj", "{E20D7100-9C3A-4E6A-A307-E54F9D9EA02F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Straight.Core.Sample.RealEstateAgency.Handler.Tests", "Straight.Core.Sample.RealEstateAgency.Handler.Tests\Straight.Core.Sample.RealEstateAgency.Handler.Tests.csproj", "{CF9CED63-0FB1-4EF2-B2E8-40FCDFB5C325}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "10.6 - Services", "10.6 - Services", "{362186BE-EC62-462C-A7FA-1F3F5D0BC990}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "10.7 - Presentation", "10.7 - Presentation", "{5F817292-D136-40D6-95F6-EF357495FF36}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Straight.Core.Sample.RealEstateAgency.Server", "Straight.Core.Sample.RealEstateAgency.Server\Straight.Core.Sample.RealEstateAgency.Server.csproj", "{D1D91A89-E18A-43DA-BD1F-47F802D95B76}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -127,6 +133,10 @@ Global
 		{CF9CED63-0FB1-4EF2-B2E8-40FCDFB5C325}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF9CED63-0FB1-4EF2-B2E8-40FCDFB5C325}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF9CED63-0FB1-4EF2-B2E8-40FCDFB5C325}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1D91A89-E18A-43DA-BD1F-47F802D95B76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1D91A89-E18A-43DA-BD1F-47F802D95B76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1D91A89-E18A-43DA-BD1F-47F802D95B76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1D91A89-E18A-43DA-BD1F-47F802D95B76}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -154,5 +164,8 @@ Global
 		{C0A4A7B1-5581-433B-83D0-F403A890A8FD} = {4F753D82-86F0-4B6C-802F-E8BC9F7826CF}
 		{E20D7100-9C3A-4E6A-A307-E54F9D9EA02F} = {8E1E2D1F-8333-4238-A1AF-B54505DC248C}
 		{CF9CED63-0FB1-4EF2-B2E8-40FCDFB5C325} = {8E1E2D1F-8333-4238-A1AF-B54505DC248C}
+		{362186BE-EC62-462C-A7FA-1F3F5D0BC990} = {AAD8D9AA-E1C5-4EB9-AE61-C76E3DAC85DD}
+		{5F817292-D136-40D6-95F6-EF357495FF36} = {AAD8D9AA-E1C5-4EB9-AE61-C76E3DAC85DD}
+		{D1D91A89-E18A-43DA-BD1F-47F802D95B76} = {362186BE-EC62-462C-A7FA-1F3F5D0BC990}
 	EndGlobalSection
 EndGlobal
