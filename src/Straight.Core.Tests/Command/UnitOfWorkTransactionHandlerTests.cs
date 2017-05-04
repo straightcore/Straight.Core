@@ -1,5 +1,5 @@
 ﻿using NSubstitute;
-using NUnit.Framework;
+using Xunit;
 using Straight.Core.Command;
 using Straight.Core.Storage;
 using System;
@@ -7,21 +7,21 @@ using NSubstitute.Core;
 
 namespace Straight.Core.Tests.Command
 {
-    [TestFixture]
+    
     public class UnitOfWorkTransactionHandlerTests
     {
         private UnitOfWorkTransactionHandler<ICommand, ICommandHandler<ICommand>> _transactionHandler;
         private IUnitOfWork _unitOfWork;
 
-        [SetUp]
-        public void Setup()
+        
+        public UnitOfWorkTransactionHandlerTests()
         {
             _unitOfWork = Substitute.For<IUnitOfWork>();
             _transactionHandler = new UnitOfWorkTransactionHandler<ICommand, ICommandHandler<ICommand>>(_unitOfWork);
         }
 
 
-        [Test]
+        [Fact]
         public void Should_call_handle_method_when_execute_transaction()
         {
             ICommandHandler<ICommand> commandHandler = Substitute.For<ICommandHandler<ICommand>>();
@@ -29,14 +29,14 @@ namespace Straight.Core.Tests.Command
             commandHandler.Received(1).Handle(Arg.Any<ICommand>());
         }
 
-        [Test]
+        [Fact]
         public void Should_call_commit_method_when_execute_transaction()
         {
             _transactionHandler.Execute(Substitute.For<ICommand>(), Substitute.For<ICommandHandler<ICommand>>());
             _unitOfWork.Received(1).Commit();
         }
 
-        [Test]
+        [Fact]
         public void Should_call_commitrollback_method_when_exception_throw_during_execution_transaction()
         {
             var commandHandler = Substitute.For<ICommandHandler<ICommand>>();

@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 
 namespace Straight.Core.Sample.RealEstateAgency.Contracts.Messages.Account
 {
-    [Serializable]
+    
     [DataContract]
     public class AttachCustomersCommand : ICommand
     {

@@ -10,11 +10,11 @@
 // See the License for the specific language governing permissions and limitations under the License.
 // ==============================================================================================================
 
-using System;
+using Straight.Core.Common;
 
 namespace Straight.Core.Exceptions
 {
-    public class ModelNotFoundException : SystemException
+    public class ModelNotFoundException : StraightCoreException
     {
         public ModelNotFoundException(string message) : base(message)
         {

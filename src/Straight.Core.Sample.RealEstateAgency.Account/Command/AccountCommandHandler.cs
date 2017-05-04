@@ -8,11 +8,9 @@ using Straight.Core.Sample.RealEstateAgency.Account.EventStore;
 using Straight.Core.Sample.RealEstateAgency.Contracts.Extensions;
 using System;
 using System.Linq;
-using AttachCustomersCommandDto =
-    Straight.Core.Sample.RealEstateAgency.Contracts.Messages.Account.AttachCustomersCommand;
+using AttachCustomersCommandDto = Straight.Core.Sample.RealEstateAgency.Contracts.Messages.Account.AttachCustomersCommand;
 using CreateAccountCommandDto = Straight.Core.Sample.RealEstateAgency.Contracts.Messages.Account.CreateAccountCommand;
-using UpdateCustomersCommandDto =
-    Straight.Core.Sample.RealEstateAgency.Contracts.Messages.Account.UpdateCustomersCommand;
+using UpdateCustomersCommandDto = Straight.Core.Sample.RealEstateAgency.Contracts.Messages.Account.UpdateCustomersCommand;
 
 namespace Straight.Core.Sample.RealEstateAgency.Account.Command
 {

@@ -1,78 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{55CA532F-D286-4C4E-B1FE-7BF2E13D5447}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Straight.Core.Sample.RealEstateAgency.Model</RootNamespace>
-    <AssemblyName>Straight.Core.Sample.RealEstateAgency.Model</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <ProjectReference Include="..\Straight.Core.Extensions\Straight.Core.Extensions.csproj" />
+    <ProjectReference Include="..\Straight.Core\Straight.Core.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\GeneralAssemblyInfo.cs">
-      <Link>Properties\GeneralAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="Address.cs" />
-    <Compile Include="Customer.cs" />
-    <Compile Include="Exceptions\DateAlreadyExistException.cs" />
-    <Compile Include="Helper\AddressHelper.cs" />
-    <Compile Include="Helper\CustomerHelper.cs" />
-    <Compile Include="Helper\PhoneHelper.cs" />
-    <Compile Include="Helper\UserHelper.cs" />
-    <Compile Include="IAccount.cs" />
-    <Compile Include="IHouse.cs" />
-    <Compile Include="Phone.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="User.cs" />
-    <Compile Include="Visit.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Straight.Core.Extensions\Straight.Core.Extensions.csproj">
-      <Project>{31dc24d4-1227-4d84-9509-85af1575ae54}</Project>
-      <Name>Straight.Core.Extensions</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Straight.Core\Straight.Core.csproj">
-      <Project>{559c30f7-60d8-40a5-8a96-0a4e16aabb37}</Project>
-      <Name>Straight.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

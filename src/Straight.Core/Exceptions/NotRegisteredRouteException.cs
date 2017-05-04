@@ -10,13 +10,13 @@
 // See the License for the specific language governing permissions and limitations under the License.
 // ==============================================================================================================
 
+using Straight.Core.Common;
 using System;
-using System.Runtime.Serialization;
 
 namespace Straight.Core.Exceptions
 {
-    [Serializable]
-    public class NotRegisteredRouteException : SystemException
+    
+    public class NotRegisteredRouteException : StraightCoreException
     {
         private static readonly string FullName = typeof(NotRegisteredRouteException).FullName;
 
@@ -32,9 +32,6 @@ namespace Straight.Core.Exceptions
             : base($"Router does not have route for {typeOfMessage.FullName}")
         {
         }
-
-        protected NotRegisteredRouteException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
+        
     }
 }

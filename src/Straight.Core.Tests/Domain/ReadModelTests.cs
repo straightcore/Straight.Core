@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 using Straight.Core.Domain;
 using Straight.Core.EventStore;
 using Straight.Core.Tests.Common.Domain;
@@ -9,11 +9,11 @@ using System.Linq;
 
 namespace Straight.Core.Tests.Domain
 {
-    [TestFixture]
+    
     public class ReadModelTests
     {
-        [SetUp]
-        public void SetUp()
+        
+        public ReadModelTests()
         {
             readModel = new ReadModelTest(() => callBack());
         }
@@ -21,18 +21,18 @@ namespace Straight.Core.Tests.Domain
         private IReadModel<IDomainEvent> readModel;
         private readonly Action callBack = () => { };
 
-        [Test]
+        [Fact]
         public void Should_apply_event_when_new_event_is_raised()
         {
             var guid = Guid.NewGuid();
             var expectedEvent = new DomainEventTest {Id = guid, AggregateId = guid, Version = 2};
             readModel.Update(expectedEvent);
-            Assert.That(readModel.Id, Is.EqualTo(expectedEvent.Id));
-            Assert.That(readModel.Version, Is.EqualTo(expectedEvent.Version));
-            Assert.That(readModel.Events.Count(ev => ev == expectedEvent), Is.EqualTo(1));
+            Assert.Equal(readModel.Id, expectedEvent.Id);
+            Assert.Equal(readModel.Version, expectedEvent.Version);
+            Assert.Equal(readModel.Events.Count(ev => ev == expectedEvent), 1);
         }
 
-        [Test]
+        [Fact]
         public void Should_load_historical_event_when_load_read_model()
         {
             var guid = Guid.NewGuid();

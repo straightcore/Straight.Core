@@ -1,79 +1,22 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{620AE724-224B-4F19-81D2-B3A69FAF9B28}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Straight.Core.Sample.RealEstateAgency.Contracts</RootNamespace>
-    <AssemblyName>Straight.Core.Sample.RealEstateAgency.Contracts</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.3.0" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="..\GeneralAssemblyInfo.cs">
-      <Link>Properties\GeneralAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="Extensions\ToEnumMapperExtensions.cs" />
-    <Compile Include="Extensions\ToModelExtensions.cs" />
-    <Compile Include="Messages\Account\AttachCustomersCommand.cs" />
-    <Compile Include="Messages\Account\CreateAccountCommand.cs" />
-    <Compile Include="Messages\Account\UpdateCustomersCommand.cs" />
-    <Compile Include="Messages\House\CreateHousesCommand.cs" />
-    <Compile Include="Messages\House\UpdateHouseCommandHandler.cs" />
-    <Compile Include="Models\AddressDto.cs" />
-    <Compile Include="Models\CustomerDto.cs" />
-    <Compile Include="Models\PhoneDto.cs" />
-    <Compile Include="Models\RequesterDto.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <ProjectReference Include="..\Straight.Core.Sample.RealEstateAgency.Model\Straight.Core.Sample.RealEstateAgency.Model.csproj" />
+    <ProjectReference Include="..\Straight.Core\Straight.Core.csproj" />
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\Straight.Core.Sample.RealEstateAgency.Model\Straight.Core.Sample.RealEstateAgency.Model.csproj">
-      <Project>{55CA532F-D286-4C4E-B1FE-7BF2E13D5447}</Project>
-      <Name>Straight.Core.Sample.RealEstateAgency.Model</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Straight.Core\Straight.Core.csproj">
-      <Project>{559c30f7-60d8-40a5-8a96-0a4e16aabb37}</Project>
-      <Name>Straight.Core</Name>
-    </ProjectReference>
+    <Reference Include="System.Runtime.Serialization.Formatters">
+      <HintPath>..\..\..\..\..\.nuget\packages\system.runtime.serialization.formatters\4.3.0\ref\netstandard1.3\System.Runtime.Serialization.Formatters.dll</HintPath>
+    </Reference>
   </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

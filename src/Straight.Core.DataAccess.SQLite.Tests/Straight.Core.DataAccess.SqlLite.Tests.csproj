@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="1.1.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
+    <PackageReference Include="NSubstitute" Version="2.0.3" />
+    <PackageReference Include="xunit" Version="2.2.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Straight.Core.Common\Straight.Core.Common.csproj" />
+    <ProjectReference Include="..\Straight.Core.DataAccess.SQLite\Straight.Core.DataAccess.SqlLite.csproj" />
+    <ProjectReference Include="..\Straight.Core.DataAccess\Straight.Core.DataAccess.csproj" />
+    <ProjectReference Include="..\Straight.Core.Extensions\Straight.Core.Extensions.csproj" />
+    <ProjectReference Include="..\Straight.Core.Tests.Common\Straight.Core.Tests.Common.csproj" />
+    <ProjectReference Include="..\Straight.Core\Straight.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.Extensions.DependencyModel">
+      <HintPath>..\..\..\..\..\.nuget\packages\microsoft.extensions.dependencymodel\1.1.0\lib\netstandard1.6\Microsoft.Extensions.DependencyModel.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.core">
+      <HintPath>..\..\..\..\..\.nuget\packages\xunit.extensibility.core\2.2.0\lib\netstandard1.1\xunit.core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\GeneralAssemblyInfo.cs" Link="Properties\GeneralAssemblyInfo.cs" />
+  </ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>bin\Debug\</OutputPath>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <LangVersion>7</LangVersion>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+</Project>

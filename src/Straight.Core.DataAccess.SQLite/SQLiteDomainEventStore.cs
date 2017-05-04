@@ -1,80 +1,104 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Data;
+using System.IO;
+using Microsoft.Data.Sqlite;
+using Straight.Core.Common.Guards;
+using Straight.Core.DataAccess.Data;
+using Straight.Core.DataAccess.SQlLite.Data;
 using Straight.Core.EventStore;
 using Straight.Core.EventStore.Aggregate;
 using Straight.Core.EventStore.Storage;
 using Straight.Core.Extensions.Collections.Generic;
 using Straight.Core.Serialization;
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Data;
-using System.IO;
-using System.Linq;
 
-namespace Straight.Core.DataAccess.SQLite
+namespace Straight.Core.DataAccess.SqlLite
 {
     public sealed class SqLiteDomainEventStore<TDomainEvent> : DomainEventStoreBase<TDomainEvent>
         where TDomainEvent : IDomainEvent
     {
         private const string TableName = @"{0}Events";
 
-        private const string InsertEventFormat =
-            @"INSERT INTO {0} VALUES(@EventId, @AggregatorId, @Event, @Version)";
+        private const string InsertEventFormat = @"INSERT INTO {0} VALUES(@EventId, @AggregatorId, @Event, @Version)";
 
-        private const string SelectLastVersionEventFormat =
-            @"SELECT ifnull(Max(Version), 0) From {0} Where AggregatorId=@AggregatorId";
+        private const string SelectLastVersionEventFormat = @"SELECT ifnull(Max(Version), 0) From {0} Where AggregatorId=@AggregatorId";
 
-        private const string SelectEventsFormat =
-            @"SELECT EventId, AggregatorId, Event, Version From {0} Where AggregatorId=@AggregatorId";
+        private const string SelectEventsFormat = @"SELECT EventId, AggregatorId, Event, Version From {0} Where AggregatorId=@AggregatorId";
 
         private static ImmutableDictionary<string, string> _typeToSelect = ImmutableDictionary<string, string>.Empty;
         private static ImmutableDictionary<string, string> _typeToInsert = ImmutableDictionary<string, string>.Empty;
+
         private static ImmutableDictionary<string, string> _typeToLastVersion = ImmutableDictionary<string, string>.Empty;
-        private readonly string _connectionString;
+
         private readonly IEventSerializer _serializer;
         private SqliteConnection _sqliteConnection;
         private SqliteTransaction _sqLiteTransaction;
-        private readonly string selectSql;
-        private readonly string lastVersionSql;
-        private readonly string insertSql;
+        private readonly string _selectSql;
+        private readonly string _lastVersionSql;
+        private readonly string _insertSql;
+        private readonly ISqlConnectionFactory<SqliteConnection> _factory;
+        private readonly string _tableName;
+
+        public SqLiteDomainEventStore(ISqlConnectionFactory<SqliteConnection> factory, string tableName, IEventSerializer serializer)
+        {
+            factory.ArgumentNull(nameof(factory));
+            tableName.ArgumentIsNullOrEmpty(nameof(tableName));
+            serializer.ArgumentNull(nameof(serializer));
+            
+            _factory = factory;
+            _tableName = tableName;
+            _serializer = serializer;
+
+            _selectSql = GetSelectCommandText(tableName);
+            _lastVersionSql = GetLastVersionCommandText(tableName);
+            _insertSql = GetInsertCommandText(tableName);
+        }
 
         public SqLiteDomainEventStore(string connectionString, string tableName, IEventSerializer serializer)
+            : this(new SQLiteConnectionFactory(connectionString), tableName, serializer)
         {
-            _connectionString = connectionString;
-            _serializer = serializer;
-            selectSql = GetSelectCommandText(tableName);
-            lastVersionSql = GetLastVersionCommandText(tableName);
-            insertSql = GetInsertCommandText(tableName);
+            
         }
 
         protected override void BeginTransactionOverride()
         {
-            _sqliteConnection = GetConnection();
+            _sqliteConnection = _factory.OpenConnection();
+            CheckIfTableExist(_tableName);
+            CreateTransaction();
+        }
+
+        private void CreateTransaction()
+        {
             _sqLiteTransaction = _sqliteConnection.BeginTransaction();
         }
-
-        private SqliteConnection GetConnection()
-        {
-            var sqliteConnection = new SqliteConnection(_connectionString);
-            sqliteConnection.Open();
-            return sqliteConnection;
-        }
-
+        
         protected override void CommitOverride()
         {
-            _sqLiteTransaction.Commit();
+            CommitTransaction();
             CloseConnection();
+        }
+
+        private void CommitTransaction()
+        {
+            _sqLiteTransaction.Commit();
+            _sqLiteTransaction.Dispose();
         }
 
         protected override void RollbackOverride()
         {
-            _sqLiteTransaction.Rollback();
+            RollbackTransaction();
             CloseConnection();
+        }
+
+        private void RollbackTransaction()
+        {
+            _sqLiteTransaction.Rollback();
+            _sqLiteTransaction.Dispose();
         }
 
         private void CloseConnection()
         {
-            _sqLiteTransaction.Dispose();
             _sqliteConnection.Close();
             _sqliteConnection.Dispose();
             _sqLiteTransaction = null;
@@ -95,11 +119,10 @@ namespace Straight.Core.DataAccess.SQLite
 
         private Stream SelectEvents(Guid aggregateId)
         {
-
-            using (var connection = GetConnection())
+            using (var connection = _factory.OpenConnection())
             using (var cmd = connection.CreateCommand())
             {
-                cmd.CommandText = selectSql;
+                cmd.CommandText = _selectSql;
                 cmd.Parameters.Add(new SqliteParameter("@AggregatorId", aggregateId));
                 return WriteEvents(cmd.ExecuteReader());
             }
@@ -120,8 +143,9 @@ namespace Straight.Core.DataAccess.SQLite
 
         protected override void SaveOverride(IDomainEventChangeable<TDomainEvent> aggregator)
         {
-            var commandText = insertSql;
-            aggregator.GetChanges().ForEach(ev => SaveEvent(ev, commandText, _sqLiteTransaction));
+            var commandText = _insertSql;
+            aggregator.GetChanges()
+                      .ForEach(ev => SaveEvent(ev, commandText, _sqLiteTransaction));
         }
 
         private void SaveEvent(TDomainEvent @event, string commandText, SqliteTransaction sqLiteTransaction)
@@ -139,15 +163,17 @@ namespace Straight.Core.DataAccess.SQLite
 
         protected override int GetVersionAggregator(IDomainEventChangeable<TDomainEvent> aggregator)
         {
-            using (var sqLiteCommand = new SqliteCommand(lastVersionSql, _sqLiteTransaction.Connection, _sqLiteTransaction))
+            using (var sqLiteCommand = new SqliteCommand(_lastVersionSql,
+                                                         _sqLiteTransaction.Connection,
+                                                         _sqLiteTransaction))
             {
                 sqLiteCommand.Parameters.Add(new SqliteParameter("@AggregatorId", aggregator.Id));
                 var executeScalar = sqLiteCommand.ExecuteScalar();
-                return executeScalar == null ? 0 : Convert.ToInt32(executeScalar);
+                return executeScalar == null
+                           ? 0
+                           : Convert.ToInt32(executeScalar);
             }
         }
-
-
 
         private string Serialize(TDomainEvent @event)
         {
@@ -158,57 +184,55 @@ namespace Straight.Core.DataAccess.SQLite
             }
         }
 
-        private string GetSelectCommandText(string table)
+        private static string GetSelectCommandText(string table)
         {
-            string select;
-            if (_typeToSelect.TryGetValue(table, out select))
+            if (_typeToSelect.TryGetValue(table, out string select))
             {
                 return select;
             }
             var tableName = string.Format(TableName, table);
             select = string.Format(SelectEventsFormat, tableName);
             _typeToSelect = _typeToSelect.Add(table, select);
-            CheckIfTableExist(tableName);
             return select;
         }
 
-        private string GetLastVersionCommandText(string table)
+        private static string GetLastVersionCommandText(string table)
         {
-            string select;
-            if (_typeToLastVersion.TryGetValue(table, out select))
+            if (_typeToLastVersion.TryGetValue(table, out string select))
             {
                 return select;
             }
             var tableName = string.Format(TableName, table);
             select = string.Format(SelectLastVersionEventFormat, tableName);
             _typeToLastVersion = _typeToLastVersion.Add(table, select);
-            CheckIfTableExist(tableName);
             return select;
         }
 
-        private string GetInsertCommandText(string table)
+        private static string GetInsertCommandText(string table)
         {
-            string insert;
-            if (_typeToInsert.TryGetValue(table, out insert))
+            if (_typeToInsert.TryGetValue(table, out string insert))
             {
                 return insert;
             }
             var tableName = string.Format(TableName, table);
             insert = string.Format(InsertEventFormat, tableName);
             _typeToInsert = _typeToInsert.Add(table, insert);
-            CheckIfTableExist(table);
             return insert;
         }
 
         private void CheckIfTableExist(string tableName)
         {
-            string createTableIfNotExist =
+            CreateTransaction();
+            var createTableIfNotExist =
                 $"create table if not exists {tableName} (AggregatorId TEXT, EventId Text, Event TEXT, Version INTEGER)";
-            using (var sqLiteCommand = new SqliteCommand(createTableIfNotExist, _sqLiteTransaction.Connection,
-                _sqLiteTransaction))
+            using (var sqLiteCommand = new SqliteCommand(
+                                                         createTableIfNotExist,
+                                                         _sqLiteTransaction.Connection,
+                                                         _sqLiteTransaction))
             {
-                sqLiteCommand.ExecuteScalar();
+                var result = sqLiteCommand.ExecuteScalar();
             }
+            CommitTransaction();
         }
 
         protected override void Dispose(bool disposing)

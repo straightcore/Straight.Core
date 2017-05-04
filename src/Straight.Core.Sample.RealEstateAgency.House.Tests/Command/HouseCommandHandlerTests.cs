@@ -1,6 +1,5 @@
 ﻿using NSubstitute;
 using NSubstitute.Core;
-using NUnit.Framework;
 using Straight.Core.EventStore;
 using Straight.Core.EventStore.Storage;
 using Straight.Core.Sample.RealEstateAgency.Contracts.Messages.House;
@@ -13,14 +12,13 @@ using Straight.Core.Sample.RealEstateAgency.Test.Common.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Xunit;
 
 namespace Straight.Core.Sample.RealEstateAgency.House.Tests.Command
 {
-    [TestFixture]
     public class HouseCommandHandlerTests
     {
-        [SetUp]
-        public void Setup()
+        public HouseCommandHandlerTests()
         {
             _repository = GetRepository();
             _commandHandler = new HouseCommandHandler(_repository);
@@ -45,7 +43,7 @@ namespace Straight.Core.Sample.RealEstateAgency.House.Tests.Command
             return _houses[callInfo.Arg<Guid>()];
         }
 
-        [Test]
+        [Fact]
         public void Should_create_new_house_when_emit_create_house_command()
         {
             _commandHandler.Handle(new CreateHouseCommandHandler
@@ -56,7 +54,7 @@ namespace Straight.Core.Sample.RealEstateAgency.House.Tests.Command
             _repository.Received(1).Add(Arg.Any<AggregatorHouse>());
         }
 
-        [Test]
+        [Fact]
         public void Should_have_created_event_when_emit_create_house_command()
         {
             var newYork = PersonaAddressDto.NationalMuseumNewYork;
@@ -68,10 +66,10 @@ namespace Straight.Core.Sample.RealEstateAgency.House.Tests.Command
                 Address = newYork,
                 Creator = john
             });
-            Assert.That(_houses, Has.Count.EqualTo(1));
+            Assert.Equal(_houses.Count, 1);
         }
 
-        [Test]
+        [Fact]
         public void Should_have_updated_event_when_emit_update_house_command()
         {
             var newYork = PersonaAddressDto.NationalMuseumNewYork;
@@ -108,16 +106,16 @@ namespace Straight.Core.Sample.RealEstateAgency.House.Tests.Command
             _commandHandler.Handle(expectedCommand);
             var actual = _houses[house.Id];
             var addressUpdated = actual.GetChanges().OfType<AddressUpdated>().First();
-            Assert.That(addressUpdated.NewAddress.Street, Is.EqualTo(expectedCommand.Address.Street));
-            Assert.That(addressUpdated.NewAddress.City, Is.EqualTo(expectedCommand.Address.City));
-            Assert.That(addressUpdated.NewAddress.PostalCode, Is.EqualTo(expectedCommand.Address.PostalCode));
-            Assert.That(addressUpdated.NewAddress.StreetNumber, Is.EqualTo(expectedCommand.Address.StreetNumber));
-            Assert.That(addressUpdated.Modifier.FirstName, Is.EqualTo(expectedCommand.Modifier.FirstName));
-            Assert.That(addressUpdated.Modifier.LastName, Is.EqualTo(expectedCommand.Modifier.LastName));
-            Assert.That(addressUpdated.Modifier.Username, Is.EqualTo(expectedCommand.Modifier.Username));
+            Assert.Equal(addressUpdated.NewAddress.Street, expectedCommand.Address.Street);
+            Assert.Equal(addressUpdated.NewAddress.City, expectedCommand.Address.City);
+            Assert.Equal(addressUpdated.NewAddress.PostalCode, expectedCommand.Address.PostalCode);
+            Assert.Equal(addressUpdated.NewAddress.StreetNumber, expectedCommand.Address.StreetNumber);
+            Assert.Equal(addressUpdated.Modifier.FirstName, expectedCommand.Modifier.FirstName);
+            Assert.Equal(addressUpdated.Modifier.LastName, expectedCommand.Modifier.LastName);
+            Assert.Equal(addressUpdated.Modifier.Username, expectedCommand.Modifier.Username);
         }
 
-        [Test]
+        [Fact]
         public void Should_update_address_when_emit_update_house_command()
         {
             var newYork = PersonaAddressDto.NationalMuseumNewYork;

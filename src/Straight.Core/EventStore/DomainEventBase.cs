@@ -11,7 +11,7 @@
 // ==============================================================================================================
 
 using System;
-using System.Data;
+using Straight.Core.Common.Data;
 
 namespace Straight.Core.EventStore
 {
@@ -27,7 +27,9 @@ namespace Straight.Core.EventStore
             set
             {
                 if (_aggregateId != Guid.Empty)
+                {
                     throw new ReadOnlyException("AggregateId is already set.");
+                }
                 _aggregateId = value;
             }
         }

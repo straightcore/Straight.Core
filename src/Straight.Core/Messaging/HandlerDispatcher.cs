@@ -41,7 +41,7 @@ namespace Straight.Core.Messaging
         {
             foreach (var commandType in handler.GetType()
                 .GetInterfaces()
-                .Where(iface => iface.IsGenericType
+                .Where(iface => iface.GetTypeInfo().IsGenericType
                                 && (iface.GetGenericTypeDefinition() == _genericHandlerType))
                 .Select(iface => iface.GetGenericArguments()[0]))
             {

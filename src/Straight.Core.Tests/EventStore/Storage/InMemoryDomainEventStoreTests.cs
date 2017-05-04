@@ -1,25 +1,24 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 using Straight.Core.EventStore;
 using Straight.Core.EventStore.Aggregate;
 using Straight.Core.EventStore.Storage;
 using Straight.Core.Exceptions;
-using Straight.Core.Tests.Common.Domain;
-using Straight.Core.Tests.Common.EventStore;
 using System;
 using System.Linq;
+using Straight.Core.Tests.Common.Domain;
+using Straight.Core.Tests.Common.EventStore;
 
 namespace Straight.Core.Tests.EventStore.Storage
 {
-    [TestFixture]
+    
     public class InMemoryDomainEventStoreTests
     {
-        [SetUp]
-        public void SetUp()
+        
+        public InMemoryDomainEventStoreTests()
         {
             _storage = new InMemoryDomainEventStore<IDomainEvent>();
         }
-
-        [TearDown]
+        
         public void TearDown()
         {
             (_storage as IDisposable)?.Dispose();
@@ -27,7 +26,7 @@ namespace Straight.Core.Tests.EventStore.Storage
 
         private IDomainEventStorage<IDomainEvent> _storage;
 
-        [Test]
+        [Fact]
         public void Should_add_event_in_memory_when_commit_changed()
         {
             IAggregator<IDomainEvent> aggregator = new AggregatorTest(() => { });
@@ -39,11 +38,11 @@ namespace Straight.Core.Tests.EventStore.Storage
             _storage.Save(aggregator);
             _storage.Commit();
 
-            Assert.That(_storage.Get(aggregator.Id), Is.EquivalentTo(expectedChanged));
+            Assert.Equal(_storage.Get(aggregator.Id), expectedChanged);
         }
 
-        [Test]
-        public void Should_does_have_event_in_memory_when_rollback_changed()
+        [Fact]
+        public void Should_does_not_have_event_in_memory_when_rollback_changed()
         {
             IAggregator<IDomainEvent> aggregator = new AggregatorTest(() => { });
 
@@ -53,10 +52,11 @@ namespace Straight.Core.Tests.EventStore.Storage
             _storage.Save(aggregator);
             _storage.Rollback();
 
-            Assert.That(_storage.Get(aggregator.Id), Is.Empty.Or.Null);
+            var domainEvents = _storage.Get(aggregator.Id);
+            Assert.Empty(domainEvents);
         }
 
-        [Test]
+        [Fact]
         public void Should_save_new_event_when_storage_is_empty()
         {
             IAggregator<IDomainEvent> aggregator = new AggregatorTest(() => { });
@@ -64,10 +64,10 @@ namespace Straight.Core.Tests.EventStore.Storage
             var expectedVersion = aggregator.GetChanges().Last().Version;
             _storage.BeginTransaction();
             _storage.Save(aggregator);
-            Assert.That(aggregator.Version, Is.EqualTo(expectedVersion));
+            Assert.Equal(aggregator.Version, expectedVersion);
         }
 
-        [Test]
+        [Fact]
         public void Should_throw_concurrancy_exception_when_aggregator_version_is_less()
         {
             IAggregator<IDomainEvent> aggregator = new AggregatorTest(() => { });
@@ -88,7 +88,7 @@ namespace Straight.Core.Tests.EventStore.Storage
             Assert.Throws<ViolationConcurrencyException>(() => _storage.Save(aggregatorClone));
         }
 
-        [Test]
+        [Fact]
         public void Should_throw_exception_when_save__without_transaction()
         {
             IAggregator<IDomainEvent> aggregator = new AggregatorTest(() => { });

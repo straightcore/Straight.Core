@@ -10,13 +10,13 @@
 // See the License for the specific language governing permissions and limitations under the License.
 // ==============================================================================================================
 
+using Straight.Core.Common;
 using System;
-using System.Runtime.Serialization;
 
 namespace Straight.Core.Exceptions
 {
-    [Serializable]
-    public class ViolationConcurrencyException : SystemException
+    
+    public class ViolationConcurrencyException : StraightCoreException
     {
         private static readonly string FullName = typeof(ViolationConcurrencyException).FullName;
 
@@ -31,9 +31,6 @@ namespace Straight.Core.Exceptions
         public ViolationConcurrencyException(string message, Exception inner) : base(message, inner)
         {
         }
-
-        protected ViolationConcurrencyException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
+        
     }
 }

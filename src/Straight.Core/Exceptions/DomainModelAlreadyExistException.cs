@@ -11,11 +11,12 @@
 // ==============================================================================================================
 
 using System;
-using System.Runtime.Serialization;
+using Straight.Core.Common;
 
 namespace Straight.Core.Exceptions
 {
-    public class DomainModelAlreadyExistException : SystemException
+    public class DomainModelAlreadyExistException : StraightCoreException
+
     {
         private static readonly string FullName = typeof(DomainModelAlreadyExistException).FullName;
 
@@ -30,10 +31,6 @@ namespace Straight.Core.Exceptions
         public DomainModelAlreadyExistException(Guid id) : base($"{id} already exists")
         {
         }
-
-        protected DomainModelAlreadyExistException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
+         
     }
 }

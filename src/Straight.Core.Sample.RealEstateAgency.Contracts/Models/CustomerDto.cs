@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 
 namespace Straight.Core.Sample.RealEstateAgency.Contracts.Models
 {
-    [Serializable]
+    
     [DataContract]
     public class CustomerDto : ICloneable
     {
@@ -36,7 +36,7 @@ namespace Straight.Core.Sample.RealEstateAgency.Contracts.Models
 
         public object Clone()
         {
-            var clone = MemberwiseClone() as CustomerDto;
+            var clone = this.MemberwiseClone() as CustomerDto;
             clone.Id = Id;
             clone.Phone = Phone?.Clone() as PhoneDto;
             clone.CellPhone = CellPhone?.Clone() as PhoneDto;
@@ -44,7 +44,7 @@ namespace Straight.Core.Sample.RealEstateAgency.Contracts.Models
             return clone;
         }
     }
-
+    
     [DataContract]
     public enum GenderDto
     {

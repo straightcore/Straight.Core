@@ -1,16 +1,14 @@
-﻿using NUnit.Framework;
-using Straight.Core.DataAccess.Serialization;
+﻿using Straight.Core.DataAccess.Serialization;
 using System;
 using System.IO;
 using System.Runtime.Serialization;
+using Xunit;
 
 namespace Straight.Core.DataAccess.Tests
 {
-    [TestFixture]
     public class JSonDomainEventSerializerTests
     {
-        [SetUp]
-        public void Setup()
+        public JSonDomainEventSerializerTests()
         {
             _serializer = new JSonEventSerializer();
         }
@@ -29,7 +27,7 @@ namespace Straight.Core.DataAccess.Tests
             public int Integer { get; set; }
         }
 
-        [Test]
+        [Fact]
         public void Should_get_data_when_deserialize_data()
         {
             var jsonActual = "{\"Content\":\"Flash Gordon\",\"Integer\":10000}";
@@ -40,13 +38,13 @@ namespace Straight.Core.DataAccess.Tests
                 writer.Flush();
                 stream.Seek(0, SeekOrigin.Begin);
                 var data = _serializer.Deserialize<JSonDataTest>(new StreamReader(stream));
-                Assert.That(data, Is.Not.Null);
-                Assert.That(data.Content, Is.EqualTo("Flash Gordon"));
-                Assert.That(data.Integer, Is.EqualTo(10000));
+                Assert.NotNull(data);
+                Assert.Equal(data.Content, "Flash Gordon");
+                Assert.Equal(data.Integer, 10000);
             }
         }
 
-        [Test]
+        [Fact]
         public void Should_json_format_when_serialize_data()
         {
             var data = new JSonDataTest
@@ -61,17 +59,18 @@ namespace Straight.Core.DataAccess.Tests
                 stream.Position = 0;
                 jsonActual = new StreamReader(stream).ReadToEnd();
             }
-            Assert.That(jsonActual, Is.Not.Null.And.Not.Empty, jsonActual);
-            Assert.That(jsonActual, Is.EqualTo("{\"Content\":\"Flash Gordon\",\"Integer\":10000}" + Environment.NewLine));
+            Assert.NotNull(jsonActual);
+            Assert.NotEmpty(jsonActual);
+            Assert.Equal(jsonActual, "{\"Content\":\"Flash Gordon\",\"Integer\":10000}" + Environment.NewLine);
         }
 
-        [Test]
+        [Fact]
         public void Should_throw_deserialization_exception_when_null_reference()
         {
+            
             using (var stream = new MemoryStream())
             {
-                Assert.Throws<SerializationException>(
-                    () => _serializer.Deserialize<JSonDataTest>(new StreamReader(stream)), GetReadToEnd(stream));
+                Assert.Throws<SerializationException>(() => _serializer.Deserialize<JSonDataTest>(new StreamReader(stream)));
             }
         }
     }

@@ -41,11 +41,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "10.2 - Repository", "10.2 -
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02 - DataAcces", "02 - DataAcces", "{4F753D82-86F0-4B6C-802F-E8BC9F7826CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Straight.Core.DataAccess.SQLite", "Straight.Core.DataAccess.SQLite\Straight.Core.DataAccess.SQLite.csproj", "{9A0A7FB3-9EFA-452D-AD9E-415A0941DFBE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Straight.Core.DataAccess.SqlLite", "Straight.Core.DataAccess.SQLite\Straight.Core.DataAccess.SqlLite.csproj", "{9A0A7FB3-9EFA-452D-AD9E-415A0941DFBE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Straight.Core.DataAccess", "Straight.Core.DataAccess\Straight.Core.DataAccess.csproj", "{262CAD4F-3F16-498C-A1AB-EF1CCB173C2B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Straight.Core.DataAccess.SQLite.Tests", "Straight.Core.DataAccess.SQLite.Tests\Straight.Core.DataAccess.SQLite.Tests.csproj", "{8ECE2506-914B-4BAD-A229-63C488D553BD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Straight.Core.DataAccess.SqlLite.Tests", "Straight.Core.DataAccess.SQLite.Tests\Straight.Core.DataAccess.SqlLite.Tests.csproj", "{8ECE2506-914B-4BAD-A229-63C488D553BD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Straight.Core.DataAccess.Tests", "Straight.Core.DataAccess.Tests\Straight.Core.DataAccess.Tests.csproj", "{C0A4A7B1-5581-433B-83D0-F403A890A8FD}"
 EndProject
@@ -58,6 +58,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "10.7 - Presentation", "10.7 - Presentation", "{5F817292-D136-40D6-95F6-EF357495FF36}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Straight.Core.Sample.RealEstateAgency.Server", "Straight.Core.Sample.RealEstateAgency.Server\Straight.Core.Sample.RealEstateAgency.Server.csproj", "{D1D91A89-E18A-43DA-BD1F-47F802D95B76}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Straight.Core.Sample.RealEstateAgency.Server.Rest", "Straight.Core.Sample.RealEstateAgency.Server.Rest\Straight.Core.Sample.RealEstateAgency.Server.Rest.csproj", "{3A852222-7C1B-4A0A-A330-F9B19A9FD934}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Straight.Core.Common", "Straight.Core.Common\Straight.Core.Common.csproj", "{811F2343-73E6-4C1D-B9AB-CDC911FD9294}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -137,6 +141,14 @@ Global
 		{D1D91A89-E18A-43DA-BD1F-47F802D95B76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1D91A89-E18A-43DA-BD1F-47F802D95B76}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1D91A89-E18A-43DA-BD1F-47F802D95B76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A852222-7C1B-4A0A-A330-F9B19A9FD934}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A852222-7C1B-4A0A-A330-F9B19A9FD934}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A852222-7C1B-4A0A-A330-F9B19A9FD934}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A852222-7C1B-4A0A-A330-F9B19A9FD934}.Release|Any CPU.Build.0 = Release|Any CPU
+		{811F2343-73E6-4C1D-B9AB-CDC911FD9294}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{811F2343-73E6-4C1D-B9AB-CDC911FD9294}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{811F2343-73E6-4C1D-B9AB-CDC911FD9294}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{811F2343-73E6-4C1D-B9AB-CDC911FD9294}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -167,5 +179,7 @@ Global
 		{362186BE-EC62-462C-A7FA-1F3F5D0BC990} = {AAD8D9AA-E1C5-4EB9-AE61-C76E3DAC85DD}
 		{5F817292-D136-40D6-95F6-EF357495FF36} = {AAD8D9AA-E1C5-4EB9-AE61-C76E3DAC85DD}
 		{D1D91A89-E18A-43DA-BD1F-47F802D95B76} = {362186BE-EC62-462C-A7FA-1F3F5D0BC990}
+		{3A852222-7C1B-4A0A-A330-F9B19A9FD934} = {362186BE-EC62-462C-A7FA-1F3F5D0BC990}
+		{811F2343-73E6-4C1D-B9AB-CDC911FD9294} = {A30B908F-535D-4DF9-BFF2-8AE1B3AD8231}
 	EndGlobalSection
 EndGlobal

@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 using Straight.Core.Domain;
 using Straight.Core.Domain.Storage;
 using Straight.Core.EventStore;
@@ -11,11 +11,11 @@ using System.Linq;
 
 namespace Straight.Core.Tests.Domain
 {
-    [TestFixture]
+    
     public class InMemoryReadModelRepositoryTests
     {
-        [SetUp]
-        public void Setup()
+        
+        public InMemoryReadModelRepositoryTests()
         {
             _beginSource = PersonaReadModel.GenerateReadModelTests();
             IReadOnlyDictionary<Type, IReadOnlyDictionary<Guid, IReadModel<IDomainEvent>>> dico = new Dictionary
@@ -32,54 +32,57 @@ namespace Straight.Core.Tests.Domain
         private InMemoryReadModelRepository<IDomainEvent> _repository;
         private IEnumerable<ReadModelTest> _beginSource;
 
-        [Test]
+        [Fact]
         public void Should_all_is_not_null_or_empty_when_get_all_by_type()
         {
             var actual = _repository.Get<ReadModelTest>();
-            Assert.That(actual, Is.Not.Null.And.Not.Empty);
+            Assert.NotNull(actual);
+            Assert.NotEmpty(actual);
         }
 
-        [Test]
+        [Fact]
         public void Should_does_not_throw_exception_when_add_new_element_with_new_type()
         {
-            Assert.DoesNotThrow(() => _repository.Add(PersonaReadModel.GenerateReadModelTest2()));
+            _repository.Add(PersonaReadModel.GenerateReadModelTest2());
         }
 
-        [Test]
+        [Fact]
         public void Should_does_not_throw_exception_when_add_new_readmodel()
         {
             var expected = PersonaReadModel.GenerateReadModelTest();
-            Assert.DoesNotThrow(() => _repository.Add(expected));
+            _repository.Add(expected);
         }
 
-        [Test]
+        [Fact]
         public void Should_get_read_model_when_get_by_id()
         {
             var actual = _repository.Get<ReadModelTest>(_beginSource.First().Id);
-            Assert.That(actual, Is.Not.Null);
+            Assert.NotNull(actual);
         }
 
-        [Test]
+        [Fact]
         public void Should_have_all_reamodel_when_get_all_by_type()
         {
-            var actual = _repository.Get<ReadModelTest>();
-            Assert.That(actual, Is.EquivalentTo(_beginSource));
+            var actual = _repository.Get<ReadModelTest>().ToList();
+            var hash = new HashSet<ReadModelTest>(_beginSource);
+            Assert.Equal(actual.Count, hash.Count);
+            Assert.All(actual, test => hash.Contains(test)); // Equivalent
         }
 
-        [Test]
+        [Fact]
         public void Should_return_null_when_id_is_not_found()
         {
             var actual = _repository.Get<ReadModelTest>(Guid.NewGuid());
-            Assert.That(actual, Is.Null);
+            Assert.Null(actual);
         }
 
-        [Test]
+        [Fact]
         public void Should_throw_already_exception_when_add_readmodel_already_exist_in_database()
         {
             Assert.Throws<DomainModelAlreadyExistException>(() => _repository.Add(_beginSource.First()));
         }
 
-        [Test]
+        [Fact]
         public void Should_throw_argument_null_when_readmodel_is_null()
         {
             Assert.Throws<ArgumentNullException>(() => _repository.Add<ReadModelTest>(null));

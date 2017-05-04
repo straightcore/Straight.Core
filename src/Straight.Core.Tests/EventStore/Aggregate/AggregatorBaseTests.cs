@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 using Straight.Core.EventStore;
 using Straight.Core.EventStore.Aggregate;
 using Straight.Core.Exceptions;
@@ -10,11 +10,11 @@ using System.Linq;
 
 namespace Straight.Core.Tests.EventStore.Aggregate
 {
-    [TestFixture]
+    
     public class AggregatorBaseTests
     {
-        [SetUp]
-        public void SetUp()
+        
+        public AggregatorBaseTests()
         {
             aggregate = new AggregatorTest(() => actionInAggregatorTest());
         }
@@ -22,37 +22,39 @@ namespace Straight.Core.Tests.EventStore.Aggregate
         private IAggregator<IDomainEvent> aggregate;
         private Action actionInAggregatorTest = () => { };
 
-        [Test]
+        [Fact]
         public void Should_call_Apply_domain_event_when_event_is_raise_in_aggregate_base()
         {
             var isCalled = false;
             actionInAggregatorTest = () => isCalled = true;
             aggregate.Update(new DomainCommandTest());
-            Assert.That(isCalled);
+            Assert.True(isCalled);
         }
 
-        [Test]
+        [Fact]
         public void Should_does_throw_exception_when_command_is_not_found()
         {
             Assert.Throws<UnregisteredDomainEventException>(() => aggregate.Update(new DomainCommandUnknow()));
         }
 
-        [Test]
+        [Fact]
         public void Should_does_throw_exception_when_domainEvent_is_not_found()
         {
             Assert.Throws<UnregisteredDomainEventException>(() => aggregate.Update(new DomainCommandTest2()));
         }
 
-        [Test]
+        [Fact]
         public void Should_have_change_event_when_execute_new_command()
         {
             var domainCommandTest = new DomainCommandTest {Id = Guid.NewGuid()};
             aggregate.Update(domainCommandTest);
-            Assert.That(aggregate.GetChanges(), Is.Not.Null.And.Not.Empty);
-            Assert.That(aggregate.GetChanges().Count(ev => ev.Id == domainCommandTest.Id), Is.EqualTo(1));
+            var domainEvents = aggregate.GetChanges();
+            Assert.NotNull(domainEvents);
+            Assert.NotEmpty(domainEvents);
+            Assert.Equal(domainEvents.Count(ev => ev.Id == domainCommandTest.Id), 1);
         }
 
-        [Test]
+        [Fact]
         public void Should_load_historical_event_when_load_aggregate_root_model()
         {
             var guid = Guid.NewGuid();
@@ -60,8 +62,8 @@ namespace Straight.Core.Tests.EventStore.Aggregate
             for (var version = 0; version < 5; version++)
                 events.Add(new DomainEventTest {Id = Guid.NewGuid(), AggregateId = guid, Version = version});
             aggregate.LoadFromHistory(events);
-            Assert.That(aggregate.Id, Is.EqualTo(guid));
-            Assert.That(aggregate.Version, Is.EqualTo(events.Last().Version));
+            Assert.Equal(aggregate.Id, guid);
+            Assert.Equal(aggregate.Version, events.Last().Version);
         }
     }
 }

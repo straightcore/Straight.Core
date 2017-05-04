@@ -5,9 +5,10 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("Straight.Core.RealEstateAgency.Account")]
-[assembly: AssemblyProduct("Straight.Core.RealEstateAgency.Account")]
+[assembly: AssemblyTitle("Straight.Core.Common")]
+[assembly: AssemblyDescription("")]
+[assembly: AssemblyConfiguration("")]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 
-[assembly: Guid("b56c7f3b-93bc-41e5-b51a-de4a6730303f")]
+[assembly: Guid("559c30f7-60d8-40a5-8a96-0a4e16aabb37")]

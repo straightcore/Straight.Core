@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.Serialization;
 
 namespace Straight.Core.Sample.RealEstateAgency.Model.Exceptions
 {
@@ -9,9 +8,6 @@ namespace Straight.Core.Sample.RealEstateAgency.Model.Exceptions
             : base($"'{meet:ddd MMMM yyyy HH:mm}' is already used for other visit")
         {
         }
-
-        protected DateAlreadyExistException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
+        
     }
 }

@@ -1,18 +1,18 @@
-﻿using NSubstitute;
-using NUnit.Framework;
+﻿using Xunit;
 using Straight.Core.Bus;
 using Straight.Core.Storage;
-using Straight.Core.Tests.Common.Bus;
 using System;
 using System.Collections.Generic;
+using NSubstitute;
+using Straight.Core.Tests.Common.Bus;
 
 namespace Straight.Core.Tests.Bus
 {
-    [TestFixture]
+
     public class InMemoryBusTests
     {
-        [SetUp]
-        public void Setup()
+        
+        public InMemoryBusTests()
         {
             commitQueue = new Queue<Action<object>>();
             actionQueue = Substitute.For<IActionQueue>();
@@ -30,7 +30,7 @@ namespace Straight.Core.Tests.Bus
         private IActionQueue actionQueue;
         private IRouterMessage router;
 
-        [Test]
+        [Fact]
         public void Should_call_route_message_when_commit_bus()
         {
             bus.Publish(new MessageTest {Transmitter = "John Doe", Message = "New Message"});
@@ -40,7 +40,7 @@ namespace Straight.Core.Tests.Bus
             actionQueue.Received(1).Put(Arg.Any<object>());
         }
 
-        [Test]
+        [Fact]
         public void Should_call_route_messages_when_commit_bus()
         {
             var messageTests = new[]
@@ -55,7 +55,7 @@ namespace Straight.Core.Tests.Bus
             actionQueue.Received(2).Put(Arg.Any<object>());
         }
 
-        [Test]
+        [Fact]
         public void Should_does_not_call_route_when_rollback_bus()
         {
             bus.Publish(new MessageTest {Transmitter = "John Doe", Message = "New Message"});
@@ -66,10 +66,10 @@ namespace Straight.Core.Tests.Bus
             actionQueue.Received(0).Put(Arg.Any<object>());
         }
 
-        [Test]
+        [Fact]
         public void Should_does_not_throw_exception_when_publish_message()
         {
-            Assert.DoesNotThrow(() => bus.Publish(new MessageTest {Transmitter = "John Doe", Message = "New Message"}));
+            bus.Publish(new MessageTest {Transmitter = "John Doe", Message = "New Message"});
             router.Received(0).Route(Arg.Any<object>());
             actionQueue.Received(0).Pop(Arg.Any<Action<object>>());
             actionQueue.Received(0).Put(Arg.Any<object>());

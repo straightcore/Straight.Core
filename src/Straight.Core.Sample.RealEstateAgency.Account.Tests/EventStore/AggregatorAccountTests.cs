@@ -1,18 +1,18 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 using Straight.Core.Sample.RealEstateAgency.Account.Domain.Command;
 using Straight.Core.Sample.RealEstateAgency.Account.EventStore;
 using Straight.Core.Sample.RealEstateAgency.Account.EventStore.Events;
-using Straight.Core.Sample.RealEstateAgency.Model;
 using Straight.Core.Sample.RealEstateAgency.Test.Common.Server;
 using System.Linq;
+using Straight.Core.Sample.RealEstateAgency.Model;
 
-namespace Straight.Core.RealEstateAgency.Account.Tests.EventStore
+namespace Straight.Core.Sample.RealEstateAgency.Account.Tests.EventStore
 {
-    [TestFixture]
+    
     public class AggregatorAccountTests
     {
-        [SetUp]
-        public void Setup()
+        
+        public AggregatorAccountTests()
         {
             _account = new AggregatorAccount();
 
@@ -21,7 +21,7 @@ namespace Straight.Core.RealEstateAgency.Account.Tests.EventStore
                 CreatorFirstName = PersonaUser.John.FirstName,
                 CreatorLastName = PersonaUser.John.LastName,
                 CreatorUsername = PersonaUser.John.Username,
-                Customers = new Customer[1]
+                Customers = new[]
                 {
                     PersonaCustomer.Pierre
                 }
@@ -29,10 +29,10 @@ namespace Straight.Core.RealEstateAgency.Account.Tests.EventStore
             _account.Update(_createAccountCommand);
         }
 
-        private AggregatorAccount _account;
-        private CreateAccountCommand _createAccountCommand;
+        private readonly AggregatorAccount _account;
+        private readonly CreateAccountCommand _createAccountCommand;
 
-        [Test]
+        [Fact]
         public void Should_add_customer_when_execute_attach_customer_command()
         {
             _account.Clear();
@@ -47,30 +47,26 @@ namespace Straight.Core.RealEstateAgency.Account.Tests.EventStore
                 }
             };
             _account.Update(attachCustomersCommand);
-            Assert.That(_account.GetChanges(), Has.Count.EqualTo(1));
-            Assert.That(_account.GetChanges().First().AggregateId, Is.EqualTo(_account.Id));
+            Assert.Equal(_account.GetChanges().Count(), 1);
+            Assert.Equal(_account.GetChanges().First().AggregateId, _account.Id);
             var accountCreated = _account.GetChanges().OfType<CustomerAttached>().First();
-            Assert.That(accountCreated, Is.Not.Null);
-            Assert.That(accountCreated.Modifier, Is.EqualTo(PersonaUser.Jane)
-                .Using(PersonaUser.UserValueComparer));
-            Assert.That(accountCreated.Customer, Is.EqualTo(attachCustomersCommand.Customers.First())
-                .Using(PersonaCustomer.CustomerValueComparer));
+            Assert.NotNull(accountCreated);
+            Assert.Equal(accountCreated.Modifier, PersonaUser.Jane, PersonaUser.UserValueComparer);
+            Assert.Equal(accountCreated.Customer, attachCustomersCommand.Customers.First(), PersonaCustomer.CustomerValueComparer);
         }
 
-        [Test]
+        [Fact]
         public void Should_have_account_with_customer_when_create_new_account()
         {
-            Assert.That(_account.GetChanges(), Has.Count.EqualTo(1));
-            Assert.That(_account.GetChanges().First().AggregateId, Is.EqualTo(_account.Id));
+            Assert.Equal(_account.GetChanges().Count(), 1);
+            Assert.Equal(_account.GetChanges().First().AggregateId, _account.Id);
             var accountCreated = _account.GetChanges().OfType<AccountCreated>().First();
-            Assert.That(accountCreated, Is.Not.Null);
-            Assert.That(accountCreated.Creator, Is.EqualTo(PersonaUser.John)
-                .Using(PersonaUser.UserValueComparer));
-            Assert.That(accountCreated.Customers,
-                Is.EquivalentTo(_createAccountCommand.Customers).Using(PersonaCustomer.CustomerValueComparer));
+            Assert.NotNull(accountCreated);
+            Assert.Equal(accountCreated.Creator, PersonaUser.John, PersonaUser.UserValueComparer);
+            Assert.Equal(accountCreated.Customers, _createAccountCommand.Customers, PersonaCustomer.CustomerValueComparer);
         }
 
-        [Test]
+        [Fact]
         public void Should_update_customer_when_execute_update_customer_command()
         {
             _account.Clear();
@@ -87,14 +83,12 @@ namespace Straight.Core.RealEstateAgency.Account.Tests.EventStore
                 }
             };
             _account.Update(attachCustomersCommand);
-            Assert.That(_account.GetChanges(), Has.Count.EqualTo(1));
-            Assert.That(_account.GetChanges().First().AggregateId, Is.EqualTo(_account.Id));
+            Assert.Equal(_account.GetChanges().Count(), 1);
+            Assert.Equal(_account.GetChanges().First().AggregateId, _account.Id);
             var accountCreated = _account.GetChanges().OfType<CustomerUpdated>().First();
-            Assert.That(accountCreated, Is.Not.Null);
-            Assert.That(accountCreated.Modifier, Is.EqualTo(PersonaUser.Jane)
-                .Using(PersonaUser.UserValueComparer));
-            Assert.That(accountCreated.Customer, Is.EqualTo(attachCustomersCommand.Customers.First())
-                .Using(PersonaCustomer.CustomerValueComparer));
+            Assert.NotNull(accountCreated);
+            Assert.Equal(accountCreated.Modifier, PersonaUser.Jane, PersonaUser.UserValueComparer);
+            Assert.Equal(accountCreated.Customer, attachCustomersCommand.Customers.First(), PersonaCustomer.CustomerValueComparer);
         }
     }
 }

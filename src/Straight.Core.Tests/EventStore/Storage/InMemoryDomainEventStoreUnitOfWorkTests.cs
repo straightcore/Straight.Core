@@ -1,5 +1,5 @@
 ﻿using NSubstitute;
-using NUnit.Framework;
+using Xunit;
 using Straight.Core.EventStore;
 using Straight.Core.EventStore.Storage;
 using Straight.Core.Storage.Generic;
@@ -10,11 +10,11 @@ using System;
 
 namespace Straight.Core.Tests.EventStore.Storage
 {
-    [TestFixture]
+    
     public class InMemoryDomainEventStoreUnitOfWorkTests
     {
-        [SetUp]
-        public void Setup()
+        
+        public InMemoryDomainEventStoreUnitOfWorkTests()
         {
             _inMemoryDomainEventStore = new InMemoryDomainEventStore<IDomainEvent>();
             _inMemoryAggregatorRootMap = new InMemoryAggregatorRootMapMock();
@@ -58,56 +58,56 @@ namespace Straight.Core.Tests.EventStore.Storage
             return aggregate;
         }
 
-        [Test]
+        [Fact]
         public void Should_can_get_aggregate_when_add_new_aggregate()
         {
             var expected = GenerateAggregate();
             _repositoryUnitOfWorkWithRealInput.Add(expected);
             var actual = _repositoryUnitOfWorkWithRealInput.GetById<AggregatorTest>(expected.Id);
-            Assert.That(actual, Is.Not.Null);
-            Assert.That(actual.Id, Is.EqualTo(expected.Id));
-            Assert.That(actual.Version, Is.EqualTo(expected.Version));
-            Assert.That(actual, Is.EqualTo(expected));
+            Assert.NotNull(actual);
+            Assert.Equal(actual.Id, expected.Id);
+            Assert.Equal(actual.Version, expected.Version);
+            Assert.Equal(actual, expected);
         }
 
-        [Test]
+        [Fact]
         public void Should_does_not_get_when_rollback_data()
         {
             var expected = GenerateAggregate();
             _repositoryUnitOfWorkWithRealInput.Add(expected);
             _repositoryUnitOfWorkWithRealInput.Rollback();
             var actual = _repositoryUnitOfWorkWithRealInput.GetById<AggregatorTest>(expected.Id);
-            Assert.That(actual, Is.Null);
+            Assert.Null(actual);
         }
 
-        [Test]
+        [Fact]
         public void Should_get_aggregate_when_aggregate_is_in_identitymap()
         {
             var expected = GenerateAggregate();
             InsertInAggregateRootMap(expected);
             var actual = _repositoryUnitOfWorkWithRealInput.GetById<AggregatorTest>(expected.Id);
-            Assert.That(actual, Is.EqualTo(expected));
-            Assert.That(ReferenceEquals(actual, expected));
+            Assert.Equal(actual, expected);
+            Assert.True(ReferenceEquals(actual, expected));
         }
 
-        [Test]
+        [Fact]
         public void Should_get_aggregate_when_aggregate_is_in_storage_repository()
         {
             var expected = GenerateAggregate();
             InsertInEventStore(expected);
             var actual = _repositoryUnitOfWorkWithRealInput.GetById<AggregatorTest>(expected.Id);
-            Assert.That(actual.Id, Is.EqualTo(expected.Id));
-            Assert.That(actual.Version, Is.EqualTo(expected.Version));
+            Assert.Equal(actual.Id, expected.Id);
+            Assert.Equal(actual.Version, expected.Version);
         }
 
-        [Test]
+        [Fact]
         public void Should_get_new_aggregate_when_aggregate_does_not_exist()
         {
             var aggregate = _repositoryUnitOfWorkWithRealInput.GetById<AggregatorTest>(Guid.NewGuid());
-            Assert.That(aggregate, Is.Null);
+            Assert.Null(aggregate);
         }
 
-        [Test]
+        [Fact]
         public void Should_received_call_clear_in_identity_root_map_when_rollback()
         {
             var actual = GenerateAggregate();
@@ -116,7 +116,7 @@ namespace Straight.Core.Tests.EventStore.Storage
             _substituteAggregatorRootMap.Received(1).Clear();
         }
 
-        [Test]
+        [Fact]
         public void Should_received_call_in_identity_root_map_when_add_new_aggregate()
         {
             var actual = GenerateAggregate();
@@ -124,7 +124,7 @@ namespace Straight.Core.Tests.EventStore.Storage
             _substituteAggregatorRootMap.Received(1).Add(Arg.Any<AggregatorTest>());
         }
 
-        [Test]
+        [Fact]
         public void Should_received_call_in_repository_vent_store_when_commit_new_aggregate()
         {
             var actual = GenerateAggregate();

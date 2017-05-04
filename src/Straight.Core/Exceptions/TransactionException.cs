@@ -11,11 +11,11 @@
 // ==============================================================================================================
 
 using System;
-using System.Runtime.Serialization;
+using Straight.Core.Common;
 
 namespace Straight.Core.Exceptions
 {
-    public class TransactionException : SystemException
+    public class TransactionException : StraightCoreException
     {
         private static readonly string FullName = typeof(TransactionException).FullName;
 
@@ -28,10 +28,6 @@ namespace Straight.Core.Exceptions
         }
 
         public TransactionException(string message, Exception inner) : base(message, inner)
-        {
-        }
-
-        protected TransactionException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }

@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 using Straight.Core.Command;
 using Straight.Core.Messaging;
 using Straight.Core.Tests.Common.Command;
@@ -6,11 +6,11 @@ using System;
 
 namespace Straight.Core.Tests.Messaging
 {
-    [TestFixture]
+    
     public class CommandHandlerDispatcherTests
     {
-        [SetUp]
-        public void Setup()
+        
+        public CommandHandlerDispatcherTests()
         {
             _dispatcher = new CommandHandlerDispatcher();
         }
@@ -47,17 +47,17 @@ namespace Straight.Core.Tests.Messaging
             }
         }
 
-        [Test]
+        [Fact]
         public void Should_process_when_commandhandler_has_been_register()
         {
             var isCalled = false;
             var handler = new CommandHandlerTest(test => isCalled = true);
             _dispatcher.Register(handler);
             _dispatcher.Process(new CommandTest());
-            Assert.That(isCalled);
+            Assert.True(isCalled);
         }
 
-        [Test]
+        [Fact]
         public void Should_process_when_multiple_commandhandler_has_been_register()
         {
             var isCalledFirstInstance = false;
@@ -68,11 +68,11 @@ namespace Straight.Core.Tests.Messaging
             _dispatcher.Register(handler);
 
             _dispatcher.Process(new CommandTest());
-            Assert.That(isCalledFirstInstance);
-            Assert.That(isCalledSecondInstance);
+            Assert.True(isCalledFirstInstance);
+            Assert.True(isCalledSecondInstance);
         }
 
-        [Test]
+        [Fact]
         public void Should_process_when_multiple_type_commandhandler_has_been_register()
         {
             var isCalledFirstInstance = false;
@@ -83,11 +83,11 @@ namespace Straight.Core.Tests.Messaging
             _dispatcher.Register(handler2);
 
             _dispatcher.Process(new CommandTest());
-            Assert.That(isCalledFirstInstance);
-            Assert.That(isCalledSecondInstance);
+            Assert.True(isCalledFirstInstance);
+            Assert.True(isCalledSecondInstance);
         }
 
-        [Test]
+        [Fact]
         public void Should_throw_argument_exception_when_process_commandtest_not_register()
         {
             Assert.Throws<ArgumentOutOfRangeException>(() => _dispatcher.Process(new CommandTest()));

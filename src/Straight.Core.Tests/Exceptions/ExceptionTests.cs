@@ -1,17 +1,17 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 using Straight.Core.Exceptions;
 using System;
 using System.Collections.Generic;
 
 namespace Straight.Core.Tests.Exceptions
 {
-    [TestFixture]
+    
     public class ExceptionTests
     {
-        [Test]
+        [Fact]
         public void Should_check_inner_exception_when_innerexception_is_set()
         {
-            var applicationException = new ApplicationException();
+            var applicationException = new Exception();
             const string exceptionmessage = "ExceptionMessage";
             var exceptions = new List<Exception>
             {
@@ -22,12 +22,12 @@ namespace Straight.Core.Tests.Exceptions
 
             foreach (var exception in exceptions)
             {
-                Assert.That(exception, Is.Not.Null);
-                Assert.That(exception.InnerException, Is.EqualTo(applicationException));
+                Assert.NotNull(exception);
+                Assert.Equal(exception.InnerException, applicationException);
             }
         }
 
-        [Test]
+        [Fact]
         public void Should_check_message_when_message_is_set()
         {
             const string exceptionmessage = "ExceptionMessage";
@@ -40,12 +40,12 @@ namespace Straight.Core.Tests.Exceptions
 
             foreach (var exception in exceptions)
             {
-                Assert.That(exception, Is.Not.Null);
-                Assert.That(exception.Message, Is.EqualTo(exceptionmessage));
+                Assert.NotNull(exception);
+                Assert.Equal(exception.Message, exceptionmessage);
             }
         }
 
-        [Test]
+        [Fact]
         public void Should_have_base_of_exception_when_constructor_without_parameters()
         {
             var exceptions = new List<Exception>
@@ -59,9 +59,8 @@ namespace Straight.Core.Tests.Exceptions
 
             foreach (var exception in exceptions)
             {
-                Assert.That(exception, Is.Not.Null);
-                Assert.That(exception.Message,
-                    Is.EqualTo($"A system exception ({exception.GetType().FullName}) occurred"));
+                Assert.NotNull(exception);
+                Assert.Equal(exception.Message, $"A system exception ({exception.GetType().FullName}) occurred");
             }
         }
     }

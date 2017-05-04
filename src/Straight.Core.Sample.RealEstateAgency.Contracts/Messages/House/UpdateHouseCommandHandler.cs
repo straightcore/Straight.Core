@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 
 namespace Straight.Core.Sample.RealEstateAgency.Contracts.Messages.House
 {
-    [Serializable]
+    
     [DataContract]
     public class UpdateHouseCommandHandler : ICommand
     {

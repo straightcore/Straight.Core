@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 using Straight.Core.Sample.RealEstateAgency.House.Domain.Command;
 using Straight.Core.Sample.RealEstateAgency.House.EventStore;
 using Straight.Core.Sample.RealEstateAgency.House.EventStore.Events;
@@ -9,11 +9,11 @@ using System.Linq;
 
 namespace Straight.Core.Sample.RealEstateAgency.House.Tests.EventStore
 {
-    [TestFixture]
+    
     public class AggregatorHouseTests
     {
-        [SetUp]
-        public void Setup()
+        
+        public AggregatorHouseTests()
         {
             _house = new AggregatorHouse();
             _house.Update(new CreateHouseCommand
@@ -31,7 +31,7 @@ namespace Straight.Core.Sample.RealEstateAgency.House.Tests.EventStore
 
         private AggregatorHouse _house;
 
-        [Test]
+        [Fact]
         public void Should_add_visit_when_add_visit_command()
         {
             _house.Clear();
@@ -41,11 +41,11 @@ namespace Straight.Core.Sample.RealEstateAgency.House.Tests.EventStore
                 Account = PersonaAccount.Virginie,
                 MeetDate = DateTime.UtcNow.Date.AddDays(2).AddHours(12)
             });
-            Assert.That(_house.GetChanges(), Has.Count.EqualTo(1));
-            Assert.That(_house.GetChanges().Last().GetType(), Is.EqualTo(typeof(VisitAdded)));
+            Assert.Equal(_house.GetChanges().Count(), 1);
+            Assert.Equal(_house.GetChanges().Last().GetType(), typeof(VisitAdded));
         }
 
-        [Test]
+        [Fact]
         public void Should_change_address_when_adress_is_wrong()
         {
             _house.Clear();
@@ -60,11 +60,11 @@ namespace Straight.Core.Sample.RealEstateAgency.House.Tests.EventStore
                 FirstName = "Jane",
                 Username = "jane.doe"
             });
-            Assert.That(_house.GetChanges(), Has.Count.EqualTo(1));
-            Assert.That(_house.GetChanges().Last().GetType(), Is.EqualTo(typeof(AddressUpdated)));
+            Assert.Equal(_house.GetChanges().Count(), 1);
+            Assert.Equal(_house.GetChanges().Last().GetType(), typeof(AddressUpdated));
         }
 
-        [Test]
+        [Fact]
         public void Should_create_event_when_create_new_aggregator_house()
         {
             _house = new AggregatorHouse();
@@ -79,11 +79,11 @@ namespace Straight.Core.Sample.RealEstateAgency.House.Tests.EventStore
                 CreatorFirstName = "John",
                 CreatorUsername = "john.doe"
             });
-            Assert.That(_house.GetChanges(), Has.Count.EqualTo(1));
-            Assert.That(_house.GetChanges().First().GetType(), Is.EqualTo(typeof(HouseCreated)));
+            Assert.Equal(_house.GetChanges().Count(), 1);
+            Assert.Equal(_house.GetChanges().First().GetType(), typeof(HouseCreated));
         }
 
-        [Test]
+        [Fact]
         public void Should_throw_exception_when_add_visit_at_date_already_used()
         {
             _house.Clear();

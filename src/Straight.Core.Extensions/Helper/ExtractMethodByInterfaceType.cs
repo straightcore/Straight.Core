@@ -28,15 +28,15 @@ namespace Straight.Core.Extensions.Helper
         {
             return new ReadOnlyDictionary<Type, MethodInfo>(
                 aggregatorType.GetInterfaces()
-                    .Where(t => IsGenericMethod(t, genericParameterType, typeOfInterfaceBase))
+                    .Where(t => IsGenericMethod(t.GetTypeInfo(), genericParameterType.GetTypeInfo(), typeOfInterfaceBase))
                     .ToDictionary(
                         interfaceType => interfaceType.GetGenericArguments().FirstOrDefault(),
                         interfaceType => interfaceType.GetMethod(methodName)));
         }
 
         private static bool IsGenericMethod(
-            Type interfaceType,
-            Type genericParameterType,
+            TypeInfo interfaceType,
+            TypeInfo genericParameterType,
             Type typeOfInterfaceBase)
         {
             return interfaceType.IsGenericType

@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 
 namespace Straight.Core.Sample.RealEstateAgency.Contracts.Models
 {
-    [Serializable]
+    
     [DataContract]
     public class AddressDto : ICloneable
     {
