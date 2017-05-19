@@ -5,9 +5,10 @@ using Straight.Core.Extensions.Collections.Generic;
 using Straight.Core.Extensions.Guard;
 using Straight.Core.Sample.RealEstateAgency.Account.Domain.Command;
 using Straight.Core.Sample.RealEstateAgency.Account.EventStore;
-using Straight.Core.Sample.RealEstateAgency.Contracts.Extensions;
 using System;
 using System.Linq;
+using Straight.Core.Sample.RealEstateAgency.Contracts;
+using Straight.Core.Sample.RealEstateAgency.Model;
 using AttachCustomersCommandDto = Straight.Core.Sample.RealEstateAgency.Contracts.Messages.Account.AttachCustomersCommand;
 using CreateAccountCommandDto = Straight.Core.Sample.RealEstateAgency.Contracts.Messages.Account.CreateAccountCommand;
 using UpdateCustomersCommandDto = Straight.Core.Sample.RealEstateAgency.Contracts.Messages.Account.UpdateCustomersCommand;
@@ -19,10 +20,12 @@ namespace Straight.Core.Sample.RealEstateAgency.Account.Command
         , ICommandHandler<AttachCustomersCommandDto>
     {
         private readonly IDomainEventStore<IDomainEvent> _repository;
+        private readonly IModelConverter _converter;
 
-        public AccountCommandHandler(IDomainEventStore<IDomainEvent> repository)
+        public AccountCommandHandler(IDomainEventStore<IDomainEvent> repository, IModelConverter converter)
         {
             _repository = repository;
+            _converter = converter;
         }
 
         public void Handle(AttachCustomersCommandDto command)
@@ -39,7 +42,7 @@ namespace Straight.Core.Sample.RealEstateAgency.Account.Command
                 ModifierFirstName = command.Modifier.FirstName,
                 ModifierLastName = command.Modifier.LastName,
                 ModifierUsername = command.Modifier.Username,
-                Customers = command.Customers.Select(ToModelExtensions.ToModel).ToList()
+                Customers = command.Customers.Select(c => _converter.ToModel<Customer>(c)).ToList()
             });
         }
 
@@ -54,7 +57,7 @@ namespace Straight.Core.Sample.RealEstateAgency.Account.Command
                 CreatorFirstName = command.Creator.FirstName,
                 CreatorLastName = command.Creator.LastName,
                 CreatorUsername = command.Creator.Username,
-                Customers = command.Customers.Select(ToModelExtensions.ToModel).ToList()
+                Customers = command.Customers.Select(c => _converter.ToModel<Customer>(c)).ToList()
             });
             _repository.Add(account);
         }
@@ -72,7 +75,7 @@ namespace Straight.Core.Sample.RealEstateAgency.Account.Command
                 ModifierFirstName = command.Modifier.FirstName,
                 ModifierLastName = command.Modifier.LastName,
                 ModifierUsername = command.Modifier.Username,
-                Customers = command.Customers.Select(ToModelExtensions.ToModel).ToList()
+                Customers = command.Customers.Select(c => _converter.ToModel<Customer>(c)).ToList()
             });
         }
     }

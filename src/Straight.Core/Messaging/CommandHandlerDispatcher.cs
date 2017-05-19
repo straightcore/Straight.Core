@@ -12,6 +12,7 @@
 
 using Straight.Core.Command;
 using System;
+using Straight.Core.Common.Command;
 
 namespace Straight.Core.Messaging
 {

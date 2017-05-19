@@ -9,14 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Straight.Core.Sample.RealEstateAgency.Model\Straight.Core.Sample.RealEstateAgency.Model.csproj" />
-    <ProjectReference Include="..\Straight.Core\Straight.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="System.Runtime.Serialization.Formatters">
-      <HintPath>..\..\..\..\..\.nuget\packages\system.runtime.serialization.formatters\4.3.0\ref\netstandard1.3\System.Runtime.Serialization.Formatters.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\Straight.Core.Common\Straight.Core.Common.csproj" />
   </ItemGroup>
 
 </Project>

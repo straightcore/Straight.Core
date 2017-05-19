@@ -10,15 +10,9 @@
 // See the License for the specific language governing permissions and limitations under the License.
 // ==============================================================================================================
 
-using Straight.Core.Command;
-using Straight.Core.Common.Command;
-
-namespace Straight.Core.Messaging
+namespace Straight.Core.Common.Command
 {
-    public interface ICommandHandlerDispatcher
+    public interface ICommand
     {
-        void Register(ICommandHandler handler);
-
-        void Process(ICommand command);
     }
 }

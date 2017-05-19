@@ -8,6 +8,7 @@ using NSubstitute;
 using Straight.Core.EventStore;
 using Straight.Core.EventStore.Storage;
 using Straight.Core.Sample.RealEstateAgency.Contracts.Models;
+using Straight.Core.Sample.RealEstateAgency.Model.Contracts.Extensions;
 using Straight.Core.Sample.RealEstateAgency.Test.Common;
 using Straight.Core.Sample.RealEstateAgency.Test.Common.Dto;
 using Straight.Core.Sample.RealEstateAgency.Test.Common.Server;
@@ -21,7 +22,7 @@ namespace Straight.Core.Sample.RealEstateAgency.Account.Tests.Command
         public AccountCommandHandlerTests()
         {
             _repository = GetRepository();
-            _commandHandler = new AccountCommandHandler(_repository);
+            _commandHandler = new AccountCommandHandler(_repository, new RealEstateAgencyModelConverter());
             GenerateAccountEvent();
         }
 
@@ -70,9 +71,7 @@ namespace Straight.Core.Sample.RealEstateAgency.Account.Tests.Command
             Assert.Throws<ArgumentNullException>(() => _commandHandler.Handle(new Contracts.Messages.Account.CreateAccountCommand()));
             Assert.Throws<ArgumentNullException>(() => _commandHandler.Handle(new Contracts.Messages.Account.AttachCustomersCommand()));
             Assert.Throws<ArgumentNullException>(() => _commandHandler.Handle(new Contracts.Messages.Account.UpdateCustomersCommand()));
-            Assert.Throws<ArgumentNullException>(
-                () =>
-                    _commandHandler.Handle(new Contracts.Messages.Account.CreateAccountCommand
+            Assert.Throws<ArgumentNullException>(() => _commandHandler.Handle(new Contracts.Messages.Account.CreateAccountCommand
                     {
                         Customers = new CustomerDto[0]
                     }));

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Straight.Core.Sample.RealEstateAgency.Contracts.Extensions
+namespace Straight.Core.Sample.RealEstateAgency.Model.Contracts.Extensions
 {
     public static class ToEnumMapperExtensions
     {

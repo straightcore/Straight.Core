@@ -1,5 +1,6 @@
 ﻿using Straight.Core.Storage;
 using System;
+using Straight.Core.Common.Command;
 
 namespace Straight.Core.Command
 {

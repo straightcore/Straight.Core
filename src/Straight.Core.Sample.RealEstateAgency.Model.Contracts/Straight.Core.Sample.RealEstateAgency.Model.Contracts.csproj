@@ -7,7 +7,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Straight.Core.Sample.RealEstateAgency.Contracts\Straight.Core.Sample.RealEstateAgency.Contracts.csproj" />
     <ProjectReference Include="..\Straight.Core.Sample.RealEstateAgency.Model\Straight.Core.Sample.RealEstateAgency.Model.csproj" />
-    <ProjectReference Include="..\Straight.Core\Straight.Core.csproj" />
   </ItemGroup>
 
 </Project>

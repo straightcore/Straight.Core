@@ -8,6 +8,7 @@
     <ProjectReference Include="..\Straight.Core.Common\Straight.Core.Common.csproj" />
     <ProjectReference Include="..\Straight.Core.Extensions\Straight.Core.Extensions.csproj" />
     <ProjectReference Include="..\Straight.Core.Sample.RealEstateAgency.Contracts\Straight.Core.Sample.RealEstateAgency.Contracts.csproj" />
+    <ProjectReference Include="..\Straight.Core.Sample.RealEstateAgency.Model\Straight.Core.Sample.RealEstateAgency.Model.csproj" />
     <ProjectReference Include="..\Straight.Core\Straight.Core.csproj" />
   </ItemGroup>
 

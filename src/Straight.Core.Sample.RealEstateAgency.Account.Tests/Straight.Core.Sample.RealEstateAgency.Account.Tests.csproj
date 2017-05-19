@@ -7,6 +7,7 @@
     <ProjectReference Include="..\Straight.Core.Common\Straight.Core.Common.csproj" />
     <ProjectReference Include="..\Straight.Core.Extensions\Straight.Core.Extensions.csproj" />
     <ProjectReference Include="..\Straight.Core.Sample.RealEstateAgency.Contracts\Straight.Core.Sample.RealEstateAgency.Contracts.csproj" />
+    <ProjectReference Include="..\Straight.Core.Sample.RealEstateAgency.Model.Contracts\Straight.Core.Sample.RealEstateAgency.Model.Contracts.csproj" />
     <ProjectReference Include="..\Straight.Core\Straight.Core.csproj" />
     <ProjectReference Include="..\Straight.Core.Sample.RealEstateAgency.Account\Straight.Core.Sample.RealEstateAgency.Account.csproj" />
     <ProjectReference Include="..\Straight.Core.Sample.RealEstateAgency.Test.Common\Straight.Core.Sample.RealEstateAgency.Test.Common.csproj" />

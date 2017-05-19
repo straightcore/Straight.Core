@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace Straight.Core.Sample.RealEstateAgency.Contracts.Models
 {

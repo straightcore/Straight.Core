@@ -1,7 +1,7 @@
-﻿using Straight.Core.Command;
-using Straight.Core.Sample.RealEstateAgency.Contracts.Models;
+﻿using Straight.Core.Sample.RealEstateAgency.Contracts.Models;
 using System;
 using System.Runtime.Serialization;
+using Straight.Core.Common.Command;
 
 namespace Straight.Core.Sample.RealEstateAgency.Contracts.Messages.House
 {

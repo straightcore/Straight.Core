@@ -1,6 +1,8 @@
-﻿namespace Straight.Core.Command
+﻿using Straight.Core.Common.Command;
+
+namespace Straight.Core.Command
 {
-    public interface ITransactionHandler<TCommand, TCommandHandler>
+    public interface ITransactionHandler<in TCommand, in TCommandHandler>
         where TCommandHandler : ICommandHandler<TCommand>
         where TCommand : class, ICommand
     {

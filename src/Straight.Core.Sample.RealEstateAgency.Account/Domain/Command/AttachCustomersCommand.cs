@@ -2,6 +2,7 @@
 using Straight.Core.Domain;
 using Straight.Core.Sample.RealEstateAgency.Model;
 using System.Collections.Generic;
+using Straight.Core.Common.Command;
 
 namespace Straight.Core.Sample.RealEstateAgency.Account.Domain.Command
 {

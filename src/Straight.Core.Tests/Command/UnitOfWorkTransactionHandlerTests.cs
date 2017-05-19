@@ -4,6 +4,7 @@ using Straight.Core.Command;
 using Straight.Core.Storage;
 using System;
 using NSubstitute.Core;
+using Straight.Core.Common.Command;
 
 namespace Straight.Core.Tests.Command
 {
