@@ -67,6 +67,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Straight.Core.Sample.RealEs
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Straight.Core.Sample.RealEstateAgency.Model.Contracts.Tests", "Straight.Core.Sample.RealEstateAgency.Model.Contracts.Tests\Straight.Core.Sample.RealEstateAgency.Model.Contracts.Tests.csproj", "{166325C1-8A82-4071-8C36-E375166A275C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Straight.Core.Sample.RealEstateAgency.Server.Rest.Tests", "Straight.Core.Sample.RealEstateAgency.Server.Rest.Tests\Straight.Core.Sample.RealEstateAgency.Server.Rest.Tests.csproj", "{E201A8F5-9D2B-4BD5-B90F-A45A2708D257}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -161,6 +163,10 @@ Global
 		{166325C1-8A82-4071-8C36-E375166A275C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{166325C1-8A82-4071-8C36-E375166A275C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{166325C1-8A82-4071-8C36-E375166A275C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E201A8F5-9D2B-4BD5-B90F-A45A2708D257}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E201A8F5-9D2B-4BD5-B90F-A45A2708D257}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E201A8F5-9D2B-4BD5-B90F-A45A2708D257}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E201A8F5-9D2B-4BD5-B90F-A45A2708D257}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -195,5 +201,6 @@ Global
 		{811F2343-73E6-4C1D-B9AB-CDC911FD9294} = {A30B908F-535D-4DF9-BFF2-8AE1B3AD8231}
 		{D9EBEABD-3078-4827-ABA7-F7E234A44A3C} = {D44DCFAC-CA41-42A1-A278-B3A1789BEEB7}
 		{166325C1-8A82-4071-8C36-E375166A275C} = {D44DCFAC-CA41-42A1-A278-B3A1789BEEB7}
+		{E201A8F5-9D2B-4BD5-B90F-A45A2708D257} = {362186BE-EC62-462C-A7FA-1F3F5D0BC990}
 	EndGlobalSection
 EndGlobal

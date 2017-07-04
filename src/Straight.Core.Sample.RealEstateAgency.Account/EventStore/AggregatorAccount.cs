@@ -18,6 +18,8 @@ namespace Straight.Core.Sample.RealEstateAgency.Account.EventStore
 {
     public class AggregatorAccount : AggregatorBase<IDomainEvent>
         , IHandlerDomainCommand<CreateAccountCommand>
+        , IHandlerDomainCommand<CreateEmployeAccountCommand>
+        , IApplyEvent<EmployeAccountCreated>
         , IApplyEvent<AccountCreated>
         , IHandlerDomainCommand<UpdateCustomersCommand>
         , IApplyEvent<CustomerUpdated>
@@ -30,10 +32,17 @@ namespace Straight.Core.Sample.RealEstateAgency.Account.EventStore
         private User _creator;
         private ImmutableDictionary<Guid, Customer> _customers = ImmutableDictionary<Guid, Customer>.Empty;
         private User _lastModifier;
+        private ConnectionInformation _connectionInformation;
 
         public void Apply(AccountCreated @event)
         {
             _creator = @event.Creator;
+            _connectionInformation = @event.ConnectionInfo;
+        }
+
+        public void Apply(EmployeAccountCreated @event)
+        {
+            Apply(@event as AccountCreated);
             _customers = _customers.AddRange(@event.Customers.ToDictionary(c => c.Id, c => c));
         }
 
@@ -83,6 +92,21 @@ namespace Straight.Core.Sample.RealEstateAgency.Account.EventStore
                 c.CellPhone));
             var modifier = new User(command.ModifierLastName, command.ModifierFirstName, command.ModifierUsername);
             return command.Customers.Select(c => new CustomerAttached(c, modifier));
+        }
+        
+        public IEnumerable Handle(CreateEmployeAccountCommand command)
+        {
+            command.Customers.ForEach(c => AddressHelper.CheckMandatory(c.Street, c.City, c.PostalCode));
+            command.Customers.ForEach(
+                                      c =>
+                                          CustomerHelper.CheckMandatoryCustomer(c.FirstName, c.LastName, c.Birthday, c.Email, c.Phone,
+                                                                                c.CellPhone));
+            yield return new EmployeAccountCreated(command.AccountKey,
+                                            new User(
+                                                     command.CreatorLastName,
+                                                     command.CreatorFirstName,
+                                                     command.CreatorUsername)
+                                            , command.Customers);
         }
 
         public IEnumerable Handle(CreateAccountCommand command)
@@ -139,5 +163,6 @@ namespace Straight.Core.Sample.RealEstateAgency.Account.EventStore
         {
             return (actual > expected ? actual - expected : expected - actual) < timeOfVisit;
         }
+
     }
 }

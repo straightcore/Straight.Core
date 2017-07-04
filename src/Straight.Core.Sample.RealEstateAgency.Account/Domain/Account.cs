@@ -9,6 +9,7 @@ using System.Linq;
 namespace Straight.Core.Sample.RealEstateAgency.Account.Domain
 {
     public class Account : ReadModelBase<IDomainEvent>, IAccount
+        , IApplyEvent<EmployeAccountCreated>
         , IApplyEvent<AccountCreated>
         , IApplyEvent<CustomerUpdated>
     {
@@ -21,7 +22,7 @@ namespace Straight.Core.Sample.RealEstateAgency.Account.Domain
         public void Apply(AccountCreated @event)
         {
             Creator = @event.Creator;
-            _customers = ImmutableList<Customer>.Empty.AddRange(@event.Customers);
+            
         }
 
         public void Apply(CustomerUpdated @event)
@@ -29,6 +30,11 @@ namespace Straight.Core.Sample.RealEstateAgency.Account.Domain
             LastModifier = @event.Modifier;
             var oldCustomers = _customers.Single(c => c.Id == @event.Id);
             _customers = _customers.Replace(oldCustomers, @event.Customer);
+        }
+
+        public void Apply(EmployeAccountCreated @event)
+        {
+            _customers = ImmutableList<Customer>.Empty.AddRange(@event.Customers);
         }
     }
 }

@@ -44,5 +44,19 @@ namespace Straight.Core.Extensions.Helper
                 //&& (interfaceType.GetGenericArguments().FirstOrDefault() != genericParameterType)
                 ;
         }
+
+        public static IReadOnlyDictionary<Type, MethodInfo> ToMappingTypeMethod(Type sourceType, Type parameterType, string methodName)
+        {
+            return new ReadOnlyDictionary<Type, MethodInfo>(
+                sourceType.GetMethods( BindingFlags.NonPublic | BindingFlags.Instance)
+                    .Where(p => p.Name.Equals(methodName, StringComparison.OrdinalIgnoreCase))
+                    .Where(p => p.GetParameters().Count() == 1 && p.GetParameters().First()
+                                                                                   .ParameterType
+                                                                                   .GetTypeInfo()
+                                                                                   .GetInterface(parameterType.Name) == parameterType)
+                    //.Where(t => IsGenericMethod(t.GetTypeInfo(), genericParameterType.GetTypeInfo(), typeOfInterfaceBase))
+                    .ToDictionary(methodInfo => methodInfo.GetParameters().First().ParameterType,
+                                  methodInfo => methodInfo));
+        }
     }
 }

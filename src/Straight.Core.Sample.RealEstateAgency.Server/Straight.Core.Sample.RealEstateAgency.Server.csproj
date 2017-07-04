@@ -19,8 +19,4 @@
 	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Account\" />
-  </ItemGroup>
-
 </Project>

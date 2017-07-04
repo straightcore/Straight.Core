@@ -21,10 +21,10 @@ namespace Straight.Core.Extensions.Domain
     {
         public static void Apply(this IReadOnlyDictionary<Type, MethodInfo> registerMethods, object model, object @event)
         {
-            MethodInfo handler;
-            if (!registerMethods.TryGetValue(@event.GetType(), out handler))
-                throw new UnregisteredDomainEventException(
-                    $"The domain event '{@event.GetType().FullName}' is not registered in '{model.GetType().FullName}'");
+            if (!registerMethods.TryGetValue(@event.GetType(), out MethodInfo handler))
+            {
+                throw new UnregisteredDomainEventException($"The domain event '{@event.GetType().FullName}' is not registered in '{model.GetType().FullName}'");
+            }
             handler.Invoke(model, new[] {@event});
         }
     }
