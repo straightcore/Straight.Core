@@ -33,8 +33,8 @@ namespace Straight.Core.Tests.EventStore.Aggregate
 
     public class AggregatorProtectedTest : AggregatorProtectedBase<IDomainEvent>
         //, IApplyEvent<DomainEventTest>
-        , IHandlerDomainCommand<DomainCommandTest>
-        , IHandlerDomainCommand<DomainCommandTest2>
+        //, IHandlerDomainCommand<DomainCommandTest>
+        //, IHandlerDomainCommand<DomainCommandTest2>
     {
         private Action _whenApplied;
 
@@ -48,7 +48,7 @@ namespace Straight.Core.Tests.EventStore.Aggregate
             _whenApplied?.Invoke();
         }
 
-        public IEnumerable Handle(DomainCommandTest command)
+        private IEnumerable Handle(DomainCommandTest command)
         {
             if (Id == Guid.Empty)
                 Id = Guid.NewGuid();
@@ -60,7 +60,7 @@ namespace Straight.Core.Tests.EventStore.Aggregate
             };
         }
 
-        public IEnumerable Handle(DomainCommandTest2 command)
+        private IEnumerable Handle(DomainCommandTest2 command)
         {
             if (Id == Guid.Empty)
                 Id = Guid.NewGuid();

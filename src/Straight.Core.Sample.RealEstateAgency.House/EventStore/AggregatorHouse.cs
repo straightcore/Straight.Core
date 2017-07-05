@@ -15,9 +15,9 @@ using System.Linq;
 namespace Straight.Core.Sample.RealEstateAgency.House.EventStore
 {
     public class AggregatorHouse : AggregatorBase<IDomainEvent>
-        , IHandlerDomainCommand<CreateHouseCommand>
-        , IHandlerDomainCommand<UpdateAddressCommand>
-        , IHandlerDomainCommand<AddVisitHouseCommand>
+        //, IHandlerDomainCommand<CreateHouseCommand>
+        //, IHandlerDomainCommand<UpdateAddressCommand>
+        //, IHandlerDomainCommand<AddVisitHouseCommand>
     {
         private readonly SortedSet<DateTime> _allMeetDateTimes = new SortedSet<DateTime>();
         private Address _address;
@@ -42,7 +42,7 @@ namespace Straight.Core.Sample.RealEstateAgency.House.EventStore
             _allMeetDateTimes.Add(@event.MeetDateTime);
         }
 
-        public IEnumerable Handle(AddVisitHouseCommand command)
+        private IEnumerable Handle(AddVisitHouseCommand command)
         {
             command.CheckIfArgumentIsNull("houseCommand");
             command.Account.CheckIfArgumentIsNull("Account");
@@ -55,7 +55,7 @@ namespace Straight.Core.Sample.RealEstateAgency.House.EventStore
                 command.MeetDate);
         }
 
-        public IEnumerable Handle(CreateHouseCommand command)
+        private IEnumerable Handle(CreateHouseCommand command)
         {
             AddressHelper.CheckMandatory(command.Street, command.City, command.PostalCode);
             UserHelper.CheckMandatoryUser(command.CreatorFirstName, command.CreatorLastName, command.CreatorUsername);
@@ -65,7 +65,7 @@ namespace Straight.Core.Sample.RealEstateAgency.House.EventStore
             yield return new HouseCreated(creator, address);
         }
 
-        public IEnumerable Handle(UpdateAddressCommand command)
+        private IEnumerable Handle(UpdateAddressCommand command)
         {
             command.CheckIfArgumentIsNull("houseCommand");
             AddressHelper.CheckMandatory(command.Street, command.City, command.PostalCode);

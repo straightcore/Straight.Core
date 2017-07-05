@@ -17,11 +17,11 @@ using System.Linq;
 namespace Straight.Core.Sample.RealEstateAgency.Account.EventStore
 {
     public class AggregatorAccount : AggregatorBase<IDomainEvent>
-        , IHandlerDomainCommand<CreateAccountCommand>
-        , IHandlerDomainCommand<CreateEmployeAccountCommand>
-        , IHandlerDomainCommand<UpdateCustomersCommand>
-        , IHandlerDomainCommand<AttachCustomersCommand>
-        , IHandlerDomainCommand<AddVisitCommand>
+        //, IHandlerDomainCommand<CreateAccountCommand>
+        //, IHandlerDomainCommand<CreateEmployeAccountCommand>
+        //, IHandlerDomainCommand<UpdateCustomersCommand>
+        //, IHandlerDomainCommand<AttachCustomersCommand>
+        //, IHandlerDomainCommand<AddVisitCommand>
         //, IApplyEvent<EmployeAccountCreated>
         //, IApplyEvent<AccountCreated>
         //, IApplyEvent<CustomerUpdated>
@@ -64,7 +64,7 @@ namespace Straight.Core.Sample.RealEstateAgency.Account.EventStore
             _allMeetDates.Add(@event.MeetDate);
         }
 
-        public IEnumerable Handle(AddVisitCommand command)
+        private IEnumerable Handle(AddVisitCommand command)
         {
             command.CheckIfArgumentIsNull("command");
             command.House.CheckIfArgumentIsNull("Address");
@@ -80,7 +80,7 @@ namespace Straight.Core.Sample.RealEstateAgency.Account.EventStore
             yield return new VisitAdded(command.House, estateOfficier, command.MeetDate);
         }
 
-        public IEnumerable Handle(AttachCustomersCommand command)
+        private IEnumerable Handle(AttachCustomersCommand command)
         {
             command.Customers.ForEach(c => AddressHelper.CheckMandatory(c.Street, c.City, c.PostalCode));
             command.Customers.ForEach(c => CustomerHelper.CheckMandatoryCustomer(
@@ -94,7 +94,7 @@ namespace Straight.Core.Sample.RealEstateAgency.Account.EventStore
             return command.Customers.Select(c => new CustomerAttached(c, modifier));
         }
 
-        public IEnumerable Handle(CreateEmployeAccountCommand command)
+        private IEnumerable Handle(CreateEmployeAccountCommand command)
         {
             command.Customers.ForEach(c => AddressHelper.CheckMandatory(c.Street, c.City, c.PostalCode));
             command.Customers.ForEach(
@@ -110,7 +110,7 @@ namespace Straight.Core.Sample.RealEstateAgency.Account.EventStore
                                                    , command.Customers);
         }
 
-        public IEnumerable Handle(CreateAccountCommand command)
+        private IEnumerable Handle(CreateAccountCommand command)
         {
             yield return new AccountCreated(
                 command.AccountKey,
@@ -122,7 +122,7 @@ namespace Straight.Core.Sample.RealEstateAgency.Account.EventStore
                     command.CreatorUsername));
         }
 
-        public IEnumerable Handle(UpdateCustomersCommand command)
+        private IEnumerable Handle(UpdateCustomersCommand command)
         {
             if (!command.Customers.All(c => _customers.ContainsKey(c.Id)))
                 throw new ArgumentException("One or more customers are not found.");
