@@ -28,13 +28,7 @@ namespace Straight.Core.Sample.RealEstateAgency.Account.EventStore.Events
         {
             Customers = customers.Select(c => c.Clone() as Customer).ToList().AsReadOnly();
         }
-
-        public string AccountKey { get; }
-
-        public ConnectionInformation ConnectionInfo { get; }
-
-        public User Creator { get; }
-
+        
         public IEnumerable<Customer> Customers { get; }
     }
 }

@@ -16,30 +16,27 @@ namespace Straight.Core.Sample.RealEstateAgency.House.EventStore
 {
     public class AggregatorHouse : AggregatorBase<IDomainEvent>
         , IHandlerDomainCommand<CreateHouseCommand>
-        , IApplyEvent<HouseCreated>
         , IHandlerDomainCommand<UpdateAddressCommand>
-        , IApplyEvent<AddressUpdated>
         , IHandlerDomainCommand<AddVisitHouseCommand>
-        , IApplyEvent<VisitAdded>
     {
         private readonly SortedSet<DateTime> _allMeetDateTimes = new SortedSet<DateTime>();
         private Address _address;
         private User _creator;
         private User _lastModifier;
 
-        public void Apply(AddressUpdated @event)
+        private void Apply(AddressUpdated @event)
         {
             _address = @event.NewAddress;
             _lastModifier = @event.Modifier;
         }
 
-        public void Apply(HouseCreated @event)
+        private void Apply(HouseCreated @event)
         {
             _address = @event.Address;
             _creator = @event.Creator;
         }
 
-        public void Apply(VisitAdded @event)
+        private void Apply(VisitAdded @event)
         {
             _lastModifier = @event.EstateOfficer;
             _allMeetDateTimes.Add(@event.MeetDateTime);

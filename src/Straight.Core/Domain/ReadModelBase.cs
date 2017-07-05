@@ -35,7 +35,7 @@ namespace Straight.Core.Domain
 
         protected ReadModelBase()
         {
-            _registerMethods = GetRegisterByType(typeof(IApplyEvent<>), ApplyMethodName);
+            _registerMethods = GetRegisterByType(typeof(IDomainEvent), ApplyMethodName);
             _appliedEvents = new List<TDomainEvent>();
         }
 
@@ -61,15 +61,17 @@ namespace Straight.Core.Domain
             _appliedEvents.Add(domainEvent);
         }
 
-        private IReadOnlyDictionary<Type, MethodInfo> GetRegisterByType(Type typeOfInterfaceBase, string methodName)
+        private IReadOnlyDictionary<Type, MethodInfo> GetRegisterByType(Type interfaceTypeOfParameter, string methodName)
         {
             IReadOnlyDictionary<Type, MethodInfo> referentiel;
             if (!RegisterApplyMethodsByType.TryGetValue(GetType(), out referentiel))
+            {
                 RegisterApplyMethodsByType[GetType()] = referentiel = MappingTypeToMethodHelper.ToMappingTypeMethod(
                     GetType(),
-                    typeof(TDomainEvent),
-                    typeOfInterfaceBase,
+                    interfaceTypeOfParameter,
+                    null,
                     methodName);
+            }
             return referentiel;
         }
     }

@@ -52,7 +52,7 @@ namespace Straight.Core.Sample.RealEstateAgency.Account.Command
             command.Customers.CheckIfArgumentIsNullOrEmpty(nameof(command.Customers));
             command.Creator.CheckIfArgumentIsNull(nameof(command.Creator));
             var account = new AggregatorAccount();
-            account.Update(new CreateAccountCommand
+            account.Update(new CreateEmployeAccountCommand
             {
                 CreatorFirstName = command.Creator.FirstName,
                 CreatorLastName = command.Creator.LastName,

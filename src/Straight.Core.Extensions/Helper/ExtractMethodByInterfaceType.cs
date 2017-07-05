@@ -20,7 +20,7 @@ namespace Straight.Core.Extensions.Helper
 {
     public static class MappingTypeToMethodHelper
     {
-        public static IReadOnlyDictionary<Type, MethodInfo> ToMappingTypeMethod(
+        public static IReadOnlyDictionary<Type, MethodInfo> ToMappingTypeByInterfaceMethod(
             Type aggregatorType,
             Type genericParameterType,
             Type typeOfInterfaceBase,
@@ -45,15 +45,16 @@ namespace Straight.Core.Extensions.Helper
                 ;
         }
 
-        public static IReadOnlyDictionary<Type, MethodInfo> ToMappingTypeMethod(Type sourceType, Type parameterType, string methodName)
+        public static IReadOnlyDictionary<Type, MethodInfo> ToMappingTypeMethod(Type sourceType, Type parameterType, Type returnType, string methodName)
         {
             return new ReadOnlyDictionary<Type, MethodInfo>(
-                sourceType.GetMethods( BindingFlags.NonPublic | BindingFlags.Instance)
+                sourceType.GetMethods( BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
                     .Where(p => p.Name.Equals(methodName, StringComparison.OrdinalIgnoreCase))
-                    .Where(p => p.GetParameters().Count() == 1 && p.GetParameters().First()
+                    .Where(p => parameterType == null || p.GetParameters().Count() == 1 && p.GetParameters().First()
                                                                                    .ParameterType
                                                                                    .GetTypeInfo()
                                                                                    .GetInterface(parameterType.Name) == parameterType)
+                    .Where(p => returnType == null || p.ReturnType == returnType)
                     //.Where(t => IsGenericMethod(t.GetTypeInfo(), genericParameterType.GetTypeInfo(), typeOfInterfaceBase))
                     .ToDictionary(methodInfo => methodInfo.GetParameters().First().ParameterType,
                                   methodInfo => methodInfo));

@@ -87,11 +87,10 @@ namespace Straight.Core.Messaging
         {
             return typeOfInterfaceBase.GetMethods()
                 .Select(m => m.Name)
-                .Select(m => MappingTypeToMethodHelper.ToMappingTypeMethod(
-                    commandHandler
-                    , genericArguments
-                    , typeOfInterfaceBase
-                    , m))
+                .Select(m => MappingTypeToMethodHelper.ToMappingTypeByInterfaceMethod(commandHandler
+                                                                                    , genericArguments
+                                                                                    , typeOfInterfaceBase
+                                                                                    , m))
                 .SelectMany(k => k)
                 .GroupBy(k => k.Key)
                 .ToDictionary(k => k.Key, k => k.First().Value);

@@ -33,7 +33,7 @@ namespace Straight.Core.Sample.RealEstateAgency.Account.Tests.Command
         private void GenerateAccountEvent()
         {
             var account = new AggregatorAccount();
-            account.Update(new CreateAccountCommand
+            account.Update(new CreateEmployeAccountCommand
             {
                 Customers = new[] { PersonaCustomer.Pierre },
                 CreatorUsername = PersonaUser.John.Username,
@@ -147,7 +147,7 @@ namespace Straight.Core.Sample.RealEstateAgency.Account.Tests.Command
         {
             var accountInDb = _testRepository.Memory.First().Value;
             var customerDto = PersonaCustomerDto.Virginie.Clone() as CustomerDto;
-            customerDto.Id = accountInDb.GetChanges().OfType<AccountCreated>().First().Customers.First().Id;
+            customerDto.Id = accountInDb.GetChanges().OfType<EmployeAccountCreated>().First().Customers.First().Id;
             accountInDb.Clear();
             customerDto.Birthday = customerDto.Birthday.AddYears(2);
 

@@ -17,8 +17,10 @@ using Straight.Core.Extensions.EventStore;
 using Straight.Core.Extensions.Guard;
 using Straight.Core.Extensions.Helper;
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 
@@ -30,34 +32,38 @@ namespace Straight.Core.EventStore.Aggregate
         private const string ApplyMethodName = "Apply";
         private const string HandleMethodName = "Handle";
 
-        private static readonly ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>>
-            RegisterApplyMethodsByType
-                = new ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>>();
-
-        private static readonly ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>>
-            RegisterHandleMethodsByType
-                = new ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>>();
-
-        private readonly List<TDomainEvent> _appliedEvents;
-        private readonly List<TDomainEvent> _changedEvents;
-
+        private ImmutableList<TDomainEvent> _appliedEvents = ImmutableList<TDomainEvent>.Empty;
+        private ImmutableList<TDomainEvent> _changedEvents = ImmutableList<TDomainEvent>.Empty;
         private readonly IReadOnlyDictionary<Type, MethodInfo> _registerMethods;
+
+        private static readonly ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>> RegisterApplyMethodsByType
+                = new ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>>();
+
+        private static readonly ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>> RegisterHandleMethodsByType
+                = new ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>>();
+
+        public Guid Id { get; protected set; }
+        public int Version { get; protected set; }
+        public int EventVersion { get; protected set; }
 
         protected AggregatorBase()
         {
             Id = Guid.NewGuid();
-            _registerMethods = GetRegisterByType(RegisterApplyMethodsByType, typeof(IApplyEvent<>), ApplyMethodName)
-                .Union(GetRegisterByType(RegisterHandleMethodsByType, typeof(IHandlerDomainCommand<>), HandleMethodName))
+            _registerMethods = GetRegisterByType(RegisterApplyMethodsByType, typeof(TDomainEvent), null, ApplyMethodName)
+                .Union(GetRegisterByType(RegisterHandleMethodsByType, typeof(IDomainCommand), typeof(IEnumerable), HandleMethodName))
                 .ToDictionary(pair => pair.Key, pair => pair.Value);
 
-            _appliedEvents = new List<TDomainEvent>();
-            _changedEvents = new List<TDomainEvent>();
         }
 
-        public int EventVersion { get; protected set; }
+        public void Clear()
+        {
+            _changedEvents = ImmutableList<TDomainEvent>.Empty;
+        }
 
-        public Guid Id { get; protected set; }
-        public int Version { get; protected set; }
+        public IEnumerable<TDomainEvent> GetChanges()
+        {
+            return _changedEvents.ToBuilder();
+        }
 
         public void LoadFromHistory(IEnumerable<TDomainEvent> domainEvents)
         {
@@ -66,20 +72,10 @@ namespace Straight.Core.EventStore.Aggregate
             if (!events.Any())
                 return;
             events.ForEach(ev => _registerMethods.Apply(this, ev));
-            _appliedEvents.AddRange(events);
+            _appliedEvents = _appliedEvents.AddRange(events);
             Version = events.Last().Version;
             Id = events.Last().AggregateId;
             EventVersion = Version;
-        }
-
-        public IEnumerable<TDomainEvent> GetChanges()
-        {
-            return _changedEvents.ToList();
-        }
-
-        public void Clear()
-        {
-            _changedEvents.Clear();
         }
 
         public void Reset()
@@ -87,8 +83,8 @@ namespace Straight.Core.EventStore.Aggregate
             Id = Guid.Empty;
             Version = 0;
             EventVersion = 0;
-            _appliedEvents.Clear();
-            _changedEvents.Clear();
+            _appliedEvents = ImmutableList<TDomainEvent>.Empty;
+            _changedEvents = ImmutableList<TDomainEvent>.Empty;
         }
 
         public void UpdateVersion(int version)
@@ -99,8 +95,8 @@ namespace Straight.Core.EventStore.Aggregate
         public void Update<TDomainCommand>(TDomainCommand command) where TDomainCommand : class, IDomainCommand
         {
             command.CheckIfArgumentIsNull("command");
-            _changedEvents.AddRange(_registerMethods.Handle<TDomainEvent>(this, command)
-                .Select(ExecuteApply));
+            _changedEvents = _changedEvents.AddRange(_registerMethods.Handle<TDomainEvent>(this, command)
+                                                                     .Select(ExecuteApply));
         }
 
         private int GetNewEventVersion()
@@ -114,22 +110,23 @@ namespace Straight.Core.EventStore.Aggregate
             @event.AggregateId = Id;
             @event.Version = GetNewEventVersion();
             _registerMethods.Apply(this, @event);
-            _appliedEvents.Add(@event);
+            _appliedEvents = _appliedEvents.Add(@event);
             return @event;
         }
 
-        private IReadOnlyDictionary<Type, MethodInfo> GetRegisterByType(
-            IDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>> register,
-            Type typeOfInterfaceBase,
+        private IReadOnlyDictionary<Type, MethodInfo> GetRegisterByType(IDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>> register, 
+            Type interfaceParameterType,
+            Type returnType,
             string methodName)
         {
-            IReadOnlyDictionary<Type, MethodInfo> referentiel;
-            if (!register.TryGetValue(GetType(), out referentiel))
+            if (!register.TryGetValue(GetType(), out IReadOnlyDictionary<Type, MethodInfo> referentiel))
+            {
                 register[GetType()] = referentiel = MappingTypeToMethodHelper.ToMappingTypeMethod(
-                    GetType(),
-                    typeof(TDomainEvent),
-                    typeOfInterfaceBase,
-                    methodName);
+                   GetType(),
+                   interfaceParameterType,
+                   returnType,
+                   methodName);
+            }
             return referentiel;
         }
     }

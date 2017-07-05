@@ -20,7 +20,7 @@ namespace Straight.Core.Sample.RealEstateAgency.Test.Common.Server
             var virginie = new Account.Domain.Account();
             virginie.LoadFromHistory(new List<IDomainEvent>
             {
-                new AccountCreated("chevalier.virginie", PersonaUser.John, new[] {PersonaCustomer.Virginie})
+                new EmployeAccountCreated("chevalier.virginie", "chevalier.virginie", "Password", PersonaUser.John, new[] {PersonaCustomer.Virginie})
                 {
                     AggregateId = Guid.NewGuid()
                 }
@@ -33,7 +33,7 @@ namespace Straight.Core.Sample.RealEstateAgency.Test.Common.Server
             var pierre = new Account.Domain.Account();
             pierre.LoadFromHistory(new List<IDomainEvent>
             {
-                new AccountCreated("pierre.durand", PersonaUser.Jane, new[] {PersonaCustomer.Pierre})
+                new EmployeAccountCreated("pierre.durand", "pierre.durand", "Password", PersonaUser.Jane, new[] {PersonaCustomer.Pierre})
                 {
                     AggregateId = Guid.NewGuid()
                 }

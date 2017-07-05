@@ -6,7 +6,6 @@ using System;
 namespace Straight.Core.Tests.Common.Domain
 {
     public class ReadModelTest : ReadModelBase<IDomainEvent>
-        , IApplyEvent<DomainEventTest>
     {
         private readonly Action _whenApplied;
 
@@ -20,14 +19,13 @@ namespace Straight.Core.Tests.Common.Domain
         {
         }
 
-        void IApplyEvent<DomainEventTest>.Apply(DomainEventTest @event)
+        private void Apply(DomainEventTest @event)
         {
             _whenApplied?.Invoke();
         }
     }
 
     public class ReadModelTest2 : ReadModelBase<IDomainEvent>
-        , IApplyEvent<DomainEventTest2>
     {
         private readonly Action _whenApplied;
 
@@ -41,7 +39,7 @@ namespace Straight.Core.Tests.Common.Domain
         {
         }
 
-        void IApplyEvent<DomainEventTest2>.Apply(DomainEventTest2 @event)
+        private void Apply(DomainEventTest2 @event)
         {
             _whenApplied?.Invoke();
         }

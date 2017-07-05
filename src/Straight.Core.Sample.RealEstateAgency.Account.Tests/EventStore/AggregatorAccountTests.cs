@@ -16,7 +16,7 @@ namespace Straight.Core.Sample.RealEstateAgency.Account.Tests.EventStore
         {
             _account = new AggregatorAccount();
 
-            _createAccountCommand = new CreateAccountCommand
+            _createAccountCommand = new CreateEmployeAccountCommand
             {
                 CreatorFirstName = PersonaUser.John.FirstName,
                 CreatorLastName = PersonaUser.John.LastName,
@@ -30,7 +30,7 @@ namespace Straight.Core.Sample.RealEstateAgency.Account.Tests.EventStore
         }
 
         private readonly AggregatorAccount _account;
-        private readonly CreateAccountCommand _createAccountCommand;
+        private readonly CreateEmployeAccountCommand _createAccountCommand;
 
         [Fact]
         public void Should_add_customer_when_execute_attach_customer_command()
@@ -60,7 +60,7 @@ namespace Straight.Core.Sample.RealEstateAgency.Account.Tests.EventStore
         {
             Assert.Equal(_account.GetChanges().Count(), 1);
             Assert.Equal(_account.GetChanges().First().AggregateId, _account.Id);
-            var accountCreated = _account.GetChanges().OfType<AccountCreated>().First();
+            var accountCreated = _account.GetChanges().OfType<EmployeAccountCreated>().First();
             Assert.NotNull(accountCreated);
             Assert.Equal(accountCreated.Creator, PersonaUser.John, PersonaUser.UserValueComparer);
             Assert.Equal(accountCreated.Customers, _createAccountCommand.Customers, PersonaCustomer.CustomerValueComparer);

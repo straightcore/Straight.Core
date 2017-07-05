@@ -8,7 +8,7 @@ using System.Collections;
 namespace Straight.Core.Tests.Common.EventStore
 {
     public class AggregatorTest : AggregatorBase<IDomainEvent>
-        , IApplyEvent<DomainEventTest>
+        //, IApplyEvent<DomainEventTest>
         , IHandlerDomainCommand<DomainCommandTest>
         , IHandlerDomainCommand<DomainCommandTest2>
     {
@@ -24,7 +24,7 @@ namespace Straight.Core.Tests.Common.EventStore
             _whenApplied = whenApplied;
         }
 
-        public void Apply(DomainEventTest @event)
+        private void Apply(DomainEventTest @event)
         {
             _whenApplied?.Invoke();
         }

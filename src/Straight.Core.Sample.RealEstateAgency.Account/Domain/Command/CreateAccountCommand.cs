@@ -10,14 +10,13 @@ namespace Straight.Core.Sample.RealEstateAgency.Account.Domain.Command
         public string CreatorFirstName { get; set; }
         public string CreatorLastName { get; set; }
         public string CreatorUsername { get; set; }
-
+        public string Login { get; set; }
+        public string Password { get; set; }
         public string AccountKey { get; set; }
     }
 
     public sealed class CreateEmployeAccountCommand : CreateAccountCommand
     {
-        public string Login { get; set; }
-        public string Password { get; set; }
         public IEnumerable<Customer> Customers { get; set; }
     }
 }

@@ -7,26 +7,26 @@ using System.Collections.Generic;
 namespace Straight.Core.Sample.RealEstateAgency.House.Domain
 {
     public class House : ReadModelBase<IDomainEvent>, IHouse
-        , IApplyEvent<HouseCreated>
-        , IApplyEvent<AddressUpdated>
-        , IApplyEvent<VisitAdded>
+        //, IApplyEvent<HouseCreated>
+        //, IApplyEvent<AddressUpdated>
+        //, IApplyEvent<VisitAdded>
     {
         private readonly List<Visit> _planningMeet = new List<Visit>();
         public IEnumerable<Visit> PlanningMeet => _planningMeet.AsReadOnly();
 
-        public void Apply(AddressUpdated @event)
+        private void Apply(AddressUpdated @event)
         {
             LastModifier = @event.Modifier;
             Address = @event.NewAddress;
         }
 
-        public void Apply(HouseCreated @event)
+        private void Apply(HouseCreated @event)
         {
             Creator = @event.Creator;
             Address = @event.Address;
         }
 
-        public void Apply(VisitAdded @event)
+        private void Apply(VisitAdded @event)
         {
             _planningMeet.Add(new Visit(@event.EstateOfficer, @event.Account, @event.MeetDateTime));
             LastModifier = @event.EstateOfficer;

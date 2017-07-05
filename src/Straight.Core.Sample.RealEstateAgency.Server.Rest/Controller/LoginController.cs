@@ -13,7 +13,7 @@ namespace Straight.Core.Sample.RealEstateAgency.Server.Rest.Controller
         [HttpPost]
         public IActionResult Connect([FromBody] ConnectionInformationDto connectionInfo)
         {
-            var 
+            return Ok(); 
         }
     }
 }

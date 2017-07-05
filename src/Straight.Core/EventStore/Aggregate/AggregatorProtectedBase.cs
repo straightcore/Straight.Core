@@ -5,6 +5,7 @@ using Straight.Core.Extensions.EventStore;
 using Straight.Core.Extensions.Guard;
 using Straight.Core.Extensions.Helper;
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -109,6 +110,7 @@ namespace Straight.Core.EventStore.Aggregate
                 register[GetType()] = referentiel = MappingTypeToMethodHelper.ToMappingTypeMethod(
                    GetType(),
                    typeof(TDomainEvent),
+                   null,
                    methodName);
             }
             return referentiel;
@@ -122,8 +124,8 @@ namespace Straight.Core.EventStore.Aggregate
             {
                 register[GetType()] = referentiel = MappingTypeToMethodHelper.ToMappingTypeMethod(
                     GetType(),
-                    typeof(TDomainEvent),
-                    typeOfInterfaceBase,
+                    typeof(IDomainCommand),
+                    typeof(IEnumerable),
                     methodName);
             }
             return referentiel;
