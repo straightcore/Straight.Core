@@ -10,6 +10,8 @@
     <Authors>Morgan Dupire</Authors>
     <Company>Straight Core</Company>
     <Product>Straight.Core.Sample</Product>
+    <Copyright>Nano Services Copyright ©  2018</Copyright>
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

@@ -19,10 +19,6 @@
   <ItemGroup>
     <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="..\GeneralAssemblyInfo.cs" Link="Properties\GeneralAssemblyInfo.cs" />
-  </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>bin\Debug\</OutputPath>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>

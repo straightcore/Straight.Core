@@ -7,10 +7,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Straight.Core\Straight.Core.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="..\GeneralAssemblyInfo.cs" Link="Properties\GeneralAssemblyInfo.cs" />
-  </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>bin\Debug\</OutputPath>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>

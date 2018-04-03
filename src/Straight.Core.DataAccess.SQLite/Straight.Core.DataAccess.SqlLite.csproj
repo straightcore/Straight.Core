@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <Copyright>Nano Services Copyright ©  2018</Copyright>
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,9 +13,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Straight.Core.DataAccess\Straight.Core.DataAccess.csproj" />
     <ProjectReference Include="..\Straight.Core\Straight.Core.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\GeneralAssemblyInfo.cs" Link="Properties\GeneralAssemblyInfo.cs" />
   </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>bin\Debug\</OutputPath>
