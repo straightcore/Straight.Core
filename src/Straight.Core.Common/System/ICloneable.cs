@@ -1,4 +1,4 @@
-﻿namespace System
+﻿namespace Straight.Core.Common
 {
     public interface ICloneable
     {
