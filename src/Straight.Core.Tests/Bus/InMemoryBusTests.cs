@@ -1,78 +1,85 @@
-﻿using Xunit;
-using Straight.Core.Bus;
+﻿using Straight.Core.Bus;
 using Straight.Core.Storage;
 using System;
 using System.Collections.Generic;
 using NSubstitute;
 using Straight.Core.Tests.Common.Bus;
+using NUnit.Framework;
 
 namespace Straight.Core.Tests.Bus
 {
-
+    [TestFixture]
     public class InMemoryBusTests
     {
-        
-        public InMemoryBusTests()
+
+        private class BusContext
         {
-            commitQueue = new Queue<Action<object>>();
-            actionQueue = Substitute.For<IActionQueue>();
-            actionQueue.When(q => q.Pop(Arg.Any<Action<object>>()))
-                .Do(info => commitQueue.Enqueue(info.Arg<Action<object>>()));
-            actionQueue.When(q => q.Put(Arg.Any<object>()))
-                .Do(info => commitQueue.Dequeue()(info.Arg<object>()));
-            router = Substitute.For<IRouterMessage>();
-            bus = new InMemoryBus(router, actionQueue);
-            actionQueue.ClearReceivedCalls();
+            public BusContext()
+            {
+                CommitQueue = new Queue<Action<object>>();
+                ActionQueue = Substitute.For<IActionQueue>();
+                ActionQueue.When(q => q.Pop(Arg.Any<Action<object>>()))
+                    .Do(info => CommitQueue.Enqueue(info.Arg<Action<object>>()));
+                ActionQueue.When(q => q.Put(Arg.Any<object>()))
+                    .Do(info => CommitQueue.Dequeue()(info.Arg<object>()));
+                Router = Substitute.For<IRouterMessage>();
+                Bus = new InMemoryBus(Router, ActionQueue);
+                ActionQueue.ClearReceivedCalls();
+            }
+
+            public Queue<Action<object>> CommitQueue { get; }
+            public InMemoryBus Bus { get; }
+            public IActionQueue ActionQueue { get; }
+            public IRouterMessage Router { get; }
         }
 
-        private Queue<Action<object>> commitQueue;
-        private InMemoryBus bus;
-        private IActionQueue actionQueue;
-        private IRouterMessage router;
-
-        [Fact]
+        [Test]
         public void Should_call_route_message_when_commit_bus()
         {
-            bus.Publish(new MessageTest {Transmitter = "John Doe", Message = "New Message"});
-            bus.Commit();
-            router.Received(1).Route(Arg.Any<object>());
-            actionQueue.Received(1).Pop(Arg.Any<Action<object>>());
-            actionQueue.Received(1).Put(Arg.Any<object>());
+            var context = new BusContext();
+            context.Bus.Publish(new MessageTest {Transmitter = "John Doe", Message = "New Message"});
+            context.Bus.Commit();
+            context.Router.Received(1).Route(Arg.Any<object>());
+            context.ActionQueue.Received(1).Pop(Arg.Any<Action<object>>());
+            context.ActionQueue.Received(1).Put(Arg.Any<object>());
         }
 
-        [Fact]
+        [Test]
         public void Should_call_route_messages_when_commit_bus()
         {
+            var context = new BusContext();
             var messageTests = new[]
             {
                 new MessageTest {Transmitter = "John Doe", Message = "New Message"},
                 new MessageTest {Transmitter = "Jane Doe", Message = "Woman Message"}
             };
-            bus.Publish(messageTests);
-            bus.Commit();
-            router.Received(2).Route(Arg.Any<object>());
-            actionQueue.Received(2).Pop(Arg.Any<Action<object>>());
-            actionQueue.Received(2).Put(Arg.Any<object>());
+            context.Bus.Publish(messageTests);
+            context.Bus.Commit();
+            context.Router.Received(2).Route(Arg.Any<object>());
+            context.ActionQueue.Received(2).Pop(Arg.Any<Action<object>>());
+            context.ActionQueue.Received(2).Put(Arg.Any<object>());
         }
 
-        [Fact]
+        [Test]
         public void Should_does_not_call_route_when_rollback_bus()
         {
-            bus.Publish(new MessageTest {Transmitter = "John Doe", Message = "New Message"});
-            bus.Rollback();
-            bus.Commit();
-            router.Received(0).Route(Arg.Any<object>());
-            actionQueue.Received(0).Pop(Arg.Any<Action<object>>());
-            actionQueue.Received(0).Put(Arg.Any<object>());
+            var context = new BusContext();
+            context.Bus.Publish(new MessageTest {Transmitter = "John Doe", Message = "New Message"});
+            context.Bus.Rollback();
+            context.Bus.Commit();
+            context.Router.Received(0).Route(Arg.Any<object>());
+            context.ActionQueue.Received(0).Pop(Arg.Any<Action<object>>());
+            context.ActionQueue.Received(0).Put(Arg.Any<object>());
         }
 
-        [Fact]
+        [Test]
         public void Should_does_not_throw_exception_when_publish_message()
         {
-            bus.Publish(new MessageTest {Transmitter = "John Doe", Message = "New Message"});
-            router.Received(0).Route(Arg.Any<object>());
-            actionQueue.Received(0).Pop(Arg.Any<Action<object>>());
-            actionQueue.Received(0).Put(Arg.Any<object>());
+            var context = new BusContext();
+            context.Bus.Publish(new MessageTest {Transmitter = "John Doe", Message = "New Message"});
+            context.Router.Received(0).Route(Arg.Any<object>());
+            context.ActionQueue.Received(0).Pop(Arg.Any<Action<object>>());
+            context.ActionQueue.Received(0).Put(Arg.Any<object>());
         }
     }
 }

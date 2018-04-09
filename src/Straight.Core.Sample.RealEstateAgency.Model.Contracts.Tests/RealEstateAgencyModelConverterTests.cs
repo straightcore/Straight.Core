@@ -1,23 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using Straight.Core.Sample.RealEstateAgency.Contracts.Models;
+﻿using Straight.Core.Sample.RealEstateAgency.Contracts.Models;
 using Straight.Core.Sample.RealEstateAgency.Model.Contracts.Extensions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Straight.Core.Sample.RealEstateAgency.Model.Contracts.Tests
 {
+    [TestFixture]
     public class RealEstateAgencyModelConverterTests
     {
-        [Fact]
+        [Test]
         public void Should_load_converter_without_exception_when_initiliaze_converter()
         {
             var converter = new RealEstateAgencyModelConverter();
         }
 
-        [Fact]
+        [Test]
         public void Should_convert_phonedto_to_phone_when_usual_case()
         {
             var converter = new RealEstateAgencyModelConverter();
@@ -28,8 +24,8 @@ namespace Straight.Core.Sample.RealEstateAgency.Model.Contracts.Tests
                                Number = "Number"
                            };
             var phone = converter.ToModel<Phone>(phoneDto);
-            Assert.Equal(phone.CountryCode, phoneDto.CountryCode);
-            Assert.Equal(phone.Number, phoneDto.Number);
+            Assert.That(phone.CountryCode, Is.EqualTo(phoneDto.CountryCode));
+            Assert.That(phone.Number, Is.EqualTo(phoneDto.Number));
         }
     }
 }

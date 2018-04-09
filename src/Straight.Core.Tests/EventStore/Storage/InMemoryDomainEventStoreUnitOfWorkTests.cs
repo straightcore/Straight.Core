@@ -1,5 +1,5 @@
 ﻿using NSubstitute;
-using Xunit;
+using NUnit.Framework;
 using Straight.Core.EventStore;
 using Straight.Core.EventStore.Storage;
 using Straight.Core.Storage.Generic;
@@ -10,45 +10,48 @@ using System;
 
 namespace Straight.Core.Tests.EventStore.Storage
 {
-    
+    [TestFixture]
     public class InMemoryDomainEventStoreUnitOfWorkTests
     {
-        
-        public InMemoryDomainEventStoreUnitOfWorkTests()
-        {
-            _inMemoryDomainEventStore = new InMemoryDomainEventStore<IDomainEvent>();
-            _inMemoryAggregatorRootMap = new InMemoryAggregatorRootMapMock();
-            _repositoryUnitOfWorkWithRealInput = new InMemoryDomainEventStoreUnitOfWork<IDomainEvent>(
-                _inMemoryAggregatorRootMap,
-                _inMemoryDomainEventStore,
-                Substitute.For<IBus<IDomainEvent>>());
 
-            _substituteAggregatorRootMap = Substitute.For<IAggregatorRootMap<IDomainEvent>>();
-            _substituteDomainEventStore = Substitute.For<IDomainEventStorage<IDomainEvent>>();
-            _repositoryUnitOfWorkWithSubstitue = new InMemoryDomainEventStoreUnitOfWork<IDomainEvent>(
-                _substituteAggregatorRootMap,
-                _substituteDomainEventStore,
-                Substitute.For<IBus<IDomainEvent>>());
+        private class InMemoContext
+        {
+            public InMemoContext()
+            {
+                InMemoryDomainEventStore = new InMemoryDomainEventStore<IDomainEvent>();
+                InMemoryAggregatorRootMap = new InMemoryAggregatorRootMapMock();
+                RepositoryUnitOfWorkWithRealInput = new InMemoryDomainEventStoreUnitOfWork<IDomainEvent>(
+                    InMemoryAggregatorRootMap,
+                    InMemoryDomainEventStore,
+                    Substitute.For<IBus<IDomainEvent>>());
+
+                SubstituteAggregatorRootMap = Substitute.For<IAggregatorRootMap<IDomainEvent>>();
+                SubstituteDomainEventStore = Substitute.For<IDomainEventStorage<IDomainEvent>>();
+                RepositoryUnitOfWorkWithSubstitue = new InMemoryDomainEventStoreUnitOfWork<IDomainEvent>(
+                    SubstituteAggregatorRootMap,
+                    SubstituteDomainEventStore,
+                    Substitute.For<IBus<IDomainEvent>>());
+            }
+
+            public InMemoryDomainEventStoreUnitOfWork<IDomainEvent> RepositoryUnitOfWorkWithSubstitue { get; }
+            public IAggregatorRootMap<IDomainEvent> SubstituteAggregatorRootMap { get; }
+            public IDomainEventStorage<IDomainEvent> SubstituteDomainEventStore { get; }
+
+            public InMemoryDomainEventStoreUnitOfWork<IDomainEvent> RepositoryUnitOfWorkWithRealInput { get; }
+            public InMemoryDomainEventStore<IDomainEvent> InMemoryDomainEventStore { get; }
+            public InMemoryAggregatorRootMapMock InMemoryAggregatorRootMap { get; }
         }
 
-        private InMemoryDomainEventStoreUnitOfWork<IDomainEvent> _repositoryUnitOfWorkWithSubstitue;
-        private IAggregatorRootMap<IDomainEvent> _substituteAggregatorRootMap;
-        private IDomainEventStorage<IDomainEvent> _substituteDomainEventStore;
-
-        private InMemoryDomainEventStoreUnitOfWork<IDomainEvent> _repositoryUnitOfWorkWithRealInput;
-        private InMemoryDomainEventStore<IDomainEvent> _inMemoryDomainEventStore;
-        private InMemoryAggregatorRootMapMock _inMemoryAggregatorRootMap;
-
-        private void InsertInAggregateRootMap(AggregatorTest expected)
+        private void InsertInAggregateRootMap(InMemoContext context, AggregatorTest expected)
         {
-            _inMemoryAggregatorRootMap.Add(expected);
+            context.InMemoryAggregatorRootMap.Add(expected);
         }
 
-        private void InsertInEventStore(AggregatorTest aggregate)
+        private void InsertInEventStore(InMemoContext context, AggregatorTest aggregate)
         {
-            _inMemoryDomainEventStore.BeginTransaction();
-            _inMemoryDomainEventStore.Save(aggregate);
-            _inMemoryDomainEventStore.Commit();
+            context.InMemoryDomainEventStore.BeginTransaction();
+            context.InMemoryDomainEventStore.Save(aggregate);
+            context.InMemoryDomainEventStore.Commit();
         }
 
         private static AggregatorTest GenerateAggregate()
@@ -58,81 +61,89 @@ namespace Straight.Core.Tests.EventStore.Storage
             return aggregate;
         }
 
-        [Fact]
+        [Test]
         public void Should_can_get_aggregate_when_add_new_aggregate()
         {
+            var context = new InMemoContext();
             var expected = GenerateAggregate();
-            _repositoryUnitOfWorkWithRealInput.Add(expected);
-            var actual = _repositoryUnitOfWorkWithRealInput.GetById<AggregatorTest>(expected.Id);
-            Assert.NotNull(actual);
-            Assert.Equal(actual.Id, expected.Id);
-            Assert.Equal(actual.Version, expected.Version);
-            Assert.Equal(actual, expected);
+            context.RepositoryUnitOfWorkWithRealInput.Add(expected);
+            var actual = context.RepositoryUnitOfWorkWithRealInput.GetById<AggregatorTest>(expected.Id);
+            Assert.That(actual, Is.Not.Null);
+            Assert.That(actual.Id, Is.EqualTo(expected.Id));
+            Assert.That(actual.Version, Is.EqualTo(expected.Version));
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
-        [Fact]
+        [Test]
         public void Should_does_not_get_when_rollback_data()
         {
+            var context = new InMemoContext();
             var expected = GenerateAggregate();
-            _repositoryUnitOfWorkWithRealInput.Add(expected);
-            _repositoryUnitOfWorkWithRealInput.Rollback();
-            var actual = _repositoryUnitOfWorkWithRealInput.GetById<AggregatorTest>(expected.Id);
-            Assert.Null(actual);
+            context.RepositoryUnitOfWorkWithRealInput.Add(expected);
+            context.RepositoryUnitOfWorkWithRealInput.Rollback();
+            var actual = context.RepositoryUnitOfWorkWithRealInput.GetById<AggregatorTest>(expected.Id);
+            Assert.That(actual, Is.Null);
         }
 
-        [Fact]
+        [Test]
         public void Should_get_aggregate_when_aggregate_is_in_identitymap()
         {
+            var context = new InMemoContext();
             var expected = GenerateAggregate();
-            InsertInAggregateRootMap(expected);
-            var actual = _repositoryUnitOfWorkWithRealInput.GetById<AggregatorTest>(expected.Id);
-            Assert.Equal(actual, expected);
-            Assert.True(ReferenceEquals(actual, expected));
+            InsertInAggregateRootMap(context, expected);
+            var actual = context.RepositoryUnitOfWorkWithRealInput.GetById<AggregatorTest>(expected.Id);
+            Assert.That(actual, Is.EqualTo(expected));
+            Assert.That(ReferenceEquals(actual, expected), Is.True);
         }
-
-        [Fact]
+        
+        [Test]
         public void Should_get_aggregate_when_aggregate_is_in_storage_repository()
         {
+            var context = new InMemoContext();
             var expected = GenerateAggregate();
-            InsertInEventStore(expected);
-            var actual = _repositoryUnitOfWorkWithRealInput.GetById<AggregatorTest>(expected.Id);
-            Assert.Equal(actual.Id, expected.Id);
-            Assert.Equal(actual.Version, expected.Version);
+            InsertInEventStore(context, expected);
+            var actual = context.RepositoryUnitOfWorkWithRealInput.GetById<AggregatorTest>(expected.Id);
+            Assert.That(actual.Id, Is.EqualTo(expected.Id));
+            Assert.That(actual.Version, Is.EqualTo(expected.Version));
         }
 
-        [Fact]
+        [Test]
         public void Should_get_new_aggregate_when_aggregate_does_not_exist()
         {
-            var aggregate = _repositoryUnitOfWorkWithRealInput.GetById<AggregatorTest>(Guid.NewGuid());
-            Assert.Null(aggregate);
+            var context = new InMemoContext();
+            var aggregate = context.RepositoryUnitOfWorkWithRealInput.GetById<AggregatorTest>(Guid.NewGuid());
+            Assert.That(aggregate, Is.Null);
         }
 
-        [Fact]
+        [Test]
         public void Should_received_call_clear_in_identity_root_map_when_rollback()
         {
+            var context = new InMemoContext();
             var actual = GenerateAggregate();
-            _repositoryUnitOfWorkWithSubstitue.Add(actual);
-            _repositoryUnitOfWorkWithSubstitue.Rollback();
-            _substituteAggregatorRootMap.Received(1).Clear();
+            context.RepositoryUnitOfWorkWithSubstitue.Add(actual);
+            context.RepositoryUnitOfWorkWithSubstitue.Rollback();
+            context.SubstituteAggregatorRootMap.Received(1).Clear();
         }
 
-        [Fact]
+        [Test]
         public void Should_received_call_in_identity_root_map_when_add_new_aggregate()
         {
+            var context = new InMemoContext();
             var actual = GenerateAggregate();
-            _repositoryUnitOfWorkWithSubstitue.Add(actual);
-            _substituteAggregatorRootMap.Received(1).Add(Arg.Any<AggregatorTest>());
+            context.RepositoryUnitOfWorkWithSubstitue.Add(actual);
+            context.SubstituteAggregatorRootMap.Received(1).Add(Arg.Any<AggregatorTest>());
         }
 
-        [Fact]
+        [Test]
         public void Should_received_call_in_repository_vent_store_when_commit_new_aggregate()
         {
+            var context = new InMemoContext();
             var actual = GenerateAggregate();
-            _repositoryUnitOfWorkWithSubstitue.Add(actual);
-            _repositoryUnitOfWorkWithSubstitue.Commit();
-            _substituteDomainEventStore.Received(1).BeginTransaction();
-            _substituteDomainEventStore.Received(1).Save(Arg.Any<AggregatorTest>());
-            _substituteDomainEventStore.Received(1).Commit();
+            context.RepositoryUnitOfWorkWithSubstitue.Add(actual);
+            context.RepositoryUnitOfWorkWithSubstitue.Commit();
+            context.SubstituteDomainEventStore.Received(1).BeginTransaction();
+            context.SubstituteDomainEventStore.Received(1).Save(Arg.Any<AggregatorTest>());
+            context.SubstituteDomainEventStore.Received(1).Commit();
         }
     }
 }

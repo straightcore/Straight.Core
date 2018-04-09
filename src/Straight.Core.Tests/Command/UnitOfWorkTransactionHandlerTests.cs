@@ -1,49 +1,55 @@
 ﻿using NSubstitute;
-using Xunit;
 using Straight.Core.Command;
 using Straight.Core.Storage;
 using System;
 using NSubstitute.Core;
 using Straight.Core.Common.Command;
+using NUnit.Framework;
 
 namespace Straight.Core.Tests.Command
 {
-    
+    [TestFixture]
     public class UnitOfWorkTransactionHandlerTests
     {
-        private UnitOfWorkTransactionHandler<ICommand, ICommandHandler<ICommand>> _transactionHandler;
-        private IUnitOfWork _unitOfWork;
-
-        
-        public UnitOfWorkTransactionHandlerTests()
+        private class UOWContext
         {
-            _unitOfWork = Substitute.For<IUnitOfWork>();
-            _transactionHandler = new UnitOfWorkTransactionHandler<ICommand, ICommandHandler<ICommand>>(_unitOfWork);
+
+            public UnitOfWorkTransactionHandler<ICommand, ICommandHandler<ICommand>> TransactionHandler { get; }
+            public IUnitOfWork UnitOfWork { get; }
+
+
+            public UOWContext()
+            {
+                UnitOfWork = Substitute.For<IUnitOfWork>();
+                TransactionHandler = new UnitOfWorkTransactionHandler<ICommand, ICommandHandler<ICommand>>(UnitOfWork);
+            }
         }
 
-
-        [Fact]
+        [Test]
         public void Should_call_handle_method_when_execute_transaction()
         {
+            var context = new UOWContext();
             ICommandHandler<ICommand> commandHandler = Substitute.For<ICommandHandler<ICommand>>();
-            _transactionHandler.Execute(Substitute.For<ICommand>(), commandHandler);
+            context.TransactionHandler.Execute(Substitute.For<ICommand>(), commandHandler);
             commandHandler.Received(1).Handle(Arg.Any<ICommand>());
         }
 
-        [Fact]
+        [Test]
         public void Should_call_commit_method_when_execute_transaction()
         {
-            _transactionHandler.Execute(Substitute.For<ICommand>(), Substitute.For<ICommandHandler<ICommand>>());
-            _unitOfWork.Received(1).Commit();
+            var context = new UOWContext();
+            context.TransactionHandler.Execute(Substitute.For<ICommand>(), Substitute.For<ICommandHandler<ICommand>>());
+            context.UnitOfWork.Received(1).Commit();
         }
 
-        [Fact]
+        [Test]
         public void Should_call_commitrollback_method_when_exception_throw_during_execution_transaction()
         {
+            var context = new UOWContext();
             var commandHandler = Substitute.For<ICommandHandler<ICommand>>();
             commandHandler.When(c => c.Handle(Arg.Any<ICommand>())).Do(ThrowException);
-            Assert.Throws<Exception>(() => _transactionHandler.Execute(Substitute.For<ICommand>(), commandHandler));
-            _unitOfWork.Received(1).Rollback();
+            Assert.Throws<Exception>(() => context.TransactionHandler.Execute(Substitute.For<ICommand>(), commandHandler));
+            context.UnitOfWork.Received(1).Rollback();
         }
 
         private static void ThrowException(CallInfo callInfo)

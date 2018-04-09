@@ -1,20 +1,15 @@
-﻿using Straight.Core.DataAccess.Serialization;
+﻿using NUnit.Framework;
+using Straight.Core.DataAccess.Serialization;
 using System;
 using System.IO;
 using System.Runtime.Serialization;
-using Xunit;
 
 namespace Straight.Core.DataAccess.Tests
 {
+    [TestFixture]
     public class JSonDomainEventSerializerTests
     {
-        public JSonDomainEventSerializerTests()
-        {
-            _serializer = new JSonEventSerializer();
-        }
-
-        private JSonEventSerializer _serializer;
-
+       
         private static string GetReadToEnd(Stream stream)
         {
             stream.Position = 0;
@@ -27,7 +22,7 @@ namespace Straight.Core.DataAccess.Tests
             public int Integer { get; set; }
         }
 
-        [Fact]
+        [Test]
         public void Should_get_data_when_deserialize_data()
         {
             var jsonActual = "{\"Content\":\"Flash Gordon\",\"Integer\":10000}";
@@ -37,14 +32,14 @@ namespace Straight.Core.DataAccess.Tests
                 writer.Write(jsonActual);
                 writer.Flush();
                 stream.Seek(0, SeekOrigin.Begin);
-                var data = _serializer.Deserialize<JSonDataTest>(new StreamReader(stream));
+                var data = new JSonEventSerializer().Deserialize<JSonDataTest>(new StreamReader(stream));
                 Assert.NotNull(data);
-                Assert.Equal(data.Content, "Flash Gordon");
-                Assert.Equal(data.Integer, 10000);
+                Assert.That(data.Content, Is.EqualTo("Flash Gordon"));
+                Assert.That(data.Integer, Is.EqualTo(10000));
             }
         }
 
-        [Fact]
+        [Test]
         public void Should_json_format_when_serialize_data()
         {
             var data = new JSonDataTest
@@ -55,22 +50,22 @@ namespace Straight.Core.DataAccess.Tests
             string jsonActual = null;
             using (var stream = new MemoryStream())
             {
-                _serializer.Serialize(new StreamWriter(stream), data);
+                new JSonEventSerializer().Serialize(new StreamWriter(stream), data);
                 stream.Position = 0;
                 jsonActual = new StreamReader(stream).ReadToEnd();
             }
             Assert.NotNull(jsonActual);
-            Assert.NotEmpty(jsonActual);
-            Assert.Equal(jsonActual, "{\"Content\":\"Flash Gordon\",\"Integer\":10000}" + Environment.NewLine);
+            Assert.That(jsonActual, Is.Not.Empty);
+            Assert.That(jsonActual, Is.EqualTo("{\"Content\":\"Flash Gordon\",\"Integer\":10000}" + Environment.NewLine));
         }
 
-        [Fact]
+        [Test]
         public void Should_throw_deserialization_exception_when_null_reference()
         {
-            
+
             using (var stream = new MemoryStream())
             {
-                Assert.Throws<SerializationException>(() => _serializer.Deserialize<JSonDataTest>(new StreamReader(stream)));
+                Assert.Throws<SerializationException>(() => new JSonEventSerializer().Deserialize<JSonDataTest>(new StreamReader(stream)));
             }
         }
     }

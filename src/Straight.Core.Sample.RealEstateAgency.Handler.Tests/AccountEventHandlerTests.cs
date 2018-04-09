@@ -1,4 +1,4 @@
-﻿using Xunit;
+﻿using NUnit.Framework;
 using Straight.Core.Domain;
 using Straight.Core.EventStore;
 using Straight.Core.Sample.RealEstateAgency.Account.EventStore;
@@ -13,33 +13,39 @@ using HouseVisitAdded = Straight.Core.Sample.RealEstateAgency.House.EventStore.E
 
 namespace Straight.Core.Sample.RealEstateAgency.Handler.Tests
 {
+    [TestFixture]
     public class AccountEventHandlerTests
     {
-        public AccountEventHandlerTests()
+        private class Context
         {
-            _readRepository = new TestReadModelRepository();
-            _aggregatorRepository = new TestDomainEventStore();
-            _handler = new AccountEventHandler(_aggregatorRepository, _readRepository);
-            _readRepository.Add(PersonaAccount.Pierre as Account.Domain.Account);
-            _readRepository.Add(PersonaAccount.Virginie as Account.Domain.Account);
-            _readRepository.Add(PersonaHouse.ApartmentParis);
-            var virginie = new AggregatorAccount();
-            virginie.LoadFromHistory((PersonaAccount.Virginie as IReadModel<IDomainEvent>)?.Events);
-            _aggregatorRepository.Add(virginie);
+            public Context()
+            {
+                ReadRepository = new TestReadModelRepository();
+                AggregatorRepository = new TestDomainEventStore();
+                Handler = new AccountEventHandler(AggregatorRepository, ReadRepository);
+                ReadRepository.Add(PersonaAccount.Pierre as Account.Domain.Account);
+                ReadRepository.Add(PersonaAccount.Virginie as Account.Domain.Account);
+                ReadRepository.Add(PersonaHouse.ApartmentParis);
+                var virginie = new AggregatorAccount();
+                virginie.LoadFromHistory((PersonaAccount.Virginie as IReadModel<IDomainEvent>)?.Events);
+                AggregatorRepository.Add(virginie);
 
-            var apartmentParis = new AggregatorHouse();
-            apartmentParis.LoadFromHistory(PersonaHouse.ApartmentParis.Events);
-            _aggregatorRepository.Add(apartmentParis);
+                var apartmentParis = new AggregatorHouse();
+                apartmentParis.LoadFromHistory(PersonaHouse.ApartmentParis.Events);
+                AggregatorRepository.Add(apartmentParis);
+            }
+
+            public AccountEventHandler Handler { get; }
+            public TestReadModelRepository ReadRepository { get; }
+            public TestDomainEventStore AggregatorRepository { get; }
+
         }
 
-        private readonly AccountEventHandler _handler;
-        private readonly TestReadModelRepository _readRepository;
-        private readonly TestDomainEventStore _aggregatorRepository;
-
-        [Fact]
+        [Test]
         public void Should_does_not_throw_exception_when_receive_event()
         {
-            _handler.Handle(new HouseVisitAdded
+            var context = new Context();
+            context.Handler.Handle(new HouseVisitAdded
                                 (new User(
                                         PersonaUser.Jane.LastName,
                                         PersonaUser.Jane.FirstName,
@@ -52,10 +58,11 @@ namespace Straight.Core.Sample.RealEstateAgency.Handler.Tests
                                 });
         }
 
-        [Fact]
+        [Test]
         public void Should_raise_visit_house_at_account_when_add_visit_at_house()
         {
-            _handler.Handle(new HouseVisitAdded(new User(
+            var context = new Context();
+            context.Handler.Handle(new HouseVisitAdded(new User(
                     PersonaUser.Jane.LastName,
                     PersonaUser.Jane.FirstName,
                     PersonaUser.Jane.Username),
@@ -65,17 +72,17 @@ namespace Straight.Core.Sample.RealEstateAgency.Handler.Tests
                 AggregateId = PersonaHouse.ApartmentParis.Id,
                 Version = 2
             });
-            var virginie = _aggregatorRepository.GetById<AggregatorAccount>(PersonaAccount.Virginie.Id);
-            Assert.NotNull(virginie.GetChanges());
-            Assert.NotEmpty(virginie.GetChanges());
-            Assert.Equal(virginie.GetChanges().Count(), 1);
-            Assert.Equal(virginie.GetChanges().First().GetType(), typeof(VisitAdded));
+            var virginie = context.AggregatorRepository.GetById<AggregatorAccount>(PersonaAccount.Virginie.Id);
+            Assert.That(virginie.GetChanges(), Is.Not.Null.And.Not.Empty);
+            Assert.That(virginie.GetChanges().Count(), Is.EqualTo(1));
+            Assert.That(virginie.GetChanges().First().GetType(), Is.EqualTo(typeof(VisitAdded)));
         }
 
-        [Fact]
+        [Test]
         public void Should_throw_exception_when_account_is_not_found()
         {
-            Assert.Throws<ArgumentException>(() => _handler.Handle(new HouseVisitAdded
+            var context = new Context();
+            Assert.Throws<ArgumentException>(() => context.Handler.Handle(new HouseVisitAdded
             (new User(
                     PersonaUser.Jane.LastName,
                     PersonaUser.Jane.FirstName,
@@ -88,10 +95,11 @@ namespace Straight.Core.Sample.RealEstateAgency.Handler.Tests
             }));
         }
 
-        [Fact]
+        [Test]
         public void Should_throw_exception_when_house_is_not_found()
         {
-            Assert.Throws<ArgumentException>(() => _handler.Handle(new HouseVisitAdded
+            var context = new Context();
+            Assert.Throws<ArgumentException>(() => context.Handler.Handle(new HouseVisitAdded
             (new User(
                     PersonaUser.Jane.LastName,
                     PersonaUser.Jane.FirstName,

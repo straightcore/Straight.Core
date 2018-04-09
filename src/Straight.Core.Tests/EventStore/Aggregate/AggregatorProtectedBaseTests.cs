@@ -1,29 +1,23 @@
-﻿using Straight.Core.Domain;
-using Straight.Core.EventStore;
+﻿using Straight.Core.EventStore;
 using Straight.Core.EventStore.Aggregate;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Collections;
 using Straight.Core.Tests.Common.Domain;
 using Straight.Core.Tests.Common.EventStore;
-using Xunit;
+using NUnit.Framework;
 
 namespace Straight.Core.Tests.EventStore.Aggregate
 {
+    [TestFixture]
     public class AggregatorProtectedBaseTests
     { 
-        private IAggregator<IDomainEvent> aggregate;
-        private Action actionInAggregatorTest = () => { };
+        
 
-        public AggregatorProtectedBaseTests()
-        {
-            aggregate = new AggregatorProtectedTest(() => actionInAggregatorTest());
-        }
-
-        [Fact]
+        [Test]
         public void Should_call_Apply_domain_event_when_event_is_raise_in_aggregate_base()
         {
+            Action actionInAggregatorTest = () => { };
+            var aggregate = new AggregatorProtectedTest(() => actionInAggregatorTest());
             var isCalled = false;
             actionInAggregatorTest = () => isCalled = true;
             aggregate.Update(new DomainCommandTest());
@@ -32,9 +26,6 @@ namespace Straight.Core.Tests.EventStore.Aggregate
     }
 
     public class AggregatorProtectedTest : AggregatorProtectedBase<IDomainEvent>
-        //, IApplyEvent<DomainEventTest>
-        //, IHandlerDomainCommand<DomainCommandTest>
-        //, IHandlerDomainCommand<DomainCommandTest2>
     {
         private Action _whenApplied;
 

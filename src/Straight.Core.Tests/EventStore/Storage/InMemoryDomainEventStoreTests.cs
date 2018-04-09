@@ -1,4 +1,4 @@
-﻿using Xunit;
+﻿using NUnit.Framework;
 using Straight.Core.EventStore;
 using Straight.Core.EventStore.Aggregate;
 using Straight.Core.EventStore.Storage;
@@ -10,90 +10,82 @@ using Straight.Core.Tests.Common.EventStore;
 
 namespace Straight.Core.Tests.EventStore.Storage
 {
-    
+    [TestFixture]
     public class InMemoryDomainEventStoreTests
     {
-        
-        public InMemoryDomainEventStoreTests()
-        {
-            _storage = new InMemoryDomainEventStore<IDomainEvent>();
-        }
-        
-        public void TearDown()
-        {
-            (_storage as IDisposable)?.Dispose();
-        }
-
-        private IDomainEventStorage<IDomainEvent> _storage;
-
-        [Fact]
+        [Test]
         public void Should_add_event_in_memory_when_commit_changed()
         {
+            var storage = new InMemoryDomainEventStore<IDomainEvent>();
             IAggregator<IDomainEvent> aggregator = new AggregatorTest(() => { });
 
             var domainCommandTest = new DomainCommandTest {Id = Guid.NewGuid()};
             aggregator.Update(domainCommandTest);
             var expectedChanged = aggregator.GetChanges();
-            _storage.BeginTransaction();
-            _storage.Save(aggregator);
-            _storage.Commit();
+            storage.BeginTransaction();
+            storage.Save(aggregator);
+            storage.Commit();
 
-            Assert.Equal(_storage.Get(aggregator.Id), expectedChanged);
+            Assert.That(storage.Get(aggregator.Id), Is.EqualTo(expectedChanged));
         }
 
-        [Fact]
+        [Test]
         public void Should_does_not_have_event_in_memory_when_rollback_changed()
         {
+            var storage = new InMemoryDomainEventStore<IDomainEvent>();
             IAggregator<IDomainEvent> aggregator = new AggregatorTest(() => { });
 
             var domainCommandTest = new DomainCommandTest {Id = Guid.NewGuid()};
             aggregator.Update(domainCommandTest);
-            _storage.BeginTransaction();
-            _storage.Save(aggregator);
-            _storage.Rollback();
+            storage.BeginTransaction();
+            storage.Save(aggregator);
+            storage.Rollback();
 
-            var domainEvents = _storage.Get(aggregator.Id);
-            Assert.Empty(domainEvents);
+            var domainEvents = storage.Get(aggregator.Id);
+            Assert.That(domainEvents, Is.Not.Null.And.Empty);
         }
 
-        [Fact]
+        [Test]
         public void Should_save_new_event_when_storage_is_empty()
         {
+            var storage = new InMemoryDomainEventStore<IDomainEvent>();
             IAggregator<IDomainEvent> aggregator = new AggregatorTest(() => { });
             aggregator.Update(new DomainCommandTest {Id = Guid.NewGuid()});
             var expectedVersion = aggregator.GetChanges().Last().Version;
-            _storage.BeginTransaction();
-            _storage.Save(aggregator);
-            Assert.Equal(aggregator.Version, expectedVersion);
+            storage.BeginTransaction();
+            storage.Save(aggregator);
+            Assert.That(aggregator.Version, Is.EqualTo(expectedVersion));
         }
 
-        [Fact]
+        [Test]
         public void Should_throw_concurrancy_exception_when_aggregator_version_is_less()
         {
+            var storage = new InMemoryDomainEventStore<IDomainEvent>();
             IAggregator<IDomainEvent> aggregator = new AggregatorTest(() => { });
             IAggregator<IDomainEvent> aggregatorClone = new AggregatorTest(() => { });
 
             var domainCommandTest = new DomainCommandTest {Id = Guid.NewGuid()};
             aggregator.Update(domainCommandTest);
-            _storage.BeginTransaction();
-            _storage.Save(aggregator);
-            _storage.Commit();
+            storage.BeginTransaction();
+            storage.Save(aggregator);
+            storage.Commit();
             aggregator.Update(new DomainCommandTest {Id = Guid.NewGuid()});
-            aggregatorClone.LoadFromHistory(_storage.Get(aggregator.Id));
-            _storage.BeginTransaction();
-            _storage.Save(aggregator);
-            _storage.Commit();
+            aggregatorClone.LoadFromHistory(storage.Get(aggregator.Id));
+            storage.BeginTransaction();
+            storage.Save(aggregator);
+            storage.Commit();
 
-            _storage.BeginTransaction();
-            Assert.Throws<ViolationConcurrencyException>(() => _storage.Save(aggregatorClone));
+            storage.BeginTransaction();
+            Assert.Throws<ViolationConcurrencyException>(() => storage.Save(aggregatorClone));
         }
 
-        [Fact]
+        [Test]
         public void Should_throw_exception_when_save__without_transaction()
         {
+            var storage = new InMemoryDomainEventStore<IDomainEvent>();
             IAggregator<IDomainEvent> aggregator = new AggregatorTest(() => { });
             aggregator.Update(new DomainCommandTest {Id = Guid.NewGuid()});
-            Assert.Throws<TransactionException>(() => _storage.Save(aggregator));
+            Assert.Throws<TransactionException>(() => storage.Save(aggregator));
         }
     }
 }

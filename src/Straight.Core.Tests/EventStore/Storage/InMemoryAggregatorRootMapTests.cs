@@ -1,4 +1,4 @@
-﻿using Xunit;
+﻿using NUnit.Framework;
 using Straight.Core.EventStore;
 using Straight.Core.EventStore.Storage;
 using Straight.Core.Tests.Common.Domain;
@@ -8,99 +8,100 @@ using System.Collections.Generic;
 
 namespace Straight.Core.Tests.EventStore.Storage
 {
-    
+    [TestFixture]
     public class InMemoryAggregatorRootMapTests
     {
-        
-        public InMemoryAggregatorRootMapTests()
-        {
-            _rootMap = new InMemoryAggregatorRootMap<IDomainEvent>();
-        }
-
-        private InMemoryAggregatorRootMap<IDomainEvent> _rootMap;
-
-        [Fact]
+        [Test]
         public void Should_does_not_throw_exception_when_Add_element()
         {
-            _rootMap.Add(new AggregatorTest());
+            var rootMap = new InMemoryAggregatorRootMap<IDomainEvent>();
+            Assert.DoesNotThrow(() => rootMap.Add(new AggregatorTest()));
         }
 
-        [Fact]
+        [Test]
         public void Should_does_throw_exception_when_get_element_does_not_exist()
         {
-            _rootMap.GetById<AggregatorTest>(Guid.NewGuid());
+            var rootMap = new InMemoryAggregatorRootMap<IDomainEvent>();
+            Assert.DoesNotThrow(() => rootMap.GetById<AggregatorTest>(Guid.NewGuid()));
         }
 
-        [Fact]
+        [Test]
         public void Should_does_throw_exception_when_remove_element_which_does_not_found()
         {
-            _rootMap.Remove<AggregatorTest>(Guid.NewGuid());
+            var rootMap = new InMemoryAggregatorRootMap<IDomainEvent>();
+            Assert.DoesNotThrow(() => rootMap.Remove<AggregatorTest>(Guid.NewGuid()));
         }
 
-        [Fact]
+        [Test]
         public void Should_get_by_id_when_model_is_added()
         {
+            var rootMap = new InMemoryAggregatorRootMap<IDomainEvent>();
             var expected = new AggregatorTest();
             expected.Update(new DomainCommandTest {Id = Guid.NewGuid()});
-            _rootMap.Add(expected);
-            var root = _rootMap.GetById<AggregatorTest>(expected.Id);
-            Assert.Equal(root, expected);
+            rootMap.Add(expected);
+            var root = rootMap.GetById<AggregatorTest>(expected.Id);
+            Assert.That(root, Is.EqualTo(expected));
         }
 
-        [Fact]
+        [Test]
         public void Should_get_null_value_when_is_not_found_and_one_or_more_aggregator_is_saved()
         {
+            var rootMap = new InMemoryAggregatorRootMap<IDomainEvent>();
             var expected = new AggregatorTest();
             expected.Update(new DomainCommandTest {Id = Guid.NewGuid()});
-            _rootMap.Add(expected);
-            var root = _rootMap.GetById<AggregatorTest>(Guid.NewGuid());
-            Assert.Null(root);
+            rootMap.Add(expected);
+            var root = rootMap.GetById<AggregatorTest>(Guid.NewGuid());
+            Assert.That(root, Is.Null);
         }
 
-        [Fact]
+        [Test]
         public void Should_remove_by_type_when_aggregate_is_in_memory()
         {
+            var rootMap = new InMemoryAggregatorRootMap<IDomainEvent>();
             var expected = new AggregatorTest();
             expected.Update(new DomainCommandTest {Id = Guid.NewGuid()});
-            _rootMap.Add(expected);
-            expected = _rootMap.GetById<AggregatorTest>(expected.Id);
-            _rootMap.Remove(expected.GetType(), expected.Id);
-            var actual = _rootMap.GetById<AggregatorTest>(expected.Id);
-            Assert.Null(actual);
+            rootMap.Add(expected);
+            expected = rootMap.GetById<AggregatorTest>(expected.Id);
+            rootMap.Remove(expected.GetType(), expected.Id);
+            var actual = rootMap.GetById<AggregatorTest>(expected.Id);
+            Assert.That(actual, Is.Null);
         }
 
-        [Fact]
+        [Test]
         public void Should_remove_when_aggregate_is_in_memory()
         {
+            var rootMap = new InMemoryAggregatorRootMap<IDomainEvent>();
             var expected = new AggregatorTest();
             expected.Update(new DomainCommandTest {Id = Guid.NewGuid()});
-            _rootMap.Add(expected);
-            expected = _rootMap.GetById<AggregatorTest>(expected.Id);
-            _rootMap.Remove<AggregatorTest>(expected.Id);
-            var actual = _rootMap.GetById<AggregatorTest>(expected.Id);
-            Assert.Null(actual);
+            rootMap.Add(expected);
+            expected = rootMap.GetById<AggregatorTest>(expected.Id);
+            rootMap.Remove<AggregatorTest>(expected.Id);
+            var actual = rootMap.GetById<AggregatorTest>(expected.Id);
+            Assert.That(actual, Is.Null);
         }
 
-        [Fact]
+        [Test]
         public void Should_return_null_when_model_is_not_found()
         {
-            var root = _rootMap.GetById<AggregatorTest>(Guid.NewGuid());
-            Assert.Null(root);
+            var rootMap = new InMemoryAggregatorRootMap<IDomainEvent>();
+            var root = rootMap.GetById<AggregatorTest>(Guid.NewGuid());
+            Assert.That(root, Is.Null);
         }
 
-        [Fact]
+        [Test]
         public void Should_throw_exception_when_Add_element_already_exist()
         {
+            var rootMap = new InMemoryAggregatorRootMap<IDomainEvent>();
             var aggregate = new AggregatorTest();
             var domainEvents = new List<IDomainEvent>
             {
                 new DomainEventTest {Id = Guid.NewGuid(), Version = 1, AggregateId = Guid.NewGuid()}
             };
             aggregate.LoadFromHistory(domainEvents);
-            _rootMap.Add(aggregate);
+            rootMap.Add(aggregate);
             aggregate = new AggregatorTest();
             aggregate.LoadFromHistory(domainEvents);
-            Assert.Throws<ArgumentException>(() => _rootMap.Add(aggregate));
+            Assert.Throws<ArgumentException>(() => rootMap.Add(aggregate));
         }
     }
 }
