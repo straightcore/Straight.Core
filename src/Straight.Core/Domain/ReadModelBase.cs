@@ -26,9 +26,7 @@ namespace Straight.Core.Domain
     {
         private const string ApplyMethodName = "Apply";
 
-        private static readonly ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>>
-            RegisterApplyMethodsByType
-                = new ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>>();
+        private static readonly ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>> RegisterApplyMethodsByType = new ConcurrentDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>>();
 
         private readonly List<TDomainEvent> _appliedEvents;
         private readonly IReadOnlyDictionary<Type, MethodInfo> _registerMethods;

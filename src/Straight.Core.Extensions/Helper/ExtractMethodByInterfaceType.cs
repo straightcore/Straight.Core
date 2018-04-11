@@ -20,44 +20,87 @@ namespace Straight.Core.Extensions.Helper
 {
     public static class MappingTypeToMethodHelper
     {
-        public static IReadOnlyDictionary<Type, MethodInfo> ToMappingTypeByInterfaceMethod(
-            Type aggregatorType,
-            Type genericParameterType,
-            Type typeOfInterfaceBase,
-            string methodName)
+        private const BindingFlags AcceptedBindingsFlags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance;
+        
+        public static IReadOnlyDictionary<Type, MethodInfo> ToMappingTypeByInterfaceMethod(Type aggregatorType, Type genericParameterType, Type typeOfInterfaceBase, string methodName)
         {
-            return new ReadOnlyDictionary<Type, MethodInfo>(
-                aggregatorType.GetInterfaces()
+            return new ReadOnlyDictionary<Type, MethodInfo>(aggregatorType.GetInterfaces()
                     .Where(t => IsGenericMethod(t.GetTypeInfo(), genericParameterType.GetTypeInfo(), typeOfInterfaceBase))
-                    .ToDictionary(
-                        interfaceType => interfaceType.GetGenericArguments().FirstOrDefault(),
-                        interfaceType => interfaceType.GetMethod(methodName)));
+                    .ToDictionary(interfaceType => interfaceType.GetGenericArguments().FirstOrDefault(),
+                                  interfaceType => interfaceType.GetMethod(methodName)));
         }
 
-        private static bool IsGenericMethod(
-            TypeInfo interfaceType,
-            TypeInfo genericParameterType,
-            Type typeOfInterfaceBase)
+        private static bool IsGenericMethod(TypeInfo interfaceType, TypeInfo genericParameterType, Type typeOfInterfaceBase)
         {
             return interfaceType.IsGenericType
-                   && (interfaceType.GetGenericTypeDefinition() == typeOfInterfaceBase)
-                //&& (interfaceType.GetGenericArguments().FirstOrDefault() != genericParameterType)
-                ;
+                   && (interfaceType.GetGenericTypeDefinition() == typeOfInterfaceBase);
         }
 
         public static IReadOnlyDictionary<Type, MethodInfo> ToMappingTypeMethod(Type sourceType, Type parameterType, Type returnType, string methodName)
         {
-            return new ReadOnlyDictionary<Type, MethodInfo>(
-                sourceType.GetMethods( BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
-                    .Where(p => p.Name.Equals(methodName, StringComparison.OrdinalIgnoreCase))
-                    .Where(p => parameterType == null || p.GetParameters().Count() == 1 && p.GetParameters().First()
-                                                                                   .ParameterType
-                                                                                   .GetTypeInfo()
-                                                                                   .GetInterface(parameterType.Name) == parameterType)
-                    .Where(p => returnType == null || p.ReturnType == returnType)
-                    //.Where(t => IsGenericMethod(t.GetTypeInfo(), genericParameterType.GetTypeInfo(), typeOfInterfaceBase))
-                    .ToDictionary(methodInfo => methodInfo.GetParameters().First().ParameterType,
-                                  methodInfo => methodInfo));
+            var dictionary = sourceType.GetMethods(AcceptedBindingsFlags);
+            var resolver = new ReadModelMethodInfoResolver(sourceType, parameterType, returnType, methodName);
+            return new ReadOnlyDictionary<Type, MethodInfo>(resolver.Resolve(dictionary));
+        }
+                
+        private class ReadModelMethodInfoResolver
+        {
+            private readonly Type _sourceType;
+            private readonly Type _parameterType;
+            private readonly Type _returnType;
+            private readonly string _methodName;
+
+            public ReadModelMethodInfoResolver(Type sourceType, Type parameterType, Type returnType, string methodName)
+            {
+                _sourceType = sourceType;
+                _parameterType = parameterType;
+                _returnType = returnType;
+                _methodName = methodName;
+            }
+
+            public IDictionary<Type, MethodInfo> Resolve(IEnumerable<MethodInfo> methods)
+            {
+                return Filter(methods).ToDictionary(methodInfo => methodInfo.GetParameters().First().ParameterType,
+                                                    methodInfo => methodInfo);
+            }
+
+            private IEnumerable<MethodInfo> Filter(IEnumerable<MethodInfo> methods)
+            {
+                return methods.Where(Filter);
+            }
+
+            private bool Filter(MethodInfo methodInfo)
+            {
+                return IfEqualToMethodName(methodInfo)
+                    && IfParameterImplementInterface(methodInfo)
+                    && IfEqualToReturnType(methodInfo);
+            }
+
+            private bool IfParameterImplementInterface(MethodInfo methodInfo)
+            {
+                return _parameterType == null 
+                    || methodInfo.GetParameters().Count() == 1
+                    && ExtractInterfaceTypeInFirstParameter(methodInfo) == _parameterType;
+            }
+
+            private Type ExtractInterfaceTypeInFirstParameter(MethodInfo methodInfo)
+            {
+                return methodInfo.GetParameters()
+                                 .First()
+                                 .ParameterType
+                                 .GetTypeInfo()
+                                 .GetInterface(_parameterType.Name);
+            }
+
+            private bool IfEqualToReturnType(MethodInfo methodInfo)
+            {
+                return _returnType == null || methodInfo.ReturnType == _returnType;
+            }
+
+            private bool IfEqualToMethodName(MethodInfo methodInfo)
+            {
+                return methodInfo.Name.Equals(_methodName, StringComparison.OrdinalIgnoreCase);
+            }
         }
     }
 }
