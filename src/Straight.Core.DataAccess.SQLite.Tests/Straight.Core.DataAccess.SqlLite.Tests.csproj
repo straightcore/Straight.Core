@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Straight.Core.Common\Straight.Core.Common.csproj" />
-    <ProjectReference Include="..\Straight.Core.DataAccess.SQLite\Straight.Core.DataAccess.SqlLite.csproj" />
     <ProjectReference Include="..\Straight.Core.DataAccess\Straight.Core.DataAccess.csproj" />
     <ProjectReference Include="..\Straight.Core.Extensions\Straight.Core.Extensions.csproj" />
     <ProjectReference Include="..\Straight.Core.Tests.Common\Straight.Core.Tests.Common.csproj" />

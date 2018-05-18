@@ -3,7 +3,7 @@ using System.Data.Common;
 using Microsoft.Data.Sqlite;
 using Straight.Core.DataAccess.Data;
 
-namespace Straight.Core.DataAccess.SQlLite.Data
+namespace Straight.Core.DataAccess.SQlLite
 {
     public class SQLiteConnectionFactory : ISqlConnectionFactory<SqliteConnection>
     {
