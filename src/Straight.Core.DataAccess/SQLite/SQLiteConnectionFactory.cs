@@ -1,24 +1,40 @@
-﻿using System.Data;
-using System.Data.Common;
-using Microsoft.Data.Sqlite;
+﻿using Microsoft.Data.Sqlite;
 using Straight.Core.DataAccess.Data;
+using System.Data;
 
-namespace Straight.Core.DataAccess.SQlLite
+namespace Straight.Core.DataAccess.SQLite
 {
-    public class SQLiteConnectionFactory : ISqlConnectionFactory<SqliteConnection>
+    public class SQLiteFactory : ISqlFactory //ISqlConnectionFactory<SQLiteConnection>
     {
         public string ConnectionString { get; }
         
-        public SQLiteConnectionFactory(string connectionString)
+        public SQLiteFactory(string connectionString)
         {
             ConnectionString = connectionString;
         }
 
-        public SqliteConnection OpenConnection()
+        public IDbConnection CreateOpenConnection()
         {
-            var cnx = new SqliteConnection(ConnectionString);
+            var cnx = SqliteFactory.Instance.CreateConnection();
+            cnx.ConnectionString = ConnectionString;
             cnx.Open();
             return cnx;
         }
+
+        public IDbCommand CreateCommand(string commandText, IDbConnection connection, IDbTransaction transaction)
+        {
+            return new SqliteCommand(commandText, connection as SqliteConnection, transaction as SqliteTransaction);
+        }
+
+        public IDbCommand CreateCommand(string commandText)
+        {
+            return new SqliteCommand(commandText, (SqliteConnection)CreateOpenConnection());
+        }
+
+        public IDbCommand CreateCommand(string commandText, IDbConnection connection)
+        {
+            return new SqliteCommand(commandText, connection as SqliteConnection);
+        }
+
     }
 }

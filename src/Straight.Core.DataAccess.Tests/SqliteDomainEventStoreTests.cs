@@ -7,7 +7,6 @@ using Straight.Core.DataAccess.Data;
 using Straight.Core.DataAccess.Serialization;
 using Straight.Core.EventStore;
 using Straight.Core.Tests.Common;
-using NUnit.Framework;
 
 namespace Straight.Core.DataAccess.SqlLite.Tests
 {
@@ -43,7 +42,7 @@ namespace Straight.Core.DataAccess.SqlLite.Tests
        
     }
 
-    public class TestSQLiteConnectionFactory : ISqlConnectionFactory<SqliteConnection>
+    public class TestSQLiteConnectionFactory : ISqlFactory
     {
         static TestSQLiteConnectionFactory()
         {
@@ -69,20 +68,35 @@ namespace Straight.Core.DataAccess.SqlLite.Tests
             LoadInMemoryTable(_connection, _tableName);
         }
 
-        public SqliteConnection OpenConnection()
-        {           
-            return _connection;
-        }
-
         private static void LoadInMemoryTable(SqliteConnection cnx, string tableName)
         {
             var createTableIfNotExist = $"create table if not exists {tableName}Events (AggregatorId TEXT, EventId Text, Event TEXT, Version INTEGER)";
-            using (var sqLiteTranasction = cnx.BeginTransaction(IsolationLevel.Serializable))
-            using (var sqLiteCommand = new SqliteCommand(createTableIfNotExist, cnx, sqLiteTranasction))
+            using (var SqliteTranasction = cnx.BeginTransaction(IsolationLevel.Serializable))
+            using (var SqliteCommand = new SqliteCommand(createTableIfNotExist, cnx, SqliteTranasction))
             {
-                var result = sqLiteCommand.ExecuteScalar();
-                sqLiteTranasction.Commit();
+                var result = SqliteCommand.ExecuteScalar();
+                SqliteTranasction.Commit();
             }
+        }
+
+        public IDbConnection CreateOpenConnection()
+        {
+            return _connection;
+        }
+
+        public IDbCommand CreateCommand(string commandText, IDbConnection connection, IDbTransaction transaction)
+        {
+            return new SqliteCommand(commandText, connection as SqliteConnection, transaction as SqliteTransaction);
+        }
+
+        public IDbCommand CreateCommand(string commandText)
+        {
+            return new SqliteCommand(commandText, (SqliteConnection)CreateOpenConnection());
+        }
+
+        public IDbCommand CreateCommand(string commandText, IDbConnection dbConnection)
+        {
+            return new SqliteCommand(commandText, dbConnection as SqliteConnection);
         }
     }
 }

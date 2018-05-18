@@ -6,7 +6,6 @@ using System.IO;
 using Microsoft.Data.Sqlite;
 using Straight.Core.Common.Guards;
 using Straight.Core.DataAccess.Data;
-using Straight.Core.DataAccess.SQlLite.Data;
 using Straight.Core.EventStore;
 using Straight.Core.EventStore.Aggregate;
 using Straight.Core.EventStore.Storage;
@@ -32,15 +31,15 @@ namespace Straight.Core.DataAccess.SqlLite
         private static ImmutableDictionary<string, string> _typeToLastVersion = ImmutableDictionary<string, string>.Empty;
 
         private readonly IEventSerializer _serializer;
-        private SqliteConnection _sqliteConnection;
-        private SqliteTransaction _sqLiteTransaction;
+        private IDbConnection _sqliteConnection;
+        private IDbTransaction _sqLiteTransaction;
         private readonly string _selectSql;
         private readonly string _lastVersionSql;
         private readonly string _insertSql;
-        private readonly ISqlConnectionFactory<SqliteConnection> _factory;
+        private readonly ISqlFactory _factory;
         private readonly string _tableName;
 
-        public SqLiteDomainEventStore(ISqlConnectionFactory<SqliteConnection> factory, string tableName, IEventSerializer serializer)
+        public SqLiteDomainEventStore(ISqlFactory factory, string tableName, IEventSerializer serializer)
         {
             factory.ArgumentNull(nameof(factory));
             tableName.ArgumentIsNullOrEmpty(nameof(tableName));
@@ -56,14 +55,14 @@ namespace Straight.Core.DataAccess.SqlLite
         }
 
         public SqLiteDomainEventStore(string connectionString, string tableName, IEventSerializer serializer)
-            : this(new SQLiteConnectionFactory(connectionString), tableName, serializer)
+            : this(new SQLite.SQLiteFactory(connectionString), tableName, serializer)
         {
             
         }
 
         protected override void BeginTransactionOverride()
         {
-            _sqliteConnection = _factory.OpenConnection();
+            _sqliteConnection = _factory.CreateOpenConnection();
             CheckIfTableExist(_tableName);
             CreateTransaction();
         }
@@ -119,7 +118,7 @@ namespace Straight.Core.DataAccess.SqlLite
 
         private Stream SelectEvents(Guid aggregateId)
         {
-            using (var connection = _factory.OpenConnection())
+            using (var connection = _factory.CreateOpenConnection())
             using (var cmd = connection.CreateCommand())
             {
                 cmd.CommandText = _selectSql;
@@ -148,9 +147,9 @@ namespace Straight.Core.DataAccess.SqlLite
                       .ForEach(ev => SaveEvent(ev, commandText, _sqLiteTransaction));
         }
 
-        private void SaveEvent(TDomainEvent @event, string commandText, SqliteTransaction sqLiteTransaction)
+        private void SaveEvent(TDomainEvent @event, string commandText, IDbTransaction sqLiteTransaction)
         {
-            using (var sqLiteCommand = new SqliteCommand(commandText, sqLiteTransaction.Connection, sqLiteTransaction))
+            using (var sqLiteCommand = _factory.CreateCommand(commandText, sqLiteTransaction.Connection, sqLiteTransaction))
             {
                 sqLiteCommand.Parameters.Add(new SqliteParameter("@EventId", @event.Id));
                 sqLiteCommand.Parameters.Add(new SqliteParameter("@AggregatorId", @event.AggregateId));
@@ -163,7 +162,7 @@ namespace Straight.Core.DataAccess.SqlLite
 
         protected override int GetVersionAggregator(IDomainEventChangeable<TDomainEvent> aggregator)
         {
-            using (var sqLiteCommand = new SqliteCommand(_lastVersionSql,
+            using (var sqLiteCommand = _factory.CreateCommand(_lastVersionSql,
                                                          _sqLiteTransaction.Connection,
                                                          _sqLiteTransaction))
             {
@@ -223,12 +222,8 @@ namespace Straight.Core.DataAccess.SqlLite
         private void CheckIfTableExist(string tableName)
         {
             CreateTransaction();
-            var createTableIfNotExist =
-                $"create table if not exists {tableName} (AggregatorId TEXT, EventId Text, Event TEXT, Version INTEGER)";
-            using (var sqLiteCommand = new SqliteCommand(
-                                                         createTableIfNotExist,
-                                                         _sqLiteTransaction.Connection,
-                                                         _sqLiteTransaction))
+            var createTableIfNotExist = $"create table if not exists {tableName} (AggregatorId TEXT, EventId Text, Event TEXT, Version INTEGER)";
+            using (var sqLiteCommand = _factory.CreateCommand(createTableIfNotExist, _sqLiteTransaction.Connection, _sqLiteTransaction))
             {
                 var result = sqLiteCommand.ExecuteScalar();
             }

@@ -1,15 +1,18 @@
-﻿using System.Data;
-using System.Data.Common;
+﻿using System;
+using System.Data;
 
 namespace Straight.Core.DataAccess.Data
 {
-    public interface ISqlConnectionFactory<out T>
-         where T : IDbConnection
+    public interface ISqlFactory
     {
         string ConnectionString { get; }
 
-        T OpenConnection();
+        IDbConnection CreateOpenConnection();
 
+        IDbCommand CreateCommand(string commandText, IDbConnection connection, IDbTransaction transaction);
 
+        IDbCommand CreateCommand(string commandText);
+
+        IDbCommand CreateCommand(string commandText, IDbConnection connection);
     }
 }

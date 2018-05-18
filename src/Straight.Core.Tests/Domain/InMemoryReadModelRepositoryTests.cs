@@ -2,12 +2,12 @@
 using Straight.Core.Domain.Storage;
 using Straight.Core.EventStore;
 using Straight.Core.Exceptions;
-using Straight.Core.Tests.Common;
-using Straight.Core.Tests.Common.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
+using Straight.Core.Tests.Common.Domain;
+using Straight.Core.Tests.Common;
 
 namespace Straight.Core.Tests.Domain
 {
