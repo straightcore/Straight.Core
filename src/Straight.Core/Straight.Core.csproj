@@ -4,6 +4,11 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <Copyright>Nano Services Copyright ©  2018</Copyright>
     <Version>1.1.0</Version>
+    <PackageLicenseUrl>https://github.com/straightcore/Straight.Core/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/straightcore/Straight.Core/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/straightcore/Straight.Core</RepositoryUrl>
+    <PackageTags>1.0.0</PackageTags>
+    <PackageReleaseNotes />
   </PropertyGroup>
 
   <ItemGroup>
