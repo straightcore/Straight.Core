@@ -2,13 +2,13 @@
 using System.Reflection;
 using Microsoft.Data.Sqlite;
 using NUnit.Framework;
-using Straight.Core.Common.Runtime;
 using Straight.Core.DataAccess.Data;
 using Straight.Core.DataAccess.Serialization;
+using Straight.Core.DataAccess.SqlLite;
 using Straight.Core.EventStore;
 using Straight.Core.Tests.Common;
 
-namespace Straight.Core.DataAccess.SqlLite.Tests
+namespace Straight.Core.DataAccess.Tests
 {
     [TestFixture]
     public class SqliteDomainEventStoreTests

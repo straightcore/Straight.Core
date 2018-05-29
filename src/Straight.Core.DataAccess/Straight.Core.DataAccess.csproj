@@ -1,14 +1,16 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <Version>1.1.0</Version>
-    <Copyright>Nano Services Copyright ©  2018</Copyright>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Authors>Morgan Dupire</Authors>
+    <Company>Nano Services</Company>
+    <Product>Data layer implementation for CQRS ASP.NET core</Product>
+    <Copyright>Nano Services Copyright © 2018</Copyright>
     <PackageLicenseUrl>https://github.com/straightcore/Straight.Core/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/straightcore/Straight.Core</PackageProjectUrl>
     <RepositoryUrl>https://github.com/straightcore/Straight.Core</RepositoryUrl>
-    <RepositoryType>GitHub</RepositoryType>
-    <PackageTags>1.0.0</PackageTags>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,15 +21,5 @@
   <ItemGroup>
     <ProjectReference Include="..\Straight.Core\Straight.Core.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="SQLite\" />
-  </ItemGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>bin\Debug\</OutputPath>
-    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
-    <LangVersion>7</LangVersion>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-  </PropertyGroup>
 
 </Project>
