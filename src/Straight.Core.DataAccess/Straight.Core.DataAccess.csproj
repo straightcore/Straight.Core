@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Morgan Dupire</Authors>
     <Company>Nano Services</Company>
     <Product>Data layer implementation for CQRS ASP.NET core</Product>
