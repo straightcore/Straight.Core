@@ -11,6 +11,9 @@
     <PackageProjectUrl>https://github.com/straightcore/Straight.Core</PackageProjectUrl>
     <RepositoryUrl>https://github.com/straightcore/Straight.Core</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <Version>1.0.1</Version>
+    <AssemblyVersion>1.0.1.0</AssemblyVersion>
+    <PackageTags>CQRS;cqrs;cqr;Domain Driven Development;Domain;Domains;Event Sourcing; Events;EventStore;</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
