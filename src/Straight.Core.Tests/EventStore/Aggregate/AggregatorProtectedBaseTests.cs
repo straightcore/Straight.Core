@@ -1,5 +1,5 @@
 ﻿using Straight.Core.EventStore;
-using Straight.Core.EventStore.Aggregate;
+using Straight.Core.Domain.Aggregate;
 using System;
 using System.Collections;
 using Straight.Core.Tests.Common.Domain;

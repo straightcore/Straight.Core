@@ -1,7 +1,18 @@
-﻿using Straight.Core.Domain;
+﻿// ==============================================================================================================
+// Straight Compagny
+// Straight Core
+// ==============================================================================================================
+// ©2018 Straight Compagny. All rights reserved.
+// Licensed under the MIT License (MIT); you may not use this file except in compliance
+// with the License. You may obtain have a last condition or last licence at https://github.com/straightcore/Straight.Core/blob/master
+// Unless required by applicable law or agreed to in writing, software distributed under the License is
+// distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and limitations under the License.
+// ==============================================================================================================
+
+using Straight.Core.EventStore;
 using Straight.Core.Extensions.Collections.Generic;
 using Straight.Core.Extensions.Domain;
-using Straight.Core.Extensions.EventStore;
 using Straight.Core.Extensions.Guard;
 using Straight.Core.Extensions.Helper;
 using System;
@@ -11,11 +22,10 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
-namespace Straight.Core.EventStore.Aggregate
+namespace Straight.Core.Domain.Aggregate
 {
-    public class AggregatorProtectedBase<TDomainEvent> : IAggregator<TDomainEvent>
+    public abstract class AggregatorBase<TDomainEvent> : IAggregator<TDomainEvent>
         where TDomainEvent : IDomainEvent
     {
         private const string ApplyMethodName = "Apply";
@@ -35,13 +45,13 @@ namespace Straight.Core.EventStore.Aggregate
         public int Version { get; protected set; }
         public int EventVersion { get; protected set; }
 
-        protected AggregatorProtectedBase()
+        protected AggregatorBase()
         {
             Id = Guid.NewGuid();
-            _registerMethods = GetRegisterByType(RegisterApplyMethodsByType, ApplyMethodName)
-                .Union(GetRegisterByType(RegisterHandleMethodsByType, typeof(IHandlerDomainCommand<>), HandleMethodName))
+            _registerMethods = GetRegisterByType(RegisterApplyMethodsByType, typeof(TDomainEvent), null, ApplyMethodName)
+                .Union(GetRegisterByType(RegisterHandleMethodsByType, typeof(IDomainCommand), typeof(IEnumerable), HandleMethodName))
                 .ToDictionary(pair => pair.Key, pair => pair.Value);
-            
+
         }
 
         public void Clear()
@@ -84,8 +94,8 @@ namespace Straight.Core.EventStore.Aggregate
         public void Update<TDomainCommand>(TDomainCommand command) where TDomainCommand : class, IDomainCommand
         {
             command.CheckIfArgumentIsNull("command");
-            _changedEvents.AddRange(_registerMethods.Handle<TDomainEvent>(this, command)
-                .Select(ExecuteApply));
+            _changedEvents = _changedEvents.AddRange(_registerMethods.Handle<TDomainEvent>(this, command)
+                                                                     .Select(ExecuteApply));
         }
 
         private int GetNewEventVersion()
@@ -99,34 +109,22 @@ namespace Straight.Core.EventStore.Aggregate
             @event.AggregateId = Id;
             @event.Version = GetNewEventVersion();
             _registerMethods.Apply(this, @event);
-            _appliedEvents.Add(@event);
+            _appliedEvents = _appliedEvents.Add(@event);
             return @event;
         }
 
-        private IReadOnlyDictionary<Type, MethodInfo> GetRegisterByType(IDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>> register, string methodName)
-        {
-            if (!register.TryGetValue(GetType(), out IReadOnlyDictionary<Type, MethodInfo> referentiel))
-            {
-                register[GetType()] = referentiel = MappingTypeToMethodHelper.ToMappingTypeMethod(
-                   GetType(),
-                   typeof(TDomainEvent),
-                   null,
-                   methodName);
-            }
-            return referentiel;
-        }
-
-        private IReadOnlyDictionary<Type, MethodInfo> GetRegisterByType(IDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>> register,
-            Type typeOfInterfaceBase,
+        private IReadOnlyDictionary<Type, MethodInfo> GetRegisterByType(IDictionary<Type, IReadOnlyDictionary<Type, MethodInfo>> register, 
+            Type interfaceParameterType,
+            Type returnType,
             string methodName)
         {
             if (!register.TryGetValue(GetType(), out IReadOnlyDictionary<Type, MethodInfo> referentiel))
             {
                 register[GetType()] = referentiel = MappingTypeToMethodHelper.ToMappingTypeMethod(
-                    GetType(),
-                    typeof(IDomainCommand),
-                    typeof(IEnumerable),
-                    methodName);
+                   GetType(),
+                   interfaceParameterType,
+                   returnType,
+                   methodName);
             }
             return referentiel;
         }

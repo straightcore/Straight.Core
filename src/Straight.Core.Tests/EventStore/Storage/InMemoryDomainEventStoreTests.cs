@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 using Straight.Core.EventStore;
-using Straight.Core.EventStore.Aggregate;
+using Straight.Core.Domain.Aggregate;
 using Straight.Core.EventStore.Storage;
 using Straight.Core.Exceptions;
 using System;

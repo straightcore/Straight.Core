@@ -10,20 +10,26 @@
 // See the License for the specific language governing permissions and limitations under the License.
 // ==============================================================================================================
 
-using System;
-using System.Collections;
+using Straight.Core.Domain;
+using Straight.Core.EventStore;
+using System.Collections.Generic;
 
-namespace Straight.Core.Extensions.Collections
+namespace Straight.Core.Domain.Aggregate
 {
-    public static class IEnumerableExtensions
+    public interface IDomainEventChangeable<out TDomainEvent> : IVersionableUpdatable, IIdentifiable
     {
-        public static IEnumerable ForEach(this IEnumerable enumerable, Action<object> action)
-        {
-            foreach (var item in enumerable)
-             {
-                action(item);
-             }
-            return enumerable;
-        }
+        IEnumerable<TDomainEvent> GetChanges();
+
+        void Clear();
+    }
+
+    public interface IAggregator<TDomainEvent> : IDomainEventChangeable<TDomainEvent>
+        where TDomainEvent : IDomainEvent
+    {
+        void Reset();
+
+        void LoadFromHistory(IEnumerable<TDomainEvent> domainEvents);
+
+        void Update<TDomainCommand>(TDomainCommand command) where TDomainCommand : class, IDomainCommand;
     }
 }

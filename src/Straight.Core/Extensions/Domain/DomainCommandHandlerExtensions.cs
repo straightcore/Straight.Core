@@ -10,20 +10,30 @@
 // See the License for the specific language governing permissions and limitations under the License.
 // ==============================================================================================================
 
+using Straight.Core.EventStore;
+using Straight.Core.Exceptions;
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
-namespace Straight.Core.Extensions.Collections
+namespace Straight.Core.Extensions.Domain
 {
-    public static class IEnumerableExtensions
+    public static class DomainCommandHandlerExtensions
     {
-        public static IEnumerable ForEach(this IEnumerable enumerable, Action<object> action)
+        public static IEnumerable<TDomainEvent> Handle<TDomainEvent>(
+            this IReadOnlyDictionary<Type, MethodInfo> registerMethods,
+            object model,
+            object command)
+            where TDomainEvent : IDomainEvent
         {
-            foreach (var item in enumerable)
-             {
-                action(item);
-             }
-            return enumerable;
+            MethodInfo handler;
+            if (!registerMethods.TryGetValue(command.GetType(), out handler))
+                throw new UnregisteredDomainEventException(
+                    $"The domain command '{command.GetType().FullName}' is not registered in '{model.GetType().FullName}'");
+            return ((IEnumerable) handler.Invoke(model, new[] {command}))
+                .OfType<TDomainEvent>();
         }
     }
 }
